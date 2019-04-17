@@ -83,10 +83,10 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         String[] columns = new String[]{"_id", "phone", "role"};
         List<User> users = dataBaseHelper.selectDataFromUserTable(columns, null, null);
-//        if (users.size() == 1) {
-//            intent = new Intent(context, MyActivity.class);
-//            startActivity(intent);
-//        }
+        if (users.size() == 1) {
+            intent = new Intent(context, MyActivity.class);
+            startActivity(intent);
+        }
     }
 
     private void toast(String msg) {

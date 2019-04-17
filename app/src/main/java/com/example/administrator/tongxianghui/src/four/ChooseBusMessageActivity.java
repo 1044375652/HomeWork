@@ -24,10 +24,12 @@ import com.example.administrator.tongxianghui.dao.DataBaseHelper;
 import com.example.administrator.tongxianghui.model.BusMessageInfo;
 import com.example.administrator.tongxianghui.model.PointMessagesInfo;
 import com.example.administrator.tongxianghui.model.base.Res;
+import com.example.administrator.tongxianghui.utils.ChangeType;
 import com.example.administrator.tongxianghui.utils.Ip;
 import com.example.administrator.tongxianghui.utils.PointMessage;
 import com.google.gson.Gson;
 
+import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.Text;
 
 import java.io.IOException;
@@ -252,7 +254,7 @@ public class ChooseBusMessageActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
                 chooseTime.put("mYear", i);
-                chooseTime.put("mMonth", i1);
+                chooseTime.put("mMonth", i1 + 1);
                 chooseTime.put("mDay", i2);
                 timePickerDialog.show();
             }
@@ -264,32 +266,58 @@ public class ChooseBusMessageActivity extends AppCompatActivity {
 
     public void fourAddBusMessages(View view) {
         AlertDialog.Builder fourAddBusMessagesDialog = new AlertDialog.Builder(context);
-        fourAddBusMessagesDialog.setTitle("确定信息无误？")
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-                        long fourUpPointTime = 0;
-                        try {
-                            Date date = simpleDateFormat.parse(String.valueOf(fourInputUpPointTime.getText()));
-                            fourUpPointTime = date.getTime();
-                        } catch (ParseException e) {
-                            e.printStackTrace();
+        String upPointTimeMsg = String.valueOf(fourInputUpPointTime.getText());
+        String upPointMsg = String.valueOf(fourInputUpPoint.getText());
+        if (StringUtils.isBlank(upPointMsg)) {
+            fourAddBusMessagesDialog.setTitle("上车点未选择")
+                    .setPositiveButton("返回", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
                         }
-                        busMessageInfoList.add(new BusMessageInfo()
-                                .setId(random.nextInt(SEEDS))
-                                .setDirectionType(directionType)
-                                .setUpDate(fourUpPointTime)
-                                .setUpPoint(fourInputUpPoint.getText())
-                        );
-                    }
-                })
-                .setNegativeButton("我再看看", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                })
-                .create().show();
+                    }).create().show();
+        } else if (StringUtils.isBlank(upPointTimeMsg)) {
+            fourAddBusMessagesDialog.setTitle("上车时间未选择")
+                    .setPositiveButton("返回", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    }).create().show();
+        } else {
+            fourAddBusMessagesDialog.setTitle("确定信息无误？")
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                            fourInputUpPointTime.setText("");
+                            fourInputUpPoint.setText("");
+                            long fourUpPointTime = 0;
+                            try {
+                                Date date = simpleDateFormat.parse(upPointTimeMsg);
+                                fourUpPointTime = date.getTime();
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            busMessageInfoList.add(new BusMessageInfo()
+                                    .setId(random.nextInt(SEEDS))
+                                    .setDirectionType(directionType)
+                                    .setUpDate(fourUpPointTime)
+                                    .setUpPoint(ChangeType.PointType.MsgToCode(upPointMsg))
+                            );
+                            LinearLayout fourMsgGroup = findViewById(R.id.fourMsgGroup);
+                            TextView fourMsg = new TextView(context);
+                            fourMsg.setText("上车点：" + upPointMsg + ",上车时间：" + upPointTimeMsg);
+                            fourMsgGroup.addView(fourMsg);
+                        }
+                    })
+                    .setNegativeButton("我再看看", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    })
+                    .create().show();
+        }
     }
 }
