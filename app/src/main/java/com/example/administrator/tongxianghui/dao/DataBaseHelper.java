@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.example.administrator.tongxianghui.model.BusMessage;
+import com.example.administrator.tongxianghui.model.BusMessageInfo;
 import com.example.administrator.tongxianghui.model.DirectionMessageInfo;
 import com.example.administrator.tongxianghui.model.PointMessagesInfo;
 import com.example.administrator.tongxianghui.model.User;
@@ -41,10 +41,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         private static final String ID = "_id";
         private static final String Up_Date = "up_date";
         private static final String Up_Point = "up_point";
-        private static final String Down_Point = "down_point";
         private static final String Direction_Type = "direction_type";
-        private static final String Is_Ok = "is_ok";
-        private static final String SQL = "create table if not exists " + BusMessageTable.TABLE_NAME + "(" + BusMessageTable.ID + " INTEGER PRIMARY KEY," + BusMessageTable.Up_Date + " bigint(13)," + BusMessageTable.Up_Point + " tinyint(1)," + BusMessageTable.Down_Point + " tinyint(1)," + BusMessageTable.Direction_Type + " tinyint(1)," + BusMessageTable.Is_Ok + " tinyint(1))";
+        private static final String SQL = "create table if not exists " + BusMessageTable.TABLE_NAME + "(" + BusMessageTable.ID + " INTEGER PRIMARY KEY," + BusMessageTable.Up_Date + " bigint(13)," + BusMessageTable.Up_Point + " tinyint(1)," + BusMessageTable.Direction_Type + " tinyint(1))";
     }
 
     private static class DirectionMessagesTable {
@@ -144,16 +142,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
 
     //增加数据BusMessage
-    public boolean addDataToBusMessageTable(List<BusMessage> busMessages) {
+    public boolean addDataToBusMessageTable(List<BusMessageInfo> busMessageInfos) {
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         ContentValues contentValues = getContentValues();
-        for (BusMessage busMessage : busMessages) {
+        for (BusMessageInfo busMessageInfo : busMessageInfos) {
             contentValues.clear();
-            contentValues.put(BusMessageTable.Up_Point, busMessage.getUpPoint());
-            contentValues.put(BusMessageTable.Down_Point, busMessage.getDownPoint());
-            contentValues.put(BusMessageTable.Direction_Type, busMessage.getDirectionType());
-            contentValues.put(BusMessageTable.Is_Ok, busMessage.getIsOk());
-            contentValues.put(BusMessageTable.Up_Date, busMessage.getUpDate());
+            contentValues.put(BusMessageTable.Up_Point, busMessageInfo.getUpPoint());
+            contentValues.put(BusMessageTable.Direction_Type, busMessageInfo.getDirectionType());
+            contentValues.put(BusMessageTable.Up_Date, busMessageInfo.getUpDate());
             sqLiteDatabase.beginTransaction();
             sqLiteDatabase.insert(BusMessageTable.TABLE_NAME, null, contentValues);
             sqLiteDatabase.setTransactionSuccessful();
@@ -163,17 +159,16 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     //选择数据BusMessage
-    public List<BusMessage> selectDataFromBusMessageTable(String[] columns, String whereClause, String[] whereArgs) {
+    public List<BusMessageInfo> selectDataFromBusMessageTable(String[] columns, String whereClause, String[] whereArgs) {
         SQLiteDatabase sqLiteDatabase = getReadableDatabase();
-        List<BusMessage> busMessages = new ArrayList<>();
+        List<BusMessageInfo> busMessageInfos = new ArrayList<>();
         Cursor cursor = sqLiteDatabase.query(BusMessageTable.TABLE_NAME, columns, whereClause, whereArgs, null, null, null);
         while (cursor.moveToNext()) {
-            busMessages.add(new BusMessage().setId(cursor.getInt(cursor.getColumnIndex(BusMessageTable.ID)))
+            busMessageInfos.add(new BusMessageInfo().setId(cursor.getInt(cursor.getColumnIndex(BusMessageTable.ID)))
                     .setUpPoint(cursor.getInt(cursor.getColumnIndex(BusMessageTable.Up_Point)))
-                    .setDownPoint(cursor.getInt(cursor.getColumnIndex(BusMessageTable.Down_Point)))
                     .setUpDate(cursor.getLong(cursor.getColumnIndex(BusMessageTable.Up_Date))));
         }
-        return busMessages;
+        return busMessageInfos;
     }
 
     //选择数据DirectionMessagesTable
@@ -257,7 +252,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     //添加数据PointMessageTable
     public void addDataToPointMessageTable(List<PointMessagesInfo> pointMessagesInfoList) {
-        Log.i("--------", "count" + pointMessagesInfoList.size());
         SQLiteDatabase sqLiteDatabase = getMyWritableDatabase();
         ContentValues contentValues = getContentValues();
         for (PointMessagesInfo pointMessagesInfo : pointMessagesInfoList) {

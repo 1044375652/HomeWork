@@ -21,7 +21,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.example.administrator.tongxianghui.R;
-import com.example.administrator.tongxianghui.model.BusMessage;
+import com.example.administrator.tongxianghui.model.BusMessageInfo;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -38,7 +38,7 @@ public class AdminInterFaceActivity extends AppCompatActivity {
     private LinearLayout linearLayout;
     private Intent intent;
     private Bundle bundle;
-    private List<BusMessage> busMessages;
+    private List<BusMessageInfo> busMessageInfos;
 
 
     @Override
@@ -48,7 +48,7 @@ public class AdminInterFaceActivity extends AppCompatActivity {
         context = AdminInterFaceActivity.this;
         checkBoxes = new ArrayList<>();
         bundle = getIntent().getBundleExtra("bundleType");
-        busMessages = new ArrayList<>();
+        busMessageInfos = new ArrayList<>();
         Log.i(TAG, bundle.getInt("type") + "");
 
     }

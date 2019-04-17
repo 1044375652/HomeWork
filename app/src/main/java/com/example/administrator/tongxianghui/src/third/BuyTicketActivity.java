@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 import com.example.administrator.tongxianghui.R;
 import com.example.administrator.tongxianghui.dao.DataBaseHelper;
-import com.example.administrator.tongxianghui.model.BusMessage;
+import com.example.administrator.tongxianghui.model.BusMessageInfo;
 import com.example.administrator.tongxianghui.utils.Ip;
 import com.google.gson.Gson;
 
@@ -44,7 +44,7 @@ public class BuyTicketActivity extends AppCompatActivity {
     private RadioGroup directionGroup;
     private static final String TAG = BuyTicketActivity.class.getName();
     private static final String URL = "http://" + Ip.IP + ":8001/bus/messages?direction_type=";
-    private static List<BusMessage> busMessageList;
+    private static List<BusMessageInfo> busMessageInfoList;
     private static List<String> upDate;
     private static List<String> upTime;
     private static List<String> upPoint;
@@ -66,10 +66,10 @@ public class BuyTicketActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 selectDataFromLocalDataBase(i);
-                if (busMessageList.size() == 0) {
+                if (busMessageInfoList.size() == 0) {
                     selectDataFromServiceDataBase(i);
                 }
-                formatData(busMessageList);
+                formatData(busMessageInfoList);
             }
         });
 
@@ -79,7 +79,7 @@ public class BuyTicketActivity extends AppCompatActivity {
         String[] columns = new String[]{"_id", "up_date", "up_point", "down_point"};
         String whereClause = "direction_type=? and is_ok=?";
         String[] whereArgs = new String[]{"" + index, 1 + ""};
-        busMessageList = dataBaseHelper.selectDataFromBusMessageTable(columns, whereClause, whereArgs);
+        busMessageInfoList = dataBaseHelper.selectDataFromBusMessageTable(columns, whereClause, whereArgs);
     }
 
     private void selectDataFromServiceDataBase(int index) {
@@ -96,31 +96,31 @@ public class BuyTicketActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                BusMessage[] busMessages = new Gson().fromJson(response.body().string(), BusMessage[].class);
-                busMessageList = Arrays.asList(busMessages);
-                dataBaseHelper.addDataToBusMessageTable(busMessageList);
+                BusMessageInfo[] busMessageInfos = new Gson().fromJson(response.body().string(), BusMessageInfo[].class);
+                busMessageInfoList = Arrays.asList(busMessageInfos);
+                dataBaseHelper.addDataToBusMessageTable(busMessageInfoList);
             }
         });
     }
 
-    private void formatData(List<BusMessage> busMessages) {
-        toast(busMessages.size() + "");
-        formatUpDate(busMessages);
-        formatUpTime(busMessages);
-        formatUpPoint(busMessages);
-        formatDownPoint(busMessages);
+    private void formatData(List<BusMessageInfo> busMessageInfos) {
+        toast(busMessageInfos.size() + "");
+        formatUpDate(busMessageInfos);
+        formatUpTime(busMessageInfos);
+        formatUpPoint(busMessageInfos);
+        formatDownPoint(busMessageInfos);
     }
 
-    private void formatUpDate(List<BusMessage> busMessages) {
+    private void formatUpDate(List<BusMessageInfo> busMessageInfos) {
     }
 
-    private void formatUpTime(List<BusMessage> busMessages) {
+    private void formatUpTime(List<BusMessageInfo> busMessageInfos) {
     }
 
-    private void formatUpPoint(List<BusMessage> busMessages) {
+    private void formatUpPoint(List<BusMessageInfo> busMessageInfos) {
     }
 
-    private void formatDownPoint(List<BusMessage> busMessages) {
+    private void formatDownPoint(List<BusMessageInfo> busMessageInfos) {
     }
 
     @Override
@@ -193,10 +193,10 @@ public class BuyTicketActivity extends AppCompatActivity {
     public void chooseUpDate(View view) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM:dd HH:mm:ss");
         String msg;
-        for (BusMessage busMessage : busMessageList) {
-            msg = simpleDateFormat.format(busMessage.getUpDate());
+        for (BusMessageInfo busMessageInfo : busMessageInfoList) {
+            msg = simpleDateFormat.format(busMessageInfo.getUpDate());
             Log.i(TAG, msg);
-            Log.i(TAG, busMessage.getUpDate() + "");
+            Log.i(TAG, busMessageInfo.getUpDate() + "");
         }
     }
 

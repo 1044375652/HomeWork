@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.example.administrator.tongxianghui.R;
 import com.example.administrator.tongxianghui.dao.DataBaseHelper;
+import com.example.administrator.tongxianghui.model.BusMessageInfo;
 import com.example.administrator.tongxianghui.model.PointMessagesInfo;
 import com.example.administrator.tongxianghui.model.base.Res;
 import com.example.administrator.tongxianghui.utils.Ip;
@@ -30,10 +31,16 @@ import com.google.gson.Gson;
 import org.w3c.dom.Text;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -62,7 +69,10 @@ public class ChooseBusMessageActivity extends AppCompatActivity {
     private Handler handler;
     private EditText fourInputUpPoint;
     private EditText fourInputUpPointTime;
+    private List<BusMessageInfo> busMessageInfoList;
     private static final String Get_Point_Messages_Url = "http://" + Ip.IP + ":8001/point/messages";
+    private static int SEEDS = 1000000;
+    private Random random;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +85,8 @@ public class ChooseBusMessageActivity extends AppCompatActivity {
         handler = new Handler();
         fourInputUpPoint = findViewById(R.id.fourInputUpPoint);
         fourInputUpPointTime = findViewById(R.id.fourInputUpPointTime);
+        busMessageInfoList = new ArrayList<>();
+        random = new Random();
     }
 
 
@@ -134,7 +146,7 @@ public class ChooseBusMessageActivity extends AppCompatActivity {
     private List<PointMessage> requestDataFromService() {
         okHttpClient = new OkHttpClient();
         request = new Request.Builder()
-                .url(Get_Point_Messages_Url)
+                .url(Get_Point_Messages_Url + "?direction_type=" + directionType)
                 .build();
         call = okHttpClient.newCall(request);
         call.enqueue(new Callback() {
@@ -159,7 +171,6 @@ public class ChooseBusMessageActivity extends AppCompatActivity {
     }
 
     private void showUpAndDownPointView(List<PointMessagesInfo> pointMessagesInfoList) {
-
         upPointList = new ArrayList<>();
         downPointList = new ArrayList<>();
         for (PointMessagesInfo pointMessagesInfo : pointMessagesInfoList) {
@@ -204,6 +215,7 @@ public class ChooseBusMessageActivity extends AppCompatActivity {
                 .setItems(upPointLists, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        fourInputUpPoint.setText("");
                         fourInputUpPoint.setText(upPointLists[i]);
                     }
                 }).create().show();
@@ -217,21 +229,67 @@ public class ChooseBusMessageActivity extends AppCompatActivity {
         int mHour = calendar.get(Calendar.HOUR_OF_DAY);
         int mMinute = calendar.get(Calendar.MINUTE);
 
+        Map<String, Integer> chooseTime = new HashMap<>();
+        chooseTime.put("mYear", mYear);
+        chooseTime.put("mMonth", mMonth);
+        chooseTime.put("mDay", mDay);
+        chooseTime.put("mHour", mHour);
+        chooseTime.put("mMinute", mMinute);
+
+
         TimePickerDialog timePickerDialog = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int i, int i1) {
-
+                chooseTime.put("mHour", i);
+                chooseTime.put("mMinute", i1);
+                String time = chooseTime.get("mYear") + "-" + chooseTime.get("mMonth") + "-" + chooseTime.get("mDay") + " " + chooseTime.get("mHour") + ":" + chooseTime.get("mMinute");
+                fourInputUpPointTime.setText("");
+                fourInputUpPointTime.setText(time);
             }
         }, mHour, mMinute, true);
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                chooseTime.put("mYear", i);
+                chooseTime.put("mMonth", i1);
+                chooseTime.put("mDay", i2);
                 timePickerDialog.show();
             }
         }, mYear, mMonth, mDay);
 
         datePickerDialog.show();
 
+    }
+
+    public void fourAddBusMessages(View view) {
+        AlertDialog.Builder fourAddBusMessagesDialog = new AlertDialog.Builder(context);
+        fourAddBusMessagesDialog.setTitle("确定信息无误？")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                        long fourUpPointTime = 0;
+                        try {
+                            Date date = simpleDateFormat.parse(String.valueOf(fourInputUpPointTime.getText()));
+                            fourUpPointTime = date.getTime();
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        busMessageInfoList.add(new BusMessageInfo()
+                                .setId(random.nextInt(SEEDS))
+                                .setDirectionType(directionType)
+                                .setUpDate(fourUpPointTime)
+                                .setUpPoint(fourInputUpPoint.getText())
+                        );
+                    }
+                })
+                .setNegativeButton("我再看看", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                })
+                .create().show();
     }
 }

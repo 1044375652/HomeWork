@@ -226,7 +226,6 @@ public class DirectionChooseActivity extends AppCompatActivity {
                             .setId(modifyDirectionMessageReq.getId())
                             .setName(modifyDirectionMessageReq.getName())
                             .setDirectionStatus(0));
-                    Log.i(TAG, modifyDirectionMessageReq.getId() + "");
                     String whereClause = "_id=?";
                     String[] whereArgs = new String[]{"" + modifyDirectionMessageReq.getId()};
                     dataBaseHelper.modifyDataToDirectionMessagesTable(directionMessageInfoList, whereClause, whereArgs);
@@ -252,9 +251,6 @@ public class DirectionChooseActivity extends AppCompatActivity {
         super.onResume();
         String[] columns = new String[]{"_id", "name", "direction_status"};
         directionMessageInfoList = dataBaseHelper.selectDataFromDirectionMessagesTable(columns, null, null);
-        for (DirectionMessageInfo directionMessageInfo : directionMessageInfoList) {
-            Log.i(TAG, directionMessageInfo.getDirectionStatus() + "");
-        }
         if (directionMessageInfoList.size() == 0 || directionMessageInfoList.get(0).getDirectionStatus() == 1) {
             okHttpClient = new OkHttpClient();
             request = new Request.Builder()
@@ -321,7 +317,6 @@ public class DirectionChooseActivity extends AppCompatActivity {
                                     directionMessageInfo.setDirectionStatus(1);
                                 }
                                 boolean result = dataBaseHelper.modifyDataToDirectionMessagesTable(directionMessageInfoList, null, null);
-                                Log.i(TAG, result + "");
                             } else {
                                 Log.i(TAG, "连接服务器失败");
                             }
