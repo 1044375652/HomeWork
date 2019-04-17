@@ -275,12 +275,19 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         for (PointMessagesInfo pointMessagesInfo : pointMessagesInfoList) {
             contentValues.clear();
-            contentValues.put(DirectionMessagesTable.STATUS, pointMessagesInfo.getPointStatus());
+            contentValues.put(PointMessageTable.STATUS, pointMessagesInfo.getPointStatus());
             sqLiteDatabase.beginTransaction();
-            sqLiteDatabase.update(DirectionMessagesTable.TABLE_NAME, contentValues, whereClause, whereArgs);
+            sqLiteDatabase.update(PointMessageTable.TABLE_NAME, contentValues, whereClause, whereArgs);
             sqLiteDatabase.setTransactionSuccessful();
             sqLiteDatabase.endTransaction();
         }
+        return true;
+    }
+
+    //删除数据PointMessageTable
+    public boolean deleteDataToPointMessageTable(String whereClause, String[] whereArgs) {
+        SQLiteDatabase sqLiteDatabase = getMyWritableDatabase();
+        sqLiteDatabase.delete(PointMessageTable.TABLE_NAME, whereClause, whereArgs);
         return true;
     }
 

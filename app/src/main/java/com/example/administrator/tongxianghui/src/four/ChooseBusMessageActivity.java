@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -30,7 +31,6 @@ import com.example.administrator.tongxianghui.utils.PointMessage;
 import com.google.gson.Gson;
 
 import org.apache.commons.lang.StringUtils;
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -43,6 +43,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -54,18 +56,15 @@ import okhttp3.Response;
 
 public class ChooseBusMessageActivity extends AppCompatActivity {
 
-    private Bundle bundle;
     private static final String TAG = ChooseBusMessageActivity.class.getName();
     private Context context;
     private int directionType;
-    private TextView fourCurrentDirection;
     private DataBaseHelper dataBaseHelper;
     private List<PointMessagesInfo> pointMessagesInfoList;
     private OkHttpClient okHttpClient;
     private RequestBody requestBody;
     private Request request;
     private Call call;
-    private Response response;
     private Gson gson;
     private List<String> upPointList;
     private List<String> downPointList;
@@ -78,13 +77,16 @@ public class ChooseBusMessageActivity extends AppCompatActivity {
     private static int SEEDS = 1000000;
     private Random random;
     private MediaType json = MediaType.parse("application/json;charset=utf-8");
+    private Intent intent;
+    private TimerTask timerTask;
+    private Timer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_bus_message);
         context = ChooseBusMessageActivity.this;
-        bundle = getIntent().getBundleExtra("directionType");
+        Bundle bundle = getIntent().getBundleExtra("directionType");
         directionType = bundle.getInt("directionType");
         dataBaseHelper = DataBaseHelper.getDataBaseHelper(context);
         handler = new Handler();
@@ -98,7 +100,7 @@ public class ChooseBusMessageActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        fourCurrentDirection = findViewById(R.id.fourCurrentDirection);
+        TextView fourCurrentDirection = findViewById(R.id.fourCurrentDirection);
         fourCurrentDirection.setText(switchDirectionMsg(directionType));
     }
 
@@ -107,6 +109,9 @@ public class ChooseBusMessageActivity extends AppCompatActivity {
         super.onResume();
         String[] columns = new String[]{"_id", "name", "point_type", "direction_type", "point_status"};
         pointMessagesInfoList = dataBaseHelper.selectDataFromPointMessageTable(columns, null, null);
+        for (PointMessagesInfo pointMessagesInfo : pointMessagesInfoList) {
+            Log.i(TAG, pointMessagesInfo.getPointStatus() + "");
+        }
         if (pointMessagesInfoList.size() == 0) {
             requestDataFromService();
         } else {
@@ -167,6 +172,7 @@ public class ChooseBusMessageActivity extends AppCompatActivity {
                 if (res.getCode() == 200) {
                     PointMessagesInfo[] pointMessagesInfos = gson.fromJson(String.valueOf(res.getData()), PointMessagesInfo[].class);
                     pointMessagesInfoList = Arrays.asList(pointMessagesInfos);
+                    dataBaseHelper.deleteDataToPointMessageTable(null, null);
                     dataBaseHelper.addDataToPointMessageTable(pointMessagesInfoList);
                     showUpAndDownPointView(pointMessagesInfoList);
                 }
@@ -201,12 +207,11 @@ public class ChooseBusMessageActivity extends AppCompatActivity {
         LinearLayout upPointLinearLayout = findViewById(R.id.fourUpPointGroup);
         LinearLayout downPointLinearLayout = findViewById(R.id.fourDownPointGroup);
 
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                upPointLinearLayout.addView(upPointListView);
-                downPointLinearLayout.addView(downPointListView);
-            }
+        handler.post(() -> {
+            upPointLinearLayout.removeAllViews();
+            downPointLinearLayout.removeAllViews();
+            upPointLinearLayout.addView(upPointListView);
+            downPointLinearLayout.addView(downPointListView);
         });
     }
 
@@ -217,12 +222,9 @@ public class ChooseBusMessageActivity extends AppCompatActivity {
         }
         String[] upPointLists = upPointList.toArray(new String[upPointList.size()]);
         fourChooseUpPointDialog.setTitle("请选择上车点")
-                .setItems(upPointLists, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        fourInputUpPoint.setText("");
-                        fourInputUpPoint.setText(upPointLists[i]);
-                    }
+                .setItems(upPointLists, (dialogInterface, i) -> {
+                    fourInputUpPoint.setText("");
+                    fourInputUpPoint.setText(upPointLists[i]);
                 }).create().show();
     }
 
@@ -242,25 +244,19 @@ public class ChooseBusMessageActivity extends AppCompatActivity {
         chooseTime.put("mMinute", mMinute);
 
 
-        TimePickerDialog timePickerDialog = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker timePicker, int i, int i1) {
-                chooseTime.put("mHour", i);
-                chooseTime.put("mMinute", i1);
-                String time = chooseTime.get("mYear") + "-" + chooseTime.get("mMonth") + "-" + chooseTime.get("mDay") + " " + chooseTime.get("mHour") + ":" + chooseTime.get("mMinute");
-                fourInputUpPointTime.setText("");
-                fourInputUpPointTime.setText(time);
-            }
+        TimePickerDialog timePickerDialog = new TimePickerDialog(context, (timePicker, i, i1) -> {
+            chooseTime.put("mHour", i);
+            chooseTime.put("mMinute", i1);
+            String time = chooseTime.get("mYear") + "-" + chooseTime.get("mMonth") + "-" + chooseTime.get("mDay") + " " + chooseTime.get("mHour") + ":" + chooseTime.get("mMinute");
+            fourInputUpPointTime.setText("");
+            fourInputUpPointTime.setText(time);
         }, mHour, mMinute, true);
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                chooseTime.put("mYear", i);
-                chooseTime.put("mMonth", i1 + 1);
-                chooseTime.put("mDay", i2);
-                timePickerDialog.show();
-            }
+        DatePickerDialog datePickerDialog = new DatePickerDialog(context, (datePicker, i, i1, i2) -> {
+            chooseTime.put("mYear", i);
+            chooseTime.put("mMonth", i1 + 1);
+            chooseTime.put("mDay", i2);
+            timePickerDialog.show();
         }, mYear, mMonth, mDay);
 
         datePickerDialog.show();
@@ -273,53 +269,35 @@ public class ChooseBusMessageActivity extends AppCompatActivity {
         String upPointMsg = String.valueOf(fourInputUpPoint.getText());
         if (StringUtils.isBlank(upPointMsg)) {
             fourAddBusMessagesDialog.setTitle("上车点未选择")
-                    .setPositiveButton("返回", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                        }
-                    }).create().show();
+                    .setPositiveButton("返回", (dialogInterface, i) -> dialogInterface.dismiss()).create().show();
         } else if (StringUtils.isBlank(upPointTimeMsg)) {
             fourAddBusMessagesDialog.setTitle("上车时间未选择")
-                    .setPositiveButton("返回", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                        }
-                    }).create().show();
+                    .setPositiveButton("返回", (dialogInterface, i) -> dialogInterface.dismiss()).create().show();
         } else {
             fourAddBusMessagesDialog.setTitle("确定信息无误？")
-                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-                            fourInputUpPointTime.setText("");
-                            fourInputUpPoint.setText("");
-                            long fourUpPointTime = 0;
-                            try {
-                                Date date = simpleDateFormat.parse(upPointTimeMsg);
-                                fourUpPointTime = date.getTime();
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            busMessageInfoList.add(new BusMessageInfo()
-                                    .setId(random.nextInt(SEEDS))
-                                    .setDirectionType(directionType)
-                                    .setUpDate(fourUpPointTime)
-                                    .setUpPoint(ChangeType.PointType.MsgToCode(upPointMsg))
-                            );
-                            LinearLayout fourMsgGroup = findViewById(R.id.fourMsgGroup);
-                            TextView fourMsg = new TextView(context);
-                            fourMsg.setText("上车点：" + upPointMsg + ",上车时间：" + upPointTimeMsg);
-                            fourMsgGroup.addView(fourMsg);
+                    .setPositiveButton("确定", (dialogInterface, i) -> {
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                        fourInputUpPointTime.setText("");
+                        fourInputUpPoint.setText("");
+                        long fourUpPointTime = 0;
+                        try {
+                            Date date = simpleDateFormat.parse(upPointTimeMsg);
+                            fourUpPointTime = date.getTime();
+                        } catch (ParseException e) {
+                            e.printStackTrace();
                         }
+                        busMessageInfoList.add(new BusMessageInfo()
+                                .setId(random.nextInt(SEEDS))
+                                .setDirectionType(directionType)
+                                .setUpDate(fourUpPointTime)
+                                .setUpPoint(ChangeType.PointType.MsgToCode(upPointMsg))
+                        );
+                        LinearLayout fourMsgGroup = findViewById(R.id.fourMsgGroup);
+                        TextView fourMsg = new TextView(context);
+                        fourMsg.setText("上车点：" + upPointMsg + ",上车时间：" + upPointTimeMsg);
+                        fourMsgGroup.addView(fourMsg);
                     })
-                    .setNegativeButton("我再看看", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                        }
-                    })
+                    .setNegativeButton("我再看看", (dialogInterface, i) -> dialogInterface.dismiss())
                     .create().show();
         }
     }
@@ -329,34 +307,24 @@ public class ChooseBusMessageActivity extends AppCompatActivity {
         EditText addUpPointInput = new EditText(context);
         addUpPointBuilder.setTitle("添加上车点信息")
                 .setView(addUpPointInput)
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        String msg = String.valueOf(addUpPointInput.getText());
-                        if (StringUtils.isBlank(String.valueOf(addUpPointInput.getText()))) {
-                            showDialog("未输入上车点信息");
-                        } else {
-                            PointMessagesInfo pointMessagesInfo = new PointMessagesInfo();
+                .setPositiveButton("确定", (dialogInterface, i) -> {
+                    String msg = String.valueOf(addUpPointInput.getText());
+                    if (StringUtils.isBlank(String.valueOf(addUpPointInput.getText()))) {
+                        showDialog("未输入上车点信息");
+                    } else {
+                        PointMessagesInfo pointMessagesInfo = new PointMessagesInfo();
 
-                            pointMessagesInfo.setId(random.nextInt(SEEDS))
-                                    .setName(msg)
-                                    .setPointType(0)
-                                    .setDirectionType(directionType);
+                        pointMessagesInfo.setId(random.nextInt(SEEDS))
+                                .setName(msg)
+                                .setPointType(0)
+                                .setDirectionType(directionType);
 
-                            pointMessagesInfoList.add(pointMessagesInfo);
+                        if (addUpPointMessageUrl(pointMessagesInfo)) {
 
-                            if (addUpPointMessageUrl(pointMessagesInfo)) {
-
-                            }
                         }
                     }
                 })
-                .setNegativeButton("返回", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                })
+                .setNegativeButton("返回", (dialogInterface, i) -> dialogInterface.dismiss())
                 .create().show();
 
     }
@@ -364,12 +332,7 @@ public class ChooseBusMessageActivity extends AppCompatActivity {
     private void showDialog(String msg) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(msg)
-                .setNegativeButton("返回", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                })
+                .setNegativeButton("返回", (dialogInterface, i) -> dialogInterface.dismiss())
                 .create().show();
     }
 
@@ -393,7 +356,19 @@ public class ChooseBusMessageActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 Res res = gson.fromJson(response.body().string(), Res.class);
                 if (res.getCode() == 200) {
-                    toast("添加成功");
+                    handler.post(() -> {
+                        toast("添加成功");
+                        modifyPointMessageStatus(pointMessagesInfoList);
+                        intent = new Intent(context, ChooseBusMessageActivity.class);
+                        timerTask = new TimerTask() {
+                            @Override
+                            public void run() {
+                                startActivity(intent);
+                            }
+                        };
+                        timer = new Timer();
+                        timer.schedule(timerTask, 1000);
+                    });
                 } else {
 
                 }

@@ -21,11 +21,11 @@
         android:padding="10sp">
 
         <Button
-            android:onClick="fourAddUpPoint"
             android:id="@+id/fourUpPointBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/index_btn"
+            android:onClick="fourAddUpPoint"
             android:text="@string/add_up_point"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -37,19 +37,21 @@
             android:id="@+id/fourDownPointBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
             android:background="@drawable/index_btn"
             android:text="@string/add_down_point"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/fourUpPointBtn"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/fourSubmitBtn"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
+            android:id="@+id/fourSubmitBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/index_btn"
             android:text="@string/submit_bus_message"
+            android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/fourDownPointBtn"
             app:layout_constraintRight_toRightOf="parent"
@@ -107,6 +109,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
+            android:inputType="text"
             android:id="@+id/fourInputUpPoint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -133,6 +136,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
+            android:inputType="text"
             android:id="@+id/fourInputUpPointTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
