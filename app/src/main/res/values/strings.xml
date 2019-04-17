@@ -1,0 +1,139 @@
+<resources>
+    <string name="app_name">TongXiangHui</string>
+    <string name="login">登录</string>
+    <string name="register">注册</string>
+
+    <string name="buy_ticket">购票</string>
+    <string name="check_ticket">查票</string>
+    <string name="trip">我的行程</string>
+
+    <string name="phone">手机号:</string>
+    <string name="register_submit">提交</string>
+    <string name="register_back">返回</string>
+    <string name="user_name">姓名</string>
+    <string name="bus_messages">乘车信息</string>
+    <string name="add_bus_messages">添加乘车信息</string>
+    <string name="direction">乘车方向</string>
+    <string name="up_date">上车日期</string>
+    <string name="add_up_date">添加上车日期</string>
+    <string name="up_time">上车时间</string>
+    <string name="up_point">上车点</string>
+    <string name="down_point">下车点</string>
+    <string name="ticket_number">购买票数</string>
+    <string name="other">其他要求：</string>
+
+
+    <string name="add_direction_msg">添加乘车信息</string>
+    <string name="direction1">惠城、博罗至珠海同乡会包车</string>
+    <string name="direction2">珠海至惠城、博罗同乡会包车</string>
+    <string name="direction3">珠海至惠东、淡水客运站班次</string>
+    <string name="direction4">惠东、淡水至珠海客运站班次</string>
+    <string name="direction5">惠东、淡水至珠海同乡会包车</string>
+    <string name="direction6">珠海至惠东、淡水同乡会包车</string>
+    <string name="choose_number_show">请选择票数</string>
+    <string name="admin_interface">管理员界面</string>
+    <string name="select_all_direction">全选</string>
+    <string name="invert_select">反选</string>
+
+    <string-array name="direction1_up">
+        <item>
+            花边岭广场
+        </item>
+        <item>
+            博罗华侨中学
+        </item>
+        <item>
+            江北华贸
+        </item>
+        <item>
+            惠大
+        </item>
+    </string-array>
+
+    <string-array name="direction1_down">
+        <item>
+            香洲梅华中
+        </item>
+        <item>
+            北理工
+        </item>
+        <item>
+            北师
+        </item>
+        <item>
+            UIC
+        </item>
+        <item>
+            官塘公交站
+        </item>
+    </string-array>
+
+    <string-array name="direction2_up">
+        <item>
+            香洲梅华中
+        </item>
+        <item>
+            北理工
+        </item>
+        <item>
+            北师
+        </item>
+        <item>
+            UIC
+        </item>
+        <item>
+            官塘公交站
+        </item>
+    </string-array>
+
+
+    <string-array name="direction2_down">
+        <item>
+            花边岭广场
+        </item>
+        <item>
+            博罗华侨中学
+        </item>
+        <item>
+            江北华贸
+        </item>
+        <item>
+            惠大
+        </item>
+    </string-array>
+
+    <string-array name="direction3_up">
+        <item>
+            官塘公交站
+        </item>
+    </string-array>
+
+    <string-array name="direction3_down">
+        <item>
+            惠东客运站
+        </item>
+        <item>
+            淡水客运站
+        </item>
+    </string-array>
+
+    <string-array name="direction4_up">
+        <item>
+            惠东客运站
+        </item>
+        <item>
+            淡水客运站
+        </item>
+    </string-array>
+
+    <string-array name="direction4_down">
+        <item>
+            香洲
+        </item>
+        <item>
+            官塘公交站
+        </item>
+    </string-array>
+
+
+</resources>

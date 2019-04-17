@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/thirdLinearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="top"
+    android:orientation="vertical"
+    tools:context=".src.third.AdminInterFaceActivity">
+
+    <!--<android.support.constraint.ConstraintLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content">-->
+
+    <!--<LinearLayout-->
+    <!--android:id="@+id/thirdDirectionGroup"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:gravity="center"-->
+    <!--android:paddingTop="5sp"-->
+    <!--android:paddingBottom="5sp"-->
+    <!--app:layout_constraintBottom_toTopOf="@id/thirdDirection1"-->
+    <!--app:layout_constraintLeft_toLeftOf="parent"-->
+    <!--app:layout_constraintRight_toRightOf="parent"-->
+    <!--app:layout_constraintTop_toTopOf="parent">-->
+
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="@string/direction" />-->
+
+    <!--<CheckBox-->
+    <!--android:id="@+id/thirdDirectionSelectAll"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginLeft="20sp"-->
+    <!--android:onClick="thirdDirectionSelectAll"-->
+    <!--android:text="@string/select_all_direction" />-->
+
+    <!--<CheckBox-->
+    <!--android:id="@+id/thirdDirectionInvertSelect"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginLeft="40sp"-->
+    <!--android:onClick="thirdDirectionInvertSelect"-->
+    <!--android:text="@string/invert_select" />-->
+
+    <!--</LinearLayout>-->
+
+
+    <!--<CheckBox-->
+    <!--android:id="@+id/thirdDirection1"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="@string/direction1"-->
+    <!--app:layout_constraintBottom_toTopOf="@id/thirdDirection2"-->
+    <!--app:layout_constraintLeft_toLeftOf="parent"-->
+    <!--app:layout_constraintRight_toRightOf="parent"-->
+    <!--app:layout_constraintTop_toBottomOf="@id/thirdDirectionGroup" />-->
+
+    <!--<CheckBox-->
+    <!--android:id="@+id/thirdDirection2"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="@string/direction2"-->
+    <!--app:layout_constraintBottom_toTopOf="@id/thirdDirection3"-->
+    <!--app:layout_constraintLeft_toLeftOf="parent"-->
+    <!--app:layout_constraintRight_toRightOf="parent"-->
+    <!--app:layout_constraintTop_toBottomOf="@id/thirdDirection1" />-->
+
+    <!--<CheckBox-->
+    <!--android:id="@+id/thirdDirection3"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="@string/direction3"-->
+    <!--app:layout_constraintBottom_toTopOf="@id/thirdDirection4"-->
+    <!--app:layout_constraintLeft_toLeftOf="parent"-->
+    <!--app:layout_constraintRight_toRightOf="parent"-->
+    <!--app:layout_constraintTop_toBottomOf="@id/thirdDirection2" />-->
+
+    <!--<CheckBox-->
+    <!--android:id="@+id/thirdDirection4"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="@string/direction4"-->
+    <!--app:layout_constraintBottom_toTopOf="@id/thirdDirection5"-->
+    <!--app:layout_constraintLeft_toLeftOf="parent"-->
+    <!--app:layout_constraintRight_toRightOf="parent"-->
+    <!--app:layout_constraintTop_toBottomOf="@id/thirdDirection3" />-->
+
+    <!--<CheckBox-->
+    <!--android:id="@+id/thirdDirection5"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="@string/direction5"-->
+    <!--app:layout_constraintBottom_toTopOf="@id/thirdDirection6"-->
+    <!--app:layout_constraintLeft_toLeftOf="parent"-->
+    <!--app:layout_constraintRight_toRightOf="parent"-->
+    <!--app:layout_constraintTop_toBottomOf="@id/thirdDirection4" />-->
+
+    <!--<CheckBox-->
+    <!--android:id="@+id/thirdDirection6"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="@string/direction6"-->
+    <!--app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--app:layout_constraintLeft_toLeftOf="parent"-->
+    <!--app:layout_constraintRight_toRightOf="parent"-->
+    <!--app:layout_constraintTop_toBottomOf="@id/thirdDirection5" />-->
+
+    <!--</android.support.constraint.ConstraintLayout>-->
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5sp"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bus_messages" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40sp"
+            android:background="@drawable/index_btn"
+            android:onClick="addBusMessage"
+            android:text="@string/add_bus_messages"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/upDateGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical">
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
