@@ -34,6 +34,8 @@
     <string name="admin_interface">管理员界面</string>
     <string name="select_all_direction">全选</string>
     <string name="invert_select">反选</string>
+    <string name="add_up_point">添加上车点</string>
+    <string name="add_down_point">添加下车点</string>
 
     <string-array name="direction1_up">
         <item>
