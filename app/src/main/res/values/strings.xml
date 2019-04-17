@@ -39,6 +39,7 @@
     <string name="select_up_point">选择上车点</string>
     <string name="select_time">选择上车时间</string>
     <string name="add">添加</string>
+    <string name="submit_bus_message">提交信息</string>
 
     <string-array name="direction1_up">
         <item>

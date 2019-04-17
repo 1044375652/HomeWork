@@ -268,4 +268,20 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    //修改数据PointMessageTable
+    public boolean modifyDataToPointMessageTable(List<PointMessagesInfo> pointMessagesInfoList, String whereClause, String[] whereArgs) {
+        ContentValues contentValues = getContentValues();
+        SQLiteDatabase sqLiteDatabase = getMyWritableDatabase();
+
+        for (PointMessagesInfo pointMessagesInfo : pointMessagesInfoList) {
+            contentValues.clear();
+            contentValues.put(DirectionMessagesTable.STATUS, pointMessagesInfo.getPointStatus());
+            sqLiteDatabase.beginTransaction();
+            sqLiteDatabase.update(DirectionMessagesTable.TABLE_NAME, contentValues, whereClause, whereArgs);
+            sqLiteDatabase.setTransactionSuccessful();
+            sqLiteDatabase.endTransaction();
+        }
+        return true;
+    }
+
 }

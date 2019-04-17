@@ -46,6 +46,7 @@ import java.util.Random;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -73,8 +74,10 @@ public class ChooseBusMessageActivity extends AppCompatActivity {
     private EditText fourInputUpPointTime;
     private List<BusMessageInfo> busMessageInfoList;
     private static final String Get_Point_Messages_Url = "http://" + Ip.IP + ":8001/point/messages";
+    private static final String Add_Up_Point_Message_Url = "http://" + Ip.IP + ":8001/point/message";
     private static int SEEDS = 1000000;
     private Random random;
+    private MediaType json = MediaType.parse("application/json;charset=utf-8");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -320,4 +323,90 @@ public class ChooseBusMessageActivity extends AppCompatActivity {
                     .create().show();
         }
     }
+
+    public void fourAddUpPoint(View view) {
+        AlertDialog.Builder addUpPointBuilder = new AlertDialog.Builder(context);
+        EditText addUpPointInput = new EditText(context);
+        addUpPointBuilder.setTitle("添加上车点信息")
+                .setView(addUpPointInput)
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        String msg = String.valueOf(addUpPointInput.getText());
+                        if (StringUtils.isBlank(String.valueOf(addUpPointInput.getText()))) {
+                            showDialog("未输入上车点信息");
+                        } else {
+                            PointMessagesInfo pointMessagesInfo = new PointMessagesInfo();
+
+                            pointMessagesInfo.setId(random.nextInt(SEEDS))
+                                    .setName(msg)
+                                    .setPointType(0)
+                                    .setDirectionType(directionType);
+
+                            pointMessagesInfoList.add(pointMessagesInfo);
+
+                            if (addUpPointMessageUrl(pointMessagesInfo)) {
+
+                            }
+                        }
+                    }
+                })
+                .setNegativeButton("返回", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                })
+                .create().show();
+
+    }
+
+    private void showDialog(String msg) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(msg)
+                .setNegativeButton("返回", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                })
+                .create().show();
+    }
+
+    private boolean addUpPointMessageUrl(PointMessagesInfo pointMessagesInfo) {
+        okHttpClient = new OkHttpClient();
+        gson = new Gson();
+        String obj = gson.toJson(pointMessagesInfo);
+        requestBody = RequestBody.create(json, obj);
+        request = new Request.Builder()
+                .url(Add_Up_Point_Message_Url)
+                .post(requestBody)
+                .build();
+        call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.i(TAG, "请求服务器失败");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Res res = gson.fromJson(response.body().string(), Res.class);
+                if (res.getCode() == 200) {
+                    toast("添加成功");
+                } else {
+
+                }
+            }
+        });
+        return true;
+    }
+
+    private void modifyPointMessageStatus(List<PointMessagesInfo> pointMessagesInfoList) {
+        for (PointMessagesInfo pointMessagesInfo : pointMessagesInfoList) {
+            pointMessagesInfo.setPointStatus(1);
+        }
+        dataBaseHelper.modifyDataToPointMessageTable(pointMessagesInfoList, null, null);
+    }
+
 }
