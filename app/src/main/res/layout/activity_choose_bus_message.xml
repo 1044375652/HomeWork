@@ -88,20 +88,26 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/select_up_point" />
+            android:text="@string/select_up_point"
+            android:textSize="16sp" />
 
         <EditText
+            android:id="@+id/fourInputUpPoint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ems="4" />
+            android:ems="4"
+            android:onClick="fourChooseUpPoint" />
 
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/select_time" />
+            android:text="@string/select_time"
+            android:textSize="16sp" />
 
         <EditText
+            android:onClick="fourChooseUpPointTime"
+            android:id="@+id/fourInputUpPointTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="4" />

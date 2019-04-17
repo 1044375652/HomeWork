@@ -1,14 +1,22 @@
 package com.example.administrator.tongxianghui.src.four;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Handler;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.administrator.tongxianghui.R;
@@ -24,6 +32,7 @@ import org.w3c.dom.Text;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 import okhttp3.Call;
@@ -51,6 +60,8 @@ public class ChooseBusMessageActivity extends AppCompatActivity {
     private List<String> upPointList;
     private List<String> downPointList;
     private Handler handler;
+    private EditText fourInputUpPoint;
+    private EditText fourInputUpPointTime;
     private static final String Get_Point_Messages_Url = "http://" + Ip.IP + ":8001/point/messages";
 
     @Override
@@ -62,6 +73,8 @@ public class ChooseBusMessageActivity extends AppCompatActivity {
         directionType = bundle.getInt("directionType");
         dataBaseHelper = DataBaseHelper.getDataBaseHelper(context);
         handler = new Handler();
+        fourInputUpPoint = findViewById(R.id.fourInputUpPoint);
+        fourInputUpPointTime = findViewById(R.id.fourInputUpPointTime);
     }
 
 
@@ -181,4 +194,44 @@ public class ChooseBusMessageActivity extends AppCompatActivity {
         });
     }
 
+    public void fourChooseUpPoint(View view) {
+        AlertDialog.Builder fourChooseUpPointDialog = new AlertDialog.Builder(context);
+        for (String pointMessagesInfo : upPointList) {
+            Log.i(TAG, pointMessagesInfo);
+        }
+        String[] upPointLists = upPointList.toArray(new String[upPointList.size()]);
+        fourChooseUpPointDialog.setTitle("请选择上车点")
+                .setItems(upPointLists, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        fourInputUpPoint.setText(upPointLists[i]);
+                    }
+                }).create().show();
+    }
+
+    public void fourChooseUpPointTime(View view) {
+        Calendar calendar = Calendar.getInstance();
+        int mYear = calendar.get(Calendar.YEAR);
+        int mMonth = calendar.get(Calendar.MONTH);
+        int mDay = calendar.get(Calendar.DAY_OF_MONTH);
+        int mHour = calendar.get(Calendar.HOUR_OF_DAY);
+        int mMinute = calendar.get(Calendar.MINUTE);
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int i, int i1) {
+
+            }
+        }, mHour, mMinute, true);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                timePickerDialog.show();
+            }
+        }, mYear, mMonth, mDay);
+
+        datePickerDialog.show();
+
+    }
 }
