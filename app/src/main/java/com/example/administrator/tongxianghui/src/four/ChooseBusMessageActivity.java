@@ -78,10 +78,12 @@ public class ChooseBusMessageActivity extends AppCompatActivity {
         String[] columns = new String[]{"_id", "name", "point_type", "direction_type", "point_status"};
         pointMessagesInfoList = dataBaseHelper.selectDataFromPointMessageTable(columns, null, null);
         if (pointMessagesInfoList.size() == 0) {
-
+            requestDataFromService();
         } else {
             if (pointMessagesInfoList.get(0).getPointStatus() == 1) {
-
+                requestDataFromService();
+            } else {
+                showUpAndDownPointView(pointMessagesInfoList);
             }
         }
     }
@@ -136,6 +138,7 @@ public class ChooseBusMessageActivity extends AppCompatActivity {
                     PointMessagesInfo[] pointMessagesInfos = gson.fromJson(String.valueOf(res.getData()), PointMessagesInfo[].class);
                     pointMessagesInfoList = Arrays.asList(pointMessagesInfos);
                     dataBaseHelper.addDataToPointMessageTable(pointMessagesInfoList);
+                    showUpAndDownPointView(pointMessagesInfoList);
                 }
             }
         });
