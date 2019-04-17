@@ -16,6 +16,7 @@ import com.example.administrator.tongxianghui.dao.DataBaseHelper;
 import com.example.administrator.tongxianghui.model.User;
 import com.example.administrator.tongxianghui.model.base.Res;
 import com.example.administrator.tongxianghui.src.second.MyActivity;
+import com.example.administrator.tongxianghui.utils.Ip;
 import com.google.gson.Gson;
 
 import org.apache.commons.lang.StringUtils;
@@ -41,9 +42,8 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText editText;
     private DataBaseHelper dataBaseHelper;
     private MediaType JSON = MediaType.parse("application/json;charset=utf-8");
-    private static final String IP = "192.168.103.139:8001";
-    private static final String IS_REGISTER_URL = "http://" + IP + "/user/is_register";
-    private static final String REGISTER_URL = "http://" + IP + "/user/register";
+    private static final String IS_REGISTER_URL = "http://" + Ip.IP + ":8001/user/is_register";
+    private static final String REGISTER_URL = "http://" + Ip.IP + ":8001/user/register";
     private static final String TAG = RegisterActivity.class.getName();
     private static final int SEEDS = 1000000;
     private Gson gson;

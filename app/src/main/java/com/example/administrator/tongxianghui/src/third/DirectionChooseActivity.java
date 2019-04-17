@@ -26,6 +26,7 @@ import com.example.administrator.tongxianghui.model.DirectionMessageInfo;
 import com.example.administrator.tongxianghui.model.ModifyDirectionMessageReq;
 import com.example.administrator.tongxianghui.model.base.Res;
 import com.example.administrator.tongxianghui.src.four.ChooseBusMessageActivity;
+import com.example.administrator.tongxianghui.utils.Ip;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -52,11 +53,10 @@ public class DirectionChooseActivity extends AppCompatActivity {
     private OkHttpClient okHttpClient;
     private Request request;
     private Call call;
-    private static String IP = "192.168.103.139:8001";
-    private static String GET_Direction_Messages_URL = "http://" + IP + "/bus/direction_messages";
-    private static String POST_Add_Direction_Message_URL = "http://" + IP + "/bus/direction_message";
-    private static String POST_Delete_Direction_Message_URL = "http://" + IP + "/bus/direction_message_id";
-    private static String POST_Modify_Direction_Message_URL = "http://" + IP + "/bus/direction_message_id_name";
+    private static String GET_Direction_Messages_URL = "http://" + Ip.IP + ":8001/bus/direction_messages";
+    private static String POST_Add_Direction_Message_URL = "http://" + Ip.IP + ":8001/bus/direction_message";
+    private static String POST_Delete_Direction_Message_URL = "http://" + Ip.IP + ":8001/bus/direction_message_id";
+    private static String POST_Modify_Direction_Message_URL = "http://" + Ip.IP + ":8001/bus/direction_message_id_name";
     private Gson gson;
     private DataBaseHelper dataBaseHelper;
     private Handler handler;

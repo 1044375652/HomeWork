@@ -1,4 +1,4 @@
-package com.example.administrator.tongxianghui.model.utils;
+package com.example.administrator.tongxianghui.utils;
 
 public class PointMessage {
     public final static String Hua = "花边岭广场";

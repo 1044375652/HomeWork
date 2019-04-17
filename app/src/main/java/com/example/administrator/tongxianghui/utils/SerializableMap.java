@@ -1,4 +1,4 @@
-package com.example.administrator.tongxianghui.model.utils;
+package com.example.administrator.tongxianghui.utils;
 
 import java.io.Serializable;
 import java.util.Map;

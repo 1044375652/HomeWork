@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.example.administrator.tongxianghui.R;
 import com.example.administrator.tongxianghui.dao.DataBaseHelper;
 import com.example.administrator.tongxianghui.model.BusMessage;
+import com.example.administrator.tongxianghui.utils.Ip;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -42,7 +43,7 @@ public class BuyTicketActivity extends AppCompatActivity {
     private Context context;
     private RadioGroup directionGroup;
     private static final String TAG = BuyTicketActivity.class.getName();
-    private static final String URL = "http://192.168.103.251:8001/bus/messages?direction_type=";
+    private static final String URL = "http://" + Ip.IP + ":8001/bus/messages?direction_type=";
     private static List<BusMessage> busMessageList;
     private static List<String> upDate;
     private static List<String> upTime;
