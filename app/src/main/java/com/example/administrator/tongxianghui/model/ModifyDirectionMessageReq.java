@@ -3,7 +3,7 @@ package com.example.administrator.tongxianghui.model;
 public class ModifyDirectionMessageReq {
 
     private int id;
-    private String name;
+    private int directionType;
 
     public int getId() {
         return id;
@@ -14,12 +14,12 @@ public class ModifyDirectionMessageReq {
         return this;
     }
 
-    public String getName() {
-        return name;
+    public int getDirectionType() {
+        return directionType;
     }
 
-    public ModifyDirectionMessageReq setName(String name) {
-        this.name = name;
+    public ModifyDirectionMessageReq setDirectionType(int directionType) {
+        this.directionType = directionType;
         return this;
     }
 }

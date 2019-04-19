@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".src.third.BuyTicketActivity">
+    tools:context=".src.third.BuyTicketActivity"
+    android:id="@+id/thirdBuyTicketGroup">
 
     <TextView
         android:layout_width="wrap_content"

@@ -1,14 +1,14 @@
 package com.example.administrator.tongxianghui.model;
 
 public class AddDirectionMessageReq {
-    private String name;
+    private int directionType;
 
-    public String getName() {
-        return name;
+    public int getDirectionType() {
+        return directionType;
     }
 
-    public AddDirectionMessageReq setName(String name) {
-        this.name = name;
+    public AddDirectionMessageReq setDirectionType(int directionType) {
+        this.directionType = directionType;
         return this;
     }
 }

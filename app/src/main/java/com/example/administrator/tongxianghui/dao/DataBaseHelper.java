@@ -48,9 +48,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static class DirectionMessagesTable {
         private static final String TABLE_NAME = "direction_messages";
         private static final String ID = "_id";
-        private static final String NAME = "name";
+        private static final String DirectionType = "direction_type";
         private static final String STATUS = "direction_status";
-        private static final String SQL = "create table if not exists " + DirectionMessagesTable.TABLE_NAME + "(" + DirectionMessagesTable.ID + " integer primary key," + DirectionMessagesTable.NAME + " varchar(40)," + DirectionMessagesTable.STATUS + " tinyint(1))";
+        private static final String SQL = "create table if not exists " + DirectionMessagesTable.TABLE_NAME + "(" + DirectionMessagesTable.ID + " integer primary key," + DirectionMessagesTable.DirectionType + " tinyint(1)," + DirectionMessagesTable.STATUS + " tinyint(1))";
     }
 
     private static class PointMessageTable {
@@ -181,7 +181,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         while (cursor.moveToNext()) {
             directionMessageInfoList.add(new DirectionMessageInfo()
                     .setId(cursor.getInt(cursor.getColumnIndex(DirectionMessagesTable.ID)))
-                    .setName(cursor.getString(cursor.getColumnIndex(DirectionMessagesTable.NAME)))
+                    .setDirectionType(cursor.getInt(cursor.getColumnIndex(DirectionMessagesTable.DirectionType)))
                     .setDirectionStatus(cursor.getInt(cursor.getColumnIndex(DirectionMessagesTable.STATUS)))
             );
         }
@@ -206,7 +206,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         for (DirectionMessageInfo directionMessageInfo : directionMessageInfoList) {
             contentValues.clear();
             contentValues.put(DirectionMessagesTable.ID, directionMessageInfo.getId());
-            contentValues.put(DirectionMessagesTable.NAME, directionMessageInfo.getName());
+            contentValues.put(DirectionMessagesTable.DirectionType, directionMessageInfo.getDirectionType());
             contentValues.put(DirectionMessagesTable.STATUS, 0);
             sqLiteDatabase.beginTransaction();
             sqLiteDatabase.insert(DirectionMessagesTable.TABLE_NAME, null, contentValues);
@@ -224,7 +224,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         for (DirectionMessageInfo directionMessageInfo : directionMessageInfoList) {
             contentValues.clear();
             contentValues.put(DirectionMessagesTable.STATUS, directionMessageInfo.getDirectionStatus());
-            contentValues.put(DirectionMessagesTable.NAME, directionMessageInfo.getName());
+            contentValues.put(DirectionMessagesTable.DirectionType, directionMessageInfo.getDirectionType());
             sqLiteDatabase.beginTransaction();
             sqLiteDatabase.update(DirectionMessagesTable.TABLE_NAME, contentValues, whereClause, whereArgs);
             sqLiteDatabase.setTransactionSuccessful();

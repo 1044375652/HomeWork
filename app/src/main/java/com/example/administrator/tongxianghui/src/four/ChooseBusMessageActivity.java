@@ -3,7 +3,6 @@ package com.example.administrator.tongxianghui.src.four;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
@@ -12,12 +11,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.administrator.tongxianghui.R;
@@ -74,6 +71,7 @@ public class ChooseBusMessageActivity extends AppCompatActivity {
     private List<BusMessageInfo> busMessageInfoList;
     private static final String Get_Point_Messages_Url = "http://" + Ip.IP + ":8001/point/messages";
     private static final String Add_Up_Point_Message_Url = "http://" + Ip.IP + ":8001/point/message";
+    private static final String Add_Bus_Message_Url = "http://" + Ip.IP + ":8001/bus/add_bus_message";
     private static int SEEDS = 1000000;
     private Random random;
     private MediaType json = MediaType.parse("application/json;charset=utf-8");
@@ -384,4 +382,41 @@ public class ChooseBusMessageActivity extends AppCompatActivity {
         dataBaseHelper.modifyDataToPointMessageTable(pointMessagesInfoList, null, null);
     }
 
+    public void fourSubmitBtn(View view) {
+        Log.i(TAG, "----------------");
+        Log.i(TAG, busMessageInfoList.size() + "");
+        if (busMessageInfoList.size() == 0) {
+            showDialog("您未填写乘车信息，请填写");
+        } else {
+            okHttpClient = new OkHttpClient();
+            gson = new Gson();
+            String msg = gson.toJson(busMessageInfoList);
+            requestBody = RequestBody.create(json, msg);
+            request = new Request.Builder()
+                    .url(Add_Bus_Message_Url)
+                    .post(requestBody)
+                    .build();
+            call = okHttpClient.newCall(request);
+            call.enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    Log.i(TAG, "请求服务器失败");
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    Res res = gson.fromJson(String.valueOf(response.body().string()), Res.class);
+
+                    if (res.getCode() == 200) {
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                toast("提交成功");
+                            }
+                        });
+                    }
+                }
+            });
+        }
+    }
 }

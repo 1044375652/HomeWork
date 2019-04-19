@@ -1,8 +1,13 @@
 package com.example.administrator.tongxianghui.src.third;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -21,6 +28,12 @@ import android.widget.Toast;
 import com.example.administrator.tongxianghui.R;
 import com.example.administrator.tongxianghui.dao.DataBaseHelper;
 import com.example.administrator.tongxianghui.model.BusMessageInfo;
+import com.example.administrator.tongxianghui.model.DirectionMessageInfo;
+import com.example.administrator.tongxianghui.model.ModifyDirectionMessageReq;
+import com.example.administrator.tongxianghui.model.base.Res;
+import com.example.administrator.tongxianghui.src.four.BuyTicketEndActivity;
+import com.example.administrator.tongxianghui.src.four.ChooseBusMessageActivity;
+import com.example.administrator.tongxianghui.utils.ChangeType;
 import com.example.administrator.tongxianghui.utils.Ip;
 import com.google.gson.Gson;
 
@@ -29,26 +42,34 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class BuyTicketActivity extends AppCompatActivity {
     private DataBaseHelper dataBaseHelper;
-    private ListAdapter arrayAdapter;
-    private List<Integer> tickNumber;
     private Context context;
-    private RadioGroup directionGroup;
+    private List<DirectionMessageInfo> directionMessageInfoList;
+    private Gson gson;
+    private OkHttpClient okHttpClient;
+    private Request request;
+    private Call call;
+    private Handler handler;
+    private RequestBody requestBody;
+    private MediaType Json = MediaType.parse("application/json;charset=utf-8");
+    private Intent intent;
+    private TimerTask timerTask;
+    private Timer timer;
+    private LinearLayout parentLinearLayout;
+    private static String GET_Direction_Messages_URL = "http://" + Ip.IP + ":8001/bus/direction_messages";
     private static final String TAG = BuyTicketActivity.class.getName();
-    private static final String URL = "http://" + Ip.IP + ":8001/bus/messages?direction_type=";
-    private static List<BusMessageInfo> busMessageInfoList;
-    private static List<String> upDate;
-    private static List<String> upTime;
-    private static List<String> upPoint;
-    private static List<String> downPoint;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,72 +77,87 @@ public class BuyTicketActivity extends AppCompatActivity {
         setContentView(R.layout.activity_buy_ticket);
         context = BuyTicketActivity.this;
         dataBaseHelper = DataBaseHelper.getDataBaseHelper(context);
+        parentLinearLayout = findViewById(R.id.thirdBuyTicketGroup);
+        handler = new Handler();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        directionGroup = findViewById(R.id.directionGroup);
-        directionGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                selectDataFromLocalDataBase(i);
-                if (busMessageInfoList.size() == 0) {
-                    selectDataFromServiceDataBase(i);
-                }
-                formatData(busMessageInfoList);
+        String[] columns = new String[]{"_id", "direction_type", "direction_status"};
+        directionMessageInfoList = dataBaseHelper.selectDataFromDirectionMessagesTable(columns, null, null);
+        Log.i(TAG, directionMessageInfoList.size() + "");
+        if (directionMessageInfoList.size() == 0) {
+            requestDataFromGetDirectionMessagesURL();
+        } else {
+            if (directionMessageInfoList.get(0).getDirectionStatus() == 1) {
+                requestDataFromGetDirectionMessagesURL();
+            } else {
+                handler.post(() -> addDirectionMessageInfo(directionMessageInfoList));
             }
-        });
-
+        }
     }
 
-    private void selectDataFromLocalDataBase(int index) {
-        String[] columns = new String[]{"_id", "up_date", "up_point", "down_point"};
-        String whereClause = "direction_type=? and is_ok=?";
-        String[] whereArgs = new String[]{"" + index, 1 + ""};
-        busMessageInfoList = dataBaseHelper.selectDataFromBusMessageTable(columns, whereClause, whereArgs);
-    }
-
-    private void selectDataFromServiceDataBase(int index) {
-        OkHttpClient okHttpClient = new OkHttpClient();
-        Request request = new Request.Builder()
-                .url(URL + index)
+    private void requestDataFromGetDirectionMessagesURL() {
+        okHttpClient = new OkHttpClient();
+        request = new Request.Builder()
+                .url(GET_Direction_Messages_URL)
                 .build();
-        Call call = okHttpClient.newCall(request);
+        call = okHttpClient.newCall(request);
         call.enqueue(new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 Log.i(TAG, "请求服务器失败");
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                BusMessageInfo[] busMessageInfos = new Gson().fromJson(response.body().string(), BusMessageInfo[].class);
-                busMessageInfoList = Arrays.asList(busMessageInfos);
-                dataBaseHelper.addDataToBusMessageTable(busMessageInfoList);
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                gson = new Gson();
+                assert response.body() != null;
+                Res res = gson.fromJson(response.body().string(), Res.class);
+                DirectionMessageInfo[] directionMessageInfos = gson.fromJson(String.valueOf(res.getData()), DirectionMessageInfo[].class);
+                directionMessageInfoList = Arrays.asList(directionMessageInfos);
+                dataBaseHelper.deleteDataFromDirectionMessagesTable(null, null);
+                dataBaseHelper.addDataToDirectionMessagesTable(directionMessageInfoList);
+                handler.post(() -> addDirectionMessageInfo(directionMessageInfoList));
             }
         });
     }
 
-    private void formatData(List<BusMessageInfo> busMessageInfos) {
-        toast(busMessageInfos.size() + "");
-        formatUpDate(busMessageInfos);
-        formatUpTime(busMessageInfos);
-        formatUpPoint(busMessageInfos);
-        formatDownPoint(busMessageInfos);
+    private void addDirectionMessageInfo(List<DirectionMessageInfo> directionMessageInfoList) {
+        parentLinearLayout.removeAllViews();
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        for (int i = 0; i < directionMessageInfoList.size(); i++) {
+            Intent intent = new Intent(context, BuyTicketEndActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putInt("directionType", directionMessageInfoList.get(i).getDirectionType());
+            intent.putExtra("directionType", bundle);
+            LinearLayout linearLayout = new LinearLayout(context);
+
+            TextView textView = new TextView(context);
+            String directionMsg = ChangeType.DirectionType.CodeToMsg(directionMessageInfoList.get(i).getDirectionType());
+            Log.i(TAG, directionMessageInfoList.get(i).getDirectionType() + "");
+            textView.setText(directionMsg);
+            textView.setTextSize(18);
+            params2.setMargins(0, 8, 0, 0);
+            textView.setLayoutParams(params2);
+            textView.setTextColor(Color.BLACK);
+
+
+            Button button = new Button(context);
+            button.setBackgroundResource(R.drawable.register_cancel_btn);
+            params.setMargins(30, 10, 10, 0);
+            button.setLayoutParams(params);
+            button.setTextColor(Color.WHITE);
+            button.setText("进入");
+            button.setOnClickListener(view -> startActivity(intent));
+            linearLayout.addView(button);
+            linearLayout.addView(textView);
+            parentLinearLayout.addView(linearLayout);
+        }
     }
 
-    private void formatUpDate(List<BusMessageInfo> busMessageInfos) {
-    }
-
-    private void formatUpTime(List<BusMessageInfo> busMessageInfos) {
-    }
-
-    private void formatUpPoint(List<BusMessageInfo> busMessageInfos) {
-    }
-
-    private void formatDownPoint(List<BusMessageInfo> busMessageInfos) {
-    }
 
     @Override
     protected void onResume() {
@@ -129,83 +165,4 @@ public class BuyTicketActivity extends AppCompatActivity {
 
     }
 
-    public void secondBuyTicketSubmit(View view) {
-    }
-
-    public void secondBuyTicketCancel(View view) {
-    }
-
-    public void chooseTickNumber(View view) {
-        final TextView tickNumbers = findViewById(R.id.tickNumber);
-
-        final PopupWindow popupWindow = new PopupWindow();
-        tickNumber = new ArrayList<Integer>() {{
-            add(1);
-            add(2);
-            add(3);
-        }};
-        arrayAdapter = new ArrayAdapter<>(context, R.layout.buy_ticket_number, tickNumber);
-        final ListView listView = new ListView(context);
-        listView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        listView.setAdapter(arrayAdapter);
-        final ConstraintLayout constraintLayout = findViewById(R.id.buyTicketOtherGroup);
-        final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins(0, getHeight(listView), 0, 0);
-        constraintLayout.setLayoutParams(layoutParams);
-
-        popupWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-        popupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-        popupWindow.setContentView(listView);
-        popupWindow.setTouchable(true);
-        popupWindow.setOutsideTouchable(true);
-        popupWindow.setBackgroundDrawable(new BitmapDrawable());
-        popupWindow.showAsDropDown(tickNumbers, 0, -90);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                layoutParams.setMargins(0, 0, 0, 0);
-                constraintLayout.setLayoutParams(layoutParams);
-                tickNumbers.clearComposingText();
-                String msg = "购买票数：";
-                int number = tickNumber.get(i);
-                msg += number;
-                tickNumbers.setText(msg);
-                popupWindow.dismiss();
-            }
-        });
-    }
-
-    private int getHeight(ListView listView) {
-        ListAdapter listAdapter = listView.getAdapter();
-        int totalHeight = 0;
-        for (int i = 0; i < listAdapter.getCount(); i++) {
-            View view = listAdapter.getView(i, null, listView);
-            view.measure(0, 0);
-            totalHeight += view.getMeasuredHeight();
-        }
-        return totalHeight;
-    }
-
-    private void toast(String msg) {
-        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
-    }
-
-    public void chooseUpDate(View view) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM:dd HH:mm:ss");
-        String msg;
-        for (BusMessageInfo busMessageInfo : busMessageInfoList) {
-            msg = simpleDateFormat.format(busMessageInfo.getUpDate());
-            Log.i(TAG, msg);
-            Log.i(TAG, busMessageInfo.getUpDate() + "");
-        }
-    }
-
-    public void chooseUpTime(View view) {
-    }
-
-    public void chooseUpPoint(View view) {
-    }
-
-    public void chooseDownPoint(View view) {
-    }
 }

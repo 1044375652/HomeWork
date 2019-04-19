@@ -1,6 +1,46 @@
 package com.example.administrator.tongxianghui.utils;
 
 public class ChangeType {
+    public static class DirectionType {
+        public static int MsgToCode(String msg) {
+            switch (msg) {
+                case "惠城、博罗至珠海同乡会包车":
+                    return 1;
+                case "珠海至惠城、博罗同乡会包车":
+                    return 2;
+                case "珠海至惠东、淡水客运站班次":
+                    return 3;
+                case "惠东、淡水至珠海客运站班次":
+                    return 4;
+                case "惠东、淡水至珠海同乡会包车":
+                    return 5;
+                case "珠海至惠东、淡水同乡会包车":
+                    return 6;
+            }
+            return 1;
+        }
+
+
+        public static String CodeToMsg(int code) {
+            switch (code) {
+                case 1:
+                    return "惠城、博罗至珠海同乡会包车";
+                case 2:
+                    return "珠海至惠城、博罗同乡会包车";
+                case 3:
+                    return "珠海至惠东、淡水客运站班次";
+                case 4:
+                    return "惠东、淡水至珠海客运站班次";
+                case 5:
+                    return "惠东、淡水至珠海同乡会包车";
+                case 6:
+                    return "珠海至惠东、淡水同乡会包车";
+            }
+            return "惠城、博罗至珠海同乡会包车";
+        }
+    }
+
+
     public static class PointType {
         public static int MsgToCode(String msg) {
             switch (msg) {
@@ -30,4 +70,5 @@ public class ChangeType {
             return "花边岭广场";
         }
     }
+
 }

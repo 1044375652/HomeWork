@@ -26,6 +26,7 @@ import com.example.administrator.tongxianghui.model.DirectionMessageInfo;
 import com.example.administrator.tongxianghui.model.ModifyDirectionMessageReq;
 import com.example.administrator.tongxianghui.model.base.Res;
 import com.example.administrator.tongxianghui.src.four.ChooseBusMessageActivity;
+import com.example.administrator.tongxianghui.utils.ChangeType;
 import com.example.administrator.tongxianghui.utils.Ip;
 import com.google.gson.Gson;
 
@@ -91,12 +92,14 @@ public class DirectionChooseActivity extends AppCompatActivity {
             final int j = i;
             Intent intent = new Intent(context, ChooseBusMessageActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putInt("directionType", i);
+            bundle.putInt("directionType", directionMessageInfoList.get(i).getDirectionType());
             intent.putExtra("directionType", bundle);
             LinearLayout linearLayout = new LinearLayout(context);
 
             TextView textView = new TextView(context);
-            textView.setText(directionMessageInfoList.get(i).getName());
+            String directionMsg = ChangeType.DirectionType.CodeToMsg(directionMessageInfoList.get(i).getDirectionType());
+            Log.i(TAG, directionMessageInfoList.get(i).getDirectionType() + "");
+            textView.setText(directionMsg);
             textView.setTextSize(18);
             params2.setMargins(0, 8, 0, 0);
             textView.setLayoutParams(params2);
@@ -135,15 +138,16 @@ public class DirectionChooseActivity extends AppCompatActivity {
             button3.setText("修改");
             button3.setOnClickListener(view -> {
                 EditText editText = new EditText(context);
-                editText.setText(directionMessageInfoList.get(j).getName());
+                editText.setText(directionMsg);
                 handler.post(() -> {
                     AlertDialog.Builder modifyDialog = new AlertDialog.Builder(context);
                     modifyDialog.setTitle("乘车信息")
                             .setView(editText)
                             .setPositiveButton("确定", (dialogInterface, i13) -> {
+                                int directionType = ChangeType.DirectionType.MsgToCode(String.valueOf(editText.getText()));
                                 ModifyDirectionMessageReq modifyDirectionMessageReq = new ModifyDirectionMessageReq()
                                         .setId(directionMessageInfoList.get(j).getId())
-                                        .setName(String.valueOf(editText.getText()));
+                                        .setDirectionType(directionType);
                                 modifyDirectionMessage(modifyDirectionMessageReq);
                             })
                             .setNegativeButton("取消", (dialogInterface, i13) -> dialogInterface.dismiss())
@@ -224,7 +228,7 @@ public class DirectionChooseActivity extends AppCompatActivity {
                     List<DirectionMessageInfo> directionMessageInfoList = new ArrayList<>();
                     directionMessageInfoList.add(new DirectionMessageInfo()
                             .setId(modifyDirectionMessageReq.getId())
-                            .setName(modifyDirectionMessageReq.getName())
+                            .setDirectionType(modifyDirectionMessageReq.getDirectionType())
                             .setDirectionStatus(0));
                     String whereClause = "_id=?";
                     String[] whereArgs = new String[]{"" + modifyDirectionMessageReq.getId()};
@@ -249,38 +253,43 @@ public class DirectionChooseActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        String[] columns = new String[]{"_id", "name", "direction_status"};
+        String[] columns = new String[]{"_id", "direction_type", "direction_status"};
         directionMessageInfoList = dataBaseHelper.selectDataFromDirectionMessagesTable(columns, null, null);
-        if (directionMessageInfoList.size() == 0 || directionMessageInfoList.get(0).getDirectionStatus() == 1) {
-            okHttpClient = new OkHttpClient();
-            request = new Request.Builder()
-                    .url(GET_Direction_Messages_URL)
-                    .build();
-            call = okHttpClient.newCall(request);
-            call.enqueue(new Callback() {
-                @Override
-                public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                    Log.i(TAG, "请求服务器失败");
-                }
-
-                @Override
-                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                    gson = new Gson();
-                    assert response.body() != null;
-                    Res res = gson.fromJson(response.body().string(), Res.class);
-                    DirectionMessageInfo[] directionMessageInfos = gson.fromJson(String.valueOf(res.getData()), DirectionMessageInfo[].class);
-                    directionMessageInfoList = Arrays.asList(directionMessageInfos);
-                    dataBaseHelper.deleteDataFromDirectionMessagesTable(null, null);
-                    dataBaseHelper.addDataToDirectionMessagesTable(directionMessageInfoList);
-                    handler.post(() -> addDirectionMessageInfo(directionMessageInfoList));
-
-                }
-            });
+        if (directionMessageInfoList.size() == 0) {
+            requestDataFromGetDirectionMessagesURL();
         } else {
-            handler.post(() -> addDirectionMessageInfo(directionMessageInfoList));
+            if (directionMessageInfoList.get(0).getDirectionStatus() == 1) {
+                requestDataFromGetDirectionMessagesURL();
+            } else {
+                handler.post(() -> addDirectionMessageInfo(directionMessageInfoList));
+            }
         }
+    }
 
+    private void requestDataFromGetDirectionMessagesURL() {
+        okHttpClient = new OkHttpClient();
+        request = new Request.Builder()
+                .url(GET_Direction_Messages_URL)
+                .build();
+        call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.i(TAG, "请求服务器失败");
+            }
 
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                gson = new Gson();
+                assert response.body() != null;
+                Res res = gson.fromJson(response.body().string(), Res.class);
+                DirectionMessageInfo[] directionMessageInfos = gson.fromJson(String.valueOf(res.getData()), DirectionMessageInfo[].class);
+                directionMessageInfoList = Arrays.asList(directionMessageInfos);
+                dataBaseHelper.deleteDataFromDirectionMessagesTable(null, null);
+                dataBaseHelper.addDataToDirectionMessagesTable(directionMessageInfoList);
+                handler.post(() -> addDirectionMessageInfo(directionMessageInfoList));
+            }
+        });
     }
 
     public void addDirectionMessages(View view) {
@@ -291,9 +300,10 @@ public class DirectionChooseActivity extends AppCompatActivity {
                 .setView(editText)
                 .setPositiveButton("确定", (dialogInterface, i) -> {
                     String directionMsg = String.valueOf(editText.getText());
+                    int directionCode = ChangeType.DirectionType.MsgToCode(directionMsg);
                     okHttpClient = new OkHttpClient();
                     gson = new Gson();
-                    AddDirectionMessageReq addDirectionMessageReq = new AddDirectionMessageReq().setName(directionMsg);
+                    AddDirectionMessageReq addDirectionMessageReq = new AddDirectionMessageReq().setDirectionType(directionCode);
                     String msg = gson.toJson(addDirectionMessageReq);
                     requestBody = RequestBody.create(Json, msg);
                     request = new Request.Builder()
