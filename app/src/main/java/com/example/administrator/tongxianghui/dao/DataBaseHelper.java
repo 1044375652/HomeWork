@@ -141,7 +141,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     //修改数据
 
 
-    //增加数据BusMessage
+    //增加数据BusMessageTable
     public boolean addDataToBusMessageTable(List<BusMessageInfo> busMessageInfos) {
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         ContentValues contentValues = getContentValues();
@@ -158,7 +158,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    //选择数据BusMessage
+    //选择数据BusMessageTable
     public List<BusMessageInfo> selectDataFromBusMessageTable(String[] columns, String whereClause, String[] whereArgs) {
         SQLiteDatabase sqLiteDatabase = getReadableDatabase();
         List<BusMessageInfo> busMessageInfos = new ArrayList<>();
@@ -169,6 +169,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     .setUpDate(cursor.getLong(cursor.getColumnIndex(BusMessageTable.Up_Date))));
         }
         return busMessageInfos;
+    }
+
+    //删除数据BusMessageTable
+    public void deleteDataFromBusMessageTable(String whereClause, String[] whereArgs) {
+        SQLiteDatabase sqLiteDatabase = getMyWritableDatabase();
+        sqLiteDatabase.delete(BusMessageTable.TABLE_NAME, whereClause, whereArgs);
     }
 
     //选择数据DirectionMessagesTable

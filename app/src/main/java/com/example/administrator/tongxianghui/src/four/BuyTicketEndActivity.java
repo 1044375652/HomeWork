@@ -77,7 +77,7 @@ public class BuyTicketEndActivity extends AppCompatActivity {
         fourBuyTicketEndCurrentDirection.setText(ChangeType.Change.switchDirectionMsg(directionType));
         String[] columns = new String[]{"_id", "up_date", "up_point", "direction_type"};
         busMessageInfoList = dataBaseHelper.selectDataFromBusMessageTable(columns, null, null);
-        Log.i(TAG,busMessageInfoList.size()+"");
+        Log.i(TAG, busMessageInfoList.size() + "");
         if (busMessageInfoList.size() == 0) {
             requestFromGetBusMessageUrl();
         } else {
@@ -114,9 +114,8 @@ public class BuyTicketEndActivity extends AppCompatActivity {
                 Res res = gson.fromJson(String.valueOf(response.body().string()), Res.class);
                 BusMessageInfo[] busMessageInfos = gson.fromJson(String.valueOf(res.getData()), BusMessageInfo[].class);
                 busMessageInfoList = Arrays.asList(busMessageInfos);
-                for (BusMessageInfo busMessageInfo : busMessageInfoList) {
-                    Log.i(TAG, busMessageInfo.getUpPoint() + "");
-                }
+                dataBaseHelper.deleteDataFromBusMessageTable("direction_type=?", new String[]{"" + directionType});
+                dataBaseHelper.addDataToBusMessageTable(busMessageInfoList);
                 formatData(busMessageInfoList);
             }
         });
@@ -138,6 +137,8 @@ public class BuyTicketEndActivity extends AppCompatActivity {
                 Res res = gson.fromJson(String.valueOf(response.body().string()), Res.class);
                 PointMessagesInfo[] pointMessagesInfos = gson.fromJson(String.valueOf(res.getData()), PointMessagesInfo[].class);
                 pointMessagesInfoList = Arrays.asList(pointMessagesInfos);
+                dataBaseHelper.deleteDataToPointMessageTable("direction_type=? and point_type=?", new String[]{"" + directionType, "" + 1});
+                dataBaseHelper.addDataToPointMessageTable(pointMessagesInfoList);
                 formatDataOfDownPoint(pointMessagesInfoList);
             }
         });
