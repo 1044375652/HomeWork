@@ -42,32 +42,88 @@ public class ChangeType {
 
 
     public static class PointType {
+
         public static int MsgToCode(String msg) {
             switch (msg) {
                 case "花边岭广场":
-                    return 1;
+                    return 0;
                 case "惠大":
-                    return 2;
+                    return 1;
                 case "江北华贸":
-                    return 3;
+                    return 2;
                 case "博罗华侨中学":
+                    return 3;
+                case "香洲梅华中":
                     return 4;
+                case "北理工":
+                    return 5;
+                case "北师":
+                    return 6;
+                case "UIC":
+                    return 7;
+                case "官塘公交站":
+                    return 8;
+                case "惠东客运站":
+                    return 9;
+                case "淡水客运站":
+                    return 10;
             }
-            return 1;
+            return 0;
         }
 
         public static String CodeToMsg(int code) {
             switch (code) {
-                case 1:
+                case 0:
                     return "花边岭广场";
-                case 2:
+                case 1:
                     return "惠大";
-                case 3:
+                case 2:
                     return "江北华贸";
-                case 4:
+                case 3:
                     return "博罗华侨中学";
+                case 4:
+                    return "香洲梅华中";
+                case 5:
+                    return "北理工";
+                case 6:
+                    return "北师";
+                case 7:
+                    return "UIC";
+                case 8:
+                    return "官塘公交站";
+                case 9:
+                    return "惠东客运站";
+                case 10:
+                    return "淡水客运站l";
             }
             return "花边岭广场";
+        }
+    }
+
+    public static class Change {
+        public static String switchDirectionMsg(int directionType) {
+            String msg = "当前乘车方向：";
+            switch (directionType) {
+                case 0:
+                    msg += "惠城、博罗至珠海同乡会包车";
+                    break;
+                case 1:
+                    msg += "珠海至惠城、博罗同乡会包车";
+                    break;
+                case 2:
+                    msg += "珠海至惠东、淡水客运站班次";
+                    break;
+                case 3:
+                    msg += "惠东、淡水至珠海客运站班次";
+                    break;
+                case 4:
+                    msg += "惠东、淡水至珠海同乡会包车";
+                    break;
+                case 5:
+                    msg += "珠海至惠东、淡水同乡会包车";
+                    break;
+            }
+            return msg;
         }
     }
 

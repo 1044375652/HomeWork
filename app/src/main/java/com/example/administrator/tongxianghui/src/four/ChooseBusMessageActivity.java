@@ -99,13 +99,13 @@ public class ChooseBusMessageActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         TextView fourCurrentDirection = findViewById(R.id.fourCurrentDirection);
-        fourCurrentDirection.setText(switchDirectionMsg(directionType));
+        fourCurrentDirection.setText(ChangeType.Change.switchDirectionMsg(directionType));
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        String[] columns = new String[]{"_id", "name", "point_type", "direction_type", "point_status"};
+        String[] columns = new String[]{"_id", "point_name", "point_type", "direction_type", "point_status"};
         pointMessagesInfoList = dataBaseHelper.selectDataFromPointMessageTable(columns, null, null);
         for (PointMessagesInfo pointMessagesInfo : pointMessagesInfoList) {
             Log.i(TAG, pointMessagesInfo.getPointStatus() + "");
@@ -125,31 +125,6 @@ public class ChooseBusMessageActivity extends AppCompatActivity {
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
     }
 
-
-    private String switchDirectionMsg(int directionType) {
-        String msg = "当前乘车方向：";
-        switch (directionType) {
-            case 0:
-                msg += "惠城、博罗至珠海同乡会包车";
-                break;
-            case 1:
-                msg += "珠海至惠城、博罗同乡会包车";
-                break;
-            case 2:
-                msg += "珠海至惠东、淡水客运站班次";
-                break;
-            case 3:
-                msg += "惠东、淡水至珠海客运站班次";
-                break;
-            case 4:
-                msg += "惠东、淡水至珠海同乡会包车";
-                break;
-            case 5:
-                msg += "珠海至惠东、淡水同乡会包车";
-                break;
-        }
-        return msg;
-    }
 
     private List<PointMessage> requestDataFromService() {
         okHttpClient = new OkHttpClient();
@@ -185,10 +160,10 @@ public class ChooseBusMessageActivity extends AppCompatActivity {
         for (PointMessagesInfo pointMessagesInfo : pointMessagesInfoList) {
             switch (pointMessagesInfo.getPointType()) {
                 case 0:
-                    upPointList.add(pointMessagesInfo.getName());
+                    upPointList.add(ChangeType.PointType.CodeToMsg(pointMessagesInfo.getPointName()));
                     break;
                 case 1:
-                    downPointList.add(pointMessagesInfo.getName());
+                    downPointList.add(ChangeType.PointType.CodeToMsg(pointMessagesInfo.getPointName()));
                     break;
             }
         }
@@ -313,7 +288,7 @@ public class ChooseBusMessageActivity extends AppCompatActivity {
                         PointMessagesInfo pointMessagesInfo = new PointMessagesInfo();
 
                         pointMessagesInfo.setId(random.nextInt(SEEDS))
-                                .setName(msg)
+                                .setPointName(ChangeType.PointType.MsgToCode(msg))
                                 .setPointType(0)
                                 .setDirectionType(directionType);
 

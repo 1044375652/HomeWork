@@ -56,11 +56,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static class PointMessageTable {
         private static final String TABLE_NAME = "point_messages";
         private static final String ID = "_id";
-        private static final String NAME = "name";
+        private static final String PointName = "point_name";
         private static final String PointType = "point_type";
         private static final String DirectionType = "direction_type";
         private static final String STATUS = "point_status";
-        private static final String SQL = "create table if not exists " + PointMessageTable.TABLE_NAME + "(" + PointMessageTable.ID + " INTEGER PRIMARY KEY," + PointMessageTable.NAME + " varchar(20)," + PointMessageTable.PointType + " tinyint(1)," + PointMessageTable.DirectionType + " tinyint(1)," + PointMessageTable.STATUS + " tinyint(1))";
+        private static final String SQL = "create table if not exists " + PointMessageTable.TABLE_NAME + "(" + PointMessageTable.ID + " INTEGER PRIMARY KEY," + PointMessageTable.PointName + " tinyint(1)," + PointMessageTable.PointType + " tinyint(1)," + PointMessageTable.DirectionType + " tinyint(1)," + PointMessageTable.STATUS + " tinyint(1))";
     }
 
     public static synchronized DataBaseHelper getDataBaseHelper(Context context) {
@@ -241,7 +241,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         while (cursor.moveToNext()) {
             pointMessagesInfoList.add(new PointMessagesInfo()
                     .setId(cursor.getInt(cursor.getColumnIndex(PointMessageTable.ID)))
-                    .setName(cursor.getString(cursor.getColumnIndex(PointMessageTable.NAME)))
+                    .setPointName(cursor.getInt(cursor.getColumnIndex(PointMessageTable.PointName)))
                     .setDirectionType(cursor.getInt(cursor.getColumnIndex(PointMessageTable.DirectionType)))
                     .setPointType(cursor.getInt(cursor.getColumnIndex(PointMessageTable.PointType)))
                     .setPointStatus(cursor.getInt(cursor.getColumnIndex(PointMessageTable.STATUS)))
@@ -258,7 +258,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             contentValues.clear();
             contentValues.put(PointMessageTable.ID, pointMessagesInfo.getId());
             contentValues.put(PointMessageTable.DirectionType, pointMessagesInfo.getDirectionType());
-            contentValues.put(PointMessageTable.NAME, pointMessagesInfo.getName());
+            contentValues.put(PointMessageTable.PointName, pointMessagesInfo.getPointName());
             contentValues.put(PointMessageTable.PointType, pointMessagesInfo.getPointType());
             contentValues.put(PointMessageTable.STATUS, 0);
             sqLiteDatabase.beginTransaction();

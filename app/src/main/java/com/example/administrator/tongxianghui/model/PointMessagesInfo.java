@@ -2,7 +2,7 @@ package com.example.administrator.tongxianghui.model;
 
 public class PointMessagesInfo {
     private int id;
-    private String name;
+    private int pointName;
     private int pointType;
     private int directionType;
     private int pointStatus;
@@ -16,12 +16,12 @@ public class PointMessagesInfo {
         return this;
     }
 
-    public String getName() {
-        return name;
+    public int getPointName() {
+        return pointName;
     }
 
-    public PointMessagesInfo setName(String name) {
-        this.name = name;
+    public PointMessagesInfo setPointName(int pointName) {
+        this.pointName = pointName;
         return this;
     }
 

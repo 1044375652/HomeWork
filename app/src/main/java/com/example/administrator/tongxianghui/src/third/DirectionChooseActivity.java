@@ -54,9 +54,9 @@ public class DirectionChooseActivity extends AppCompatActivity {
     private OkHttpClient okHttpClient;
     private Request request;
     private Call call;
-    private static String GET_Direction_Messages_URL = "http://" + Ip.IP + ":8001/bus/direction_messages";
-    private static String POST_Add_Direction_Message_URL = "http://" + Ip.IP + ":8001/bus/direction_message";
-    private static String POST_Delete_Direction_Message_URL = "http://" + Ip.IP + ":8001/bus/direction_message_id";
+    private static String GET_Direction_Messages_URL = "http://" + Ip.IP + ":8001/direction/direction_messages";
+    private static String POST_Add_Direction_Message_URL = "http://" + Ip.IP + ":8001/direction/direction_message";
+    private static String POST_Delete_Direction_Message_URL = "http://" + Ip.IP + ":8001/direction/direction_message_id";
     private static String POST_Modify_Direction_Message_URL = "http://" + Ip.IP + ":8001/bus/direction_message_id_name";
     private Gson gson;
     private DataBaseHelper dataBaseHelper;
