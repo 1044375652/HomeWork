@@ -63,6 +63,16 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         private static final String SQL = "create table if not exists " + PointMessageTable.TABLE_NAME + "(" + PointMessageTable.ID + " INTEGER PRIMARY KEY," + PointMessageTable.PointName + " tinyint(1)," + PointMessageTable.PointType + " tinyint(1)," + PointMessageTable.DirectionType + " tinyint(1)," + PointMessageTable.STATUS + " tinyint(1))";
     }
 
+    private static class OrderMessageTable {
+        private static final String TABLE_NAME = "order_messages";
+        private static final String ID = "_id";
+        private static final String UpPoint = "up_point";
+        private static final String DownPoint = "down_point";
+        private static final String DirectionType = "direction_type";
+        private static final String TicketNumber = "ticket_number";
+        private static final String SQL = "create table if not exists " + OrderMessageTable.TABLE_NAME + "(" + OrderMessageTable.ID + " INTEGER PRIMARY KEY," + OrderMessageTable.UpPoint + " tinyint(1)," + OrderMessageTable.DownPoint + " tinyint(1)," + OrderMessageTable.DirectionType + " tinyint(1)," + OrderMessageTable.TicketNumber + " tinyint(1))";
+    }
+
     public static synchronized DataBaseHelper getDataBaseHelper(Context context) {
         if (dataBaseHelper == null) {
             dataBaseHelper = new DataBaseHelper(context);
@@ -84,6 +94,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(BusMessageTable.SQL);
         sqLiteDatabase.execSQL(DirectionMessagesTable.SQL);
         sqLiteDatabase.execSQL(PointMessageTable.SQL);
+        sqLiteDatabase.execSQL(OrderMessageTable.SQL);
     }
 
     @Override
