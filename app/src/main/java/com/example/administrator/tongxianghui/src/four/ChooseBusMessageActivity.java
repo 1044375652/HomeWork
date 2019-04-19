@@ -171,8 +171,8 @@ public class ChooseBusMessageActivity extends AppCompatActivity {
         ListView upPointListView = new ListView(context);
         ListView downPointListView = new ListView(context);
 
-        ArrayAdapter upPointArrayAdapter = new ArrayAdapter(context, R.layout.choose_point_item, upPointList);
-        ArrayAdapter downPointArrayAdapter = new ArrayAdapter(context, R.layout.choose_point_item, downPointList);
+        ArrayAdapter upPointArrayAdapter = new ArrayAdapter(context, R.layout.activity_choose_point_item, upPointList);
+        ArrayAdapter downPointArrayAdapter = new ArrayAdapter(context, R.layout.activity_choose_point_item, downPointList);
 
         upPointListView.setAdapter(upPointArrayAdapter);
         downPointListView.setAdapter(downPointArrayAdapter);
