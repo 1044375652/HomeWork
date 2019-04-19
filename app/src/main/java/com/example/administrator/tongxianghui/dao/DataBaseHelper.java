@@ -342,7 +342,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             contentValues.put(OrderMessageTable.UpDate, orderMessageInfo.getUpDate());
             contentValues.put(OrderMessageTable.TicketNumber, orderMessageInfo.getTickerNumber());
             sqLiteDatabase.beginTransaction();
-            sqLiteDatabase.insert(PointMessageTable.TABLE_NAME, null, contentValues);
+            sqLiteDatabase.insert(OrderMessageTable.TABLE_NAME, null, contentValues);
             sqLiteDatabase.setTransactionSuccessful();
             sqLiteDatabase.endTransaction();
         }

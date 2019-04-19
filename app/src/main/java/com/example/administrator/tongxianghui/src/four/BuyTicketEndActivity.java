@@ -29,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -64,6 +65,8 @@ public class BuyTicketEndActivity extends AppCompatActivity {
     private TextView buyTicketEndActivityDownPoint;
     private TextView buyTicketEndActivityUpDate;
     private EditText buyTicketEndActivityTickerNumber;
+    private Random random;
+    private static final int SEEDS = 100000;
 
 
     @Override
@@ -84,6 +87,7 @@ public class BuyTicketEndActivity extends AppCompatActivity {
         buyTicketEndActivityDownPoint = findViewById(R.id.buyTicketEndActivityDownPoint);
         buyTicketEndActivityUpDate = findViewById(R.id.buyTicketEndActivityUpDate);
         buyTicketEndActivityTickerNumber = findViewById(R.id.buyTicketEndActivityTickerNumber);
+        random = new Random();
     }
 
     @Override
@@ -275,6 +279,7 @@ public class BuyTicketEndActivity extends AppCompatActivity {
                             long upDate = MyUtils.StringToDate(upDateMsg);
                             int tickerNumber = Integer.parseInt(tickerNumberMsg);
                             orderMessageInfo.setUpPoint(upPoint)
+                                    .setId(random.nextInt(SEEDS))
                                     .setDownPoint(downPoint)
                                     .setUpDate(upDate)
                                     .setTickerNumber(tickerNumber)
@@ -319,6 +324,7 @@ public class BuyTicketEndActivity extends AppCompatActivity {
                     List<OrderMessageInfo> orderMessageInfoList = new ArrayList<>();
                     orderMessageInfoList.add(orderMessageInfo);
                     dataBaseHelper.addDataToOrderMessageTable(orderMessageInfoList);
+                    Log.i(TAG, "success");
                 }
             }
         });
