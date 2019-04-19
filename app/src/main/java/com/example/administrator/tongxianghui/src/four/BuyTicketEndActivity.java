@@ -77,6 +77,7 @@ public class BuyTicketEndActivity extends AppCompatActivity {
         fourBuyTicketEndCurrentDirection.setText(ChangeType.Change.switchDirectionMsg(directionType));
         String[] columns = new String[]{"_id", "up_date", "up_point", "direction_type"};
         busMessageInfoList = dataBaseHelper.selectDataFromBusMessageTable(columns, null, null);
+        Log.i(TAG,busMessageInfoList.size()+"");
         if (busMessageInfoList.size() == 0) {
             requestFromGetBusMessageUrl();
         } else {
@@ -113,6 +114,9 @@ public class BuyTicketEndActivity extends AppCompatActivity {
                 Res res = gson.fromJson(String.valueOf(response.body().string()), Res.class);
                 BusMessageInfo[] busMessageInfos = gson.fromJson(String.valueOf(res.getData()), BusMessageInfo[].class);
                 busMessageInfoList = Arrays.asList(busMessageInfos);
+                for (BusMessageInfo busMessageInfo : busMessageInfoList) {
+                    Log.i(TAG, busMessageInfo.getUpPoint() + "");
+                }
                 formatData(busMessageInfoList);
             }
         });

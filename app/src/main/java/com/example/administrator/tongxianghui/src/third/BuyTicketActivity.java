@@ -68,7 +68,7 @@ public class BuyTicketActivity extends AppCompatActivity {
     private TimerTask timerTask;
     private Timer timer;
     private LinearLayout parentLinearLayout;
-    private static String GET_Direction_Messages_URL = "http://" + Ip.IP + ":8001/bus/direction_messages";
+    private static String GET_Direction_Messages_URL = "http://" + Ip.IP + ":8001/direction/direction_messages";
     private static final String TAG = BuyTicketActivity.class.getName();
 
     @Override
