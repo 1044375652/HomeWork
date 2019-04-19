@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.example.administrator.tongxianghui.model.BusMessageInfo;
 import com.example.administrator.tongxianghui.model.DirectionMessageInfo;
+import com.example.administrator.tongxianghui.model.OrderMessageInfo;
 import com.example.administrator.tongxianghui.model.PointMessagesInfo;
 import com.example.administrator.tongxianghui.model.User;
 
@@ -70,7 +71,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         private static final String DownPoint = "down_point";
         private static final String DirectionType = "direction_type";
         private static final String TicketNumber = "ticket_number";
-        private static final String SQL = "create table if not exists " + OrderMessageTable.TABLE_NAME + "(" + OrderMessageTable.ID + " INTEGER PRIMARY KEY," + OrderMessageTable.UpPoint + " tinyint(1)," + OrderMessageTable.DownPoint + " tinyint(1)," + OrderMessageTable.DirectionType + " tinyint(1)," + OrderMessageTable.TicketNumber + " tinyint(1))";
+        private static final String UpDate = "up_date";
+        private static final String SQL = "create table if not exists " + OrderMessageTable.TABLE_NAME + "(" + OrderMessageTable.ID + " INTEGER PRIMARY KEY," + OrderMessageTable.UpPoint + " tinyint(1)," + OrderMessageTable.DownPoint + " tinyint(1)," + OrderMessageTable.DirectionType + " tinyint(1)," + OrderMessageTable.TicketNumber + " tinyint(1)," + OrderMessageTable.UpDate + " int(13))";
     }
 
     public static synchronized DataBaseHelper getDataBaseHelper(Context context) {
@@ -305,6 +307,54 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public boolean deleteDataToPointMessageTable(String whereClause, String[] whereArgs) {
         SQLiteDatabase sqLiteDatabase = getMyWritableDatabase();
         sqLiteDatabase.delete(PointMessageTable.TABLE_NAME, whereClause, whereArgs);
+        return true;
+    }
+
+
+    //选择数据OrderMessageTable
+    public List<OrderMessageInfo> selectDataFromOrderMessageTable(String[] columns, String whereClause, String[] wherArgs) {
+        SQLiteDatabase sqLiteDatabase = getMyReadableDatabase();
+        Cursor cursor = sqLiteDatabase.query(OrderMessageTable.TABLE_NAME, columns, whereClause, wherArgs, null, null, null);
+        List<OrderMessageInfo> orderMessageInfoList = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            orderMessageInfoList.add(new OrderMessageInfo()
+                    .setId(cursor.getInt(cursor.getColumnIndex(OrderMessageTable.ID)))
+                    .setDirectionType(cursor.getInt(cursor.getColumnIndex(OrderMessageTable.DirectionType)))
+                    .setUpDate(cursor.getInt(cursor.getColumnIndex(OrderMessageTable.UpDate)))
+                    .setDownPoint(cursor.getInt(cursor.getColumnIndex(OrderMessageTable.DownPoint)))
+                    .setTickerNumber(cursor.getInt(cursor.getColumnIndex(OrderMessageTable.TicketNumber)))
+                    .setUpPoint(cursor.getInt(cursor.getColumnIndex(OrderMessageTable.UpPoint)))
+            );
+        }
+        return orderMessageInfoList;
+    }
+
+    //添加数据OrderMessageTable
+    public void addDataToOrderMessageTable(List<OrderMessageInfo> orderMessageInfoList) {
+        SQLiteDatabase sqLiteDatabase = getMyWritableDatabase();
+        ContentValues contentValues = getContentValues();
+        for (OrderMessageInfo orderMessageInfo : orderMessageInfoList) {
+            contentValues.clear();
+            contentValues.put(OrderMessageTable.ID, orderMessageInfo.getId());
+            contentValues.put(OrderMessageTable.DirectionType, orderMessageInfo.getDirectionType());
+            contentValues.put(OrderMessageTable.DownPoint, orderMessageInfo.getDownPoint());
+            contentValues.put(OrderMessageTable.UpPoint, orderMessageInfo.getUpPoint());
+            contentValues.put(OrderMessageTable.UpDate, orderMessageInfo.getUpDate());
+            contentValues.put(OrderMessageTable.TicketNumber, orderMessageInfo.getTickerNumber());
+            sqLiteDatabase.beginTransaction();
+            sqLiteDatabase.insert(PointMessageTable.TABLE_NAME, null, contentValues);
+            sqLiteDatabase.setTransactionSuccessful();
+            sqLiteDatabase.endTransaction();
+        }
+    }
+
+    //修改数据OrderMessageTable
+
+
+    //删除数据OrderMessageTable
+    public boolean deleteDataToOrderMessageTable(String whereClause, String[] whereArgs) {
+        SQLiteDatabase sqLiteDatabase = getMyWritableDatabase();
+        sqLiteDatabase.delete(OrderMessageTable.TABLE_NAME, whereClause, whereArgs);
         return true;
     }
 

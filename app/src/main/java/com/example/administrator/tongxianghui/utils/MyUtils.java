@@ -12,7 +12,7 @@ public class MyUtils {
     }
 
     public static long StringToDate(String string) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM:dd HH:mm");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         try {
             return simpleDateFormat.parse(string).getTime();
         } catch (ParseException e) {

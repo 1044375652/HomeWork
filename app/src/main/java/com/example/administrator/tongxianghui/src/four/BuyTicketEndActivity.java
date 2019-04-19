@@ -279,6 +279,7 @@ public class BuyTicketEndActivity extends AppCompatActivity {
                                     .setUpDate(upDate)
                                     .setTickerNumber(tickerNumber)
                                     .setDirectionType(directionType);
+                            requestDataToPost_Order_Message_Url(orderMessageInfo);
                         }
                     })
                     .create()
@@ -313,7 +314,12 @@ public class BuyTicketEndActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                Res res = gson.fromJson(response)
+                Res res = gson.fromJson(String.valueOf(response.body().string()), Res.class);
+                if (res.getCode() == 200) {
+                    List<OrderMessageInfo> orderMessageInfoList = new ArrayList<>();
+                    orderMessageInfoList.add(orderMessageInfo);
+                    dataBaseHelper.addDataToOrderMessageTable(orderMessageInfoList);
+                }
             }
         });
     }
