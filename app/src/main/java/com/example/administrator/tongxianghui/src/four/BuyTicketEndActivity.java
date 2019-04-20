@@ -305,13 +305,9 @@ public class BuyTicketEndActivity extends AppCompatActivity {
                 if (res.getCode() == 200) {
                     List<OrderMessageInfo> orderMessageInfoList = new ArrayList<>();
                     orderMessageInfoList.add(orderMessageInfo);
+                    orderMessageInfo.setPalteNumber("123456");
                     dataBaseHelper.addDataToOrderMessageTable(orderMessageInfoList);
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            MyUtils.toast(context, "提交成功");
-                        }
-                    });
+                    handler.post(() -> MyUtils.toast(context, "提交成功"));
                 }
             }
         });

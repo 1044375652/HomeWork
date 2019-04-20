@@ -41,6 +41,7 @@
     <string name="add">添加</string>
     <string name="submit_bus_message">提交信息</string>
     <string name="choose">选择</string>
+    <string name="plate_number">车牌号码</string>
 
     <string-array name="direction1_up">
         <item>

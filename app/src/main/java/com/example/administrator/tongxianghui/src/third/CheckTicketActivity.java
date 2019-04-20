@@ -48,7 +48,7 @@ public class CheckTicketActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        String[] columns = new String[]{"_id", "up_point", "down_point", "direction_type", "ticket_number", "phone", "up_date"};
+        String[] columns = new String[]{"_id", "up_point", "down_point", "direction_type", "ticket_number", "phone", "up_date","plate_number"};
         orderMessageInfoList = dataBaseHelper.selectDataFromOrderMessageTable(columns, null, null);
         SimpleAdapter simpleAdapter = new SimpleAdapter(context, getData(orderMessageInfoList), R.layout.activity_check_ticket_item, new String[]{"checkTicketActivityUpPoint", "checkTicketActivityDownPoint", "checkTicketActivityUpDate", "checkTicketActivityTicketNumber", "checkTicketActivityPhone"}, new int[]{R.id.checkTicketActivityUpPoint, R.id.checkTicketActivityDownPoint, R.id.checkTicketActivityUpDate, R.id.checkTicketActivityTicketNumber, R.id.checkTicketActivityPhone});
         checkTicketActivityListView.setAdapter(simpleAdapter);

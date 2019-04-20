@@ -8,6 +8,7 @@ public class OrderMessageInfo {
     private int tickerNumber;
     private long upDate;
     private String phone;
+    private String palteNumber;
 
     public int getId() {
         return id;
@@ -69,6 +70,15 @@ public class OrderMessageInfo {
 
     public OrderMessageInfo setPhone(String phone) {
         this.phone = phone;
+        return this;
+    }
+
+    public String getPalteNumber() {
+        return palteNumber;
+    }
+
+    public OrderMessageInfo setPalteNumber(String palteNumber) {
+        this.palteNumber = palteNumber;
         return this;
     }
 }

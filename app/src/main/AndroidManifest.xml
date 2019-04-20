@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".src.third.CheckTicketActivity"></activity>
+        <activity android:name=".src.four.RunningActivity"></activity>
+        <activity android:name=".src.third.CheckTicketActivity" />
         <activity android:name=".src.third.MyTripActivity" />
         <activity android:name=".src.four.BuyTicketEndActivity" />
         <activity
