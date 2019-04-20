@@ -317,10 +317,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             orderMessageInfoList.add(new OrderMessageInfo()
                     .setId(cursor.getInt(cursor.getColumnIndex(OrderMessageTable.ID)))
                     .setDirectionType(cursor.getInt(cursor.getColumnIndex(OrderMessageTable.DirectionType)))
-                    .setUpDate(cursor.getInt(cursor.getColumnIndex(OrderMessageTable.UpDate)))
+                    .setUpDate(cursor.getLong(cursor.getColumnIndex(OrderMessageTable.UpDate)))
                     .setDownPoint(cursor.getInt(cursor.getColumnIndex(OrderMessageTable.DownPoint)))
                     .setTickerNumber(cursor.getInt(cursor.getColumnIndex(OrderMessageTable.TicketNumber)))
                     .setUpPoint(cursor.getInt(cursor.getColumnIndex(OrderMessageTable.UpPoint)))
+                    .setPhone(cursor.getString(cursor.getColumnIndex(OrderMessageTable.Phone)))
             );
         }
         return orderMessageInfoList;

@@ -7,49 +7,64 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/up_point" />
+        android:text="@string/up_point"
+        android:textSize="16sp" />
 
 
     <TextView
+        android:id="@+id/checkTicketActivityUpPoint"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textSize="16sp" />
 
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/down_point" />
+        android:text="@string/down_point"
+        android:textSize="16sp" />
 
     <TextView
+        android:id="@+id/checkTicketActivityDownPoint"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textSize="16sp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/up_date" />
+        android:text="@string/up_date"
+        android:textSize="16sp" />
 
 
     <TextView
+        android:id="@+id/checkTicketActivityUpDate"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textSize="16sp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/ticket_number" />
+        android:text="@string/ticket_number"
+        android:textSize="16sp" />
 
     <TextView
+        android:id="@+id/checkTicketActivityTicketNumber"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textSize="16sp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/phone" />
+        android:text="@string/phone"
+        android:textSize="16sp" />
 
     <TextView
+        android:id="@+id/checkTicketActivityPhone"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textSize="16sp" />
 
 </LinearLayout>
