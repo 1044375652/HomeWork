@@ -82,7 +82,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         private static final String UserStatus = "user_status";
         private static final String Phone = "phone";
         private static final String PlateNumber = "plate_number";
-        private static final String SQL = "create table if no exists " + RunningUserStatusTable.TABLE_NAME + "(" + RunningUserStatusTable.ID + " integer primary key not null," + RunningUserStatusTable.Phone + " varchar(11)," + RunningUserStatusTable.PlateNumber + " varchar(6)," + RunningUserStatusTable.UserStatus + " tinyint(1))";
+        private static final String SQL = "create table if not exists " + RunningUserStatusTable.TABLE_NAME + "(" + RunningUserStatusTable.ID + " integer primary key not null," + RunningUserStatusTable.Phone + " varchar(11)," + RunningUserStatusTable.PlateNumber + " varchar(6)," + RunningUserStatusTable.UserStatus + " tinyint(1))";
     }
 
     public static synchronized DataBaseHelper getDataBaseHelper(Context context) {

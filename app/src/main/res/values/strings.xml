@@ -44,6 +44,10 @@
     <string name="plate_number">车牌号码</string>
     <string name="status">状态</string>
     <string name="running_msg">行驶信息</string>
+    <string name="not_see">没看到车</string>
+    <string name="in_car">我已上车</string>
+    <string name="to_wc">上厕所</string>
+    <string name="back_from_wc">从厕所回来了</string>
 
     <string-array name="direction1_up">
         <item>

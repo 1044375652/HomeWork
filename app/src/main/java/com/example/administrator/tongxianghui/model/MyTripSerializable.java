@@ -5,6 +5,7 @@ import java.io.Serializable;
 public class MyTripSerializable implements Serializable {
     private int directionType;
     private String plateNumber;
+    private String phone;
 
     public int getDirectionType() {
         return directionType;
@@ -21,6 +22,15 @@ public class MyTripSerializable implements Serializable {
 
     public MyTripSerializable setPlateNumber(String plateNumber) {
         this.plateNumber = plateNumber;
+        return this;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public MyTripSerializable setPhone(String phone) {
+        this.phone = phone;
         return this;
     }
 }

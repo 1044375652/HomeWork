@@ -1,6 +1,8 @@
 package com.example.administrator.tongxianghui.src.four;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Button;
@@ -30,7 +32,7 @@ public class RunningActivity extends AppCompatActivity {
     private TextView runningActivityPlateNumber;
     private TextView runningActivityStatus;
     private Button runningActivityNotSee;
-    private Button runningActivitySee;
+    private Button runningActivityInCar;
     private Button runningActivityToWc;
     private Button runningActivityBackFromWc;
     private DataBaseHelper dataBaseHelper;
@@ -40,6 +42,7 @@ public class RunningActivity extends AppCompatActivity {
     private static final String Get_User_Status_Url = "http://" + Ip.IP + ":8001/status/message";
     private int status;
     private Gson gson;
+    private Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,20 +54,21 @@ public class RunningActivity extends AppCompatActivity {
         runningActivityPlateNumber = findViewById(R.id.runningActivityPlateNumber);
         runningActivityStatus = findViewById(R.id.runningActivityStatus);
         runningActivityNotSee = findViewById(R.id.runningActivityNotSee);
-        runningActivitySee = findViewById(R.id.runningActivitySee);
+        runningActivityInCar = findViewById(R.id.runningActivityInCar);
         runningActivityToWc = findViewById(R.id.runningActivityToWc);
         runningActivityBackFromWc = findViewById(R.id.runningActivityBackFromWc);
         runningActivityPlateNumber.setText(myTripSerializable.getPlateNumber());
         runningActivityCurrentDirection.setText("当前乘车方向：" + ChangeType.DirectionType.CodeToMsg(myTripSerializable.getDirectionType()));
         okHttpClient = new OkHttpClient();
         gson = new Gson();
+        handler = new Handler();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         request = new Request.Builder()
-                .url(Get_User_Status_Url)
+                .url(Get_User_Status_Url + "?phone=" + myTripSerializable.getPhone())
                 .build();
         call = okHttpClient.newCall(request);
         call.enqueue(new Callback() {
@@ -77,7 +81,9 @@ public class RunningActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 Res res = gson.fromJson(String.valueOf(response.body().string()), Res.class);
                 if (res.getCode() == 200) {
-                    status = (int) res.getData();
+                    Log.i(TAG, res.getData().getClass() + "");
+                    Log.i(TAG, res.getData() + "");
+                    status = new Double((Double) res.getData()).intValue();
                     showTextView(status);
                 }
             }
@@ -85,8 +91,12 @@ public class RunningActivity extends AppCompatActivity {
     }
 
     private void showTextView(int status) {
-        runningActivityStatus.setText(ChangeType.UserStatusType.CodeToMsg(status));
-
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                runningActivityStatus.setText(ChangeType.UserStatusType.CodeToMsg(status));
+            }
+        });
     }
 
 }

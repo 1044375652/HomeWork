@@ -59,9 +59,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5sp"
+            android:textColor="#f40"
             android:textSize="18sp" />
 
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
         <Button
+            android:text="@string/not_see"
             android:id="@+id/runningActivityNotSee"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -71,7 +80,8 @@
             android:textColor="@color/white" />
 
         <Button
-            android:id="@+id/runningActivitySee"
+            android:text="@string/in_car"
+            android:id="@+id/runningActivityInCar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="3sp"
@@ -80,6 +90,7 @@
             android:textColor="@color/white" />
 
         <Button
+            android:text="@string/to_wc"
             android:id="@+id/runningActivityToWc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -89,6 +100,7 @@
             android:textColor="@color/white" />
 
         <Button
+            android:text="@string/back_from_wc"
             android:id="@+id/runningActivityBackFromWc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -96,6 +108,9 @@
             android:layout_marginRight="3sp"
             android:background="@drawable/index_btn"
             android:textColor="@color/white" />
+
+
+
 
     </LinearLayout>
 

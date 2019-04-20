@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -28,6 +29,7 @@ public class MyTripActivity extends AppCompatActivity {
     private Context context;
     private List<OrderMessageInfo> orderMessageInfoList;
     private ListView myTripActivityListView;
+    private static final String TAG = MyTripActivity.class.getName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,8 @@ public class MyTripActivity extends AppCompatActivity {
                 MyTripSerializable myTripSerializable = new MyTripSerializable();
                 myTripSerializable.setPlateNumber(orderMessageInfoList.get(i).getPalteNumber());
                 myTripSerializable.setDirectionType(orderMessageInfoList.get(i).getDirectionType());
+                myTripSerializable.setPhone(orderMessageInfoList.get(i).getPhone());
+                Log.i(TAG, orderMessageInfoList.get(i).getPhone());
                 bundle.putSerializable("myTripSerializable", myTripSerializable);
                 Intent intent = new Intent(context, RunningActivity.class);
                 intent.putExtra("myTripSerializable", bundle);
