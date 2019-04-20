@@ -16,6 +16,7 @@ import com.example.administrator.tongxianghui.dao.DataBaseHelper;
 import com.example.administrator.tongxianghui.model.BusMessageInfo;
 import com.example.administrator.tongxianghui.model.OrderMessageInfo;
 import com.example.administrator.tongxianghui.model.PointMessagesInfo;
+import com.example.administrator.tongxianghui.model.RunningUserStatusInfo;
 import com.example.administrator.tongxianghui.model.base.Res;
 import com.example.administrator.tongxianghui.utils.ChangeType;
 import com.example.administrator.tongxianghui.utils.Ip;
@@ -47,6 +48,7 @@ public class BuyTicketEndActivity extends AppCompatActivity {
     private static final String Get_Bus_Message_Url = "http://" + Ip.IP + ":8001/bus/messages";
     private static final String Get_Point_Messages_Url = "http://" + Ip.IP + ":8001/point/messages";
     private static final String Post_Order_Message_Url = "http://" + Ip.IP + ":8001/order/message";
+    private static final String Post_User_Status_Url = "http://" + Ip.IP + ":8001/status/user";
     private OkHttpClient okHttpClient;
     private Request request;
     private Response response;
@@ -306,8 +308,30 @@ public class BuyTicketEndActivity extends AppCompatActivity {
                     List<OrderMessageInfo> orderMessageInfoList = new ArrayList<>();
                     orderMessageInfoList.add(orderMessageInfo);
                     orderMessageInfo.setPalteNumber("123456");
-                    dataBaseHelper.addDataToOrderMessageTable(orderMessageInfoList);
-                    handler.post(() -> MyUtils.toast(context, "提交成功"));
+                    RunningUserStatusInfo runningUserStatusInfo = new RunningUserStatusInfo();
+                    runningUserStatusInfo.setPhone(orderMessageInfo.getPhone())
+                            .setPlateNumber(orderMessageInfo.getPalteNumber())
+                            .setUserStatus(0);
+                    String obj = gson.toJson(runningUserStatusInfo);
+                    requestBody = RequestBody.create(json, obj);
+                    request = new Request.Builder()
+                            .url(Post_User_Status_Url)
+                            .post(requestBody)
+                            .build();
+                    call = okHttpClient.newCall(request);
+                    call.enqueue(new Callback() {
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                            Log.i(TAG, "请求服务器失败");
+                        }
+
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+                            dataBaseHelper.addDataToOrderMessageTable(orderMessageInfoList);
+                            handler.post(() -> MyUtils.toast(context, "提交成功"));
+                        }
+                    });
+
                 }
             }
         });

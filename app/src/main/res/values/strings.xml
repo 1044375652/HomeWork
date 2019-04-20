@@ -42,6 +42,8 @@
     <string name="submit_bus_message">提交信息</string>
     <string name="choose">选择</string>
     <string name="plate_number">车牌号码</string>
+    <string name="status">状态</string>
+    <string name="running_msg">行驶信息</string>
 
     <string-array name="direction1_up">
         <item>

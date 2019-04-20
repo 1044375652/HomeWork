@@ -40,7 +40,6 @@ public class ChangeType {
         }
     }
 
-
     public static class PointType {
 
         public static int MsgToCode(String msg) {
