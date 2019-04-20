@@ -126,4 +126,35 @@ public class ChangeType {
         }
     }
 
+    public static class UserStatusType {
+        //0：没看到车，1：看到车，2：服务区上厕所，3：上完厕所回来
+        public static String CodeToMsg(int code) {
+            switch (code) {
+                case 0:
+                    return "没看到车";
+                case 1:
+                    return "看到车";
+                case 2:
+                    return "服务区上厕所";
+                case 3:
+                    return "上完厕所回来";
+            }
+            return "没看到车";
+        }
+
+        public static int MsgToCode(String msg) {
+            switch (msg) {
+                case "没看到车":
+                    return 0;
+                case "看到车":
+                    return 1;
+                case "服务区上厕所":
+                    return 2;
+                case "上完厕所回来":
+                    return 3;
+            }
+            return 0;
+        }
+    }
+
 }

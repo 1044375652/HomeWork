@@ -6,12 +6,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.example.administrator.tongxianghui.model.BusMessageInfo;
 import com.example.administrator.tongxianghui.model.DirectionMessageInfo;
 import com.example.administrator.tongxianghui.model.OrderMessageInfo;
 import com.example.administrator.tongxianghui.model.PointMessagesInfo;
+import com.example.administrator.tongxianghui.model.RunningUserStatusInfo;
 import com.example.administrator.tongxianghui.model.User;
 
 import java.util.ArrayList;
@@ -76,6 +76,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         private static final String SQL = "create table if not exists " + OrderMessageTable.TABLE_NAME + "(" + OrderMessageTable.ID + " INTEGER PRIMARY KEY," + OrderMessageTable.UpPoint + " tinyint(1)," + OrderMessageTable.DownPoint + " tinyint(1)," + OrderMessageTable.DirectionType + " tinyint(1)," + OrderMessageTable.TicketNumber + " tinyint(1)," + OrderMessageTable.UpDate + " int(13)," + OrderMessageTable.Phone + " varchar(11)," + OrderMessageTable.PlateNumber + " varchar(5))";
     }
 
+    private static class RunningUserStatusTable {
+        private static final String TABLE_NAME = "running_user_status";
+        private static final String ID = "_id";
+        private static final String UserStatus = "user_status";
+        private static final String Phone = "phone";
+        private static final String PlateNumber = "plate_number";
+        private static final String SQL = "create table if no exists " + RunningUserStatusTable.TABLE_NAME + "(" + RunningUserStatusTable.ID + " integer primary key not null," + RunningUserStatusTable.Phone + " varchar(11)," + RunningUserStatusTable.PlateNumber + " varchar(6)," + RunningUserStatusTable.UserStatus + " tinyint(1))";
+    }
+
     public static synchronized DataBaseHelper getDataBaseHelper(Context context) {
         if (dataBaseHelper == null) {
             dataBaseHelper = new DataBaseHelper(context);
@@ -98,6 +107,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(DirectionMessagesTable.SQL);
         sqLiteDatabase.execSQL(PointMessageTable.SQL);
         sqLiteDatabase.execSQL(OrderMessageTable.SQL);
+        sqLiteDatabase.execSQL(RunningUserStatusTable.SQL);
     }
 
     @Override
@@ -358,6 +368,46 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public boolean deleteDataToOrderMessageTable(String whereClause, String[] whereArgs) {
         SQLiteDatabase sqLiteDatabase = getMyWritableDatabase();
         sqLiteDatabase.delete(OrderMessageTable.TABLE_NAME, whereClause, whereArgs);
+        return true;
+    }
+
+    //选择数据RunningUserStatusTable
+    public List<RunningUserStatusInfo> selectDataFromRunningUserStatusTable(String[] columns, String whereClause, String[] wherArgs) {
+        SQLiteDatabase sqLiteDatabase = getMyReadableDatabase();
+        Cursor cursor = sqLiteDatabase.query(OrderMessageTable.TABLE_NAME, columns, whereClause, wherArgs, null, null, null);
+        List<RunningUserStatusInfo> runningUserStatusInfoList = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            runningUserStatusInfoList.add(new RunningUserStatusInfo()
+                    .setId(cursor.getInt(cursor.getColumnIndex(RunningUserStatusTable.ID)))
+                    .setPhone(cursor.getString(cursor.getColumnIndex(RunningUserStatusTable.Phone)))
+                    .setPlateNumber(cursor.getString(cursor.getColumnIndex(RunningUserStatusTable.PlateNumber)))
+                    .setUserStatus(cursor.getInt(cursor.getColumnIndex(RunningUserStatusTable.PlateNumber)))
+            );
+        }
+        return runningUserStatusInfoList;
+    }
+
+    //添加数据RunningUserStatusTable
+    public void addDataToRunningUserStatusTable(List<RunningUserStatusInfo> runningUserStatusInfoList) {
+        SQLiteDatabase sqLiteDatabase = getMyWritableDatabase();
+        ContentValues contentValues = getContentValues();
+        for (RunningUserStatusInfo runningUserStatusInfo : runningUserStatusInfoList) {
+            contentValues.clear();
+            contentValues.put(RunningUserStatusTable.UserStatus, runningUserStatusInfo.getUserStatus());
+            sqLiteDatabase.beginTransaction();
+            sqLiteDatabase.insert(RunningUserStatusTable.TABLE_NAME, null, contentValues);
+            sqLiteDatabase.setTransactionSuccessful();
+            sqLiteDatabase.endTransaction();
+        }
+    }
+
+    //修改数据RunningUserStatusTable
+
+
+    //删除数据RunningUserStatusTable
+    public boolean deleteDataToRunningUserStatusTable(String whereClause, String[] whereArgs) {
+        SQLiteDatabase sqLiteDatabase = getMyWritableDatabase();
+        sqLiteDatabase.delete(RunningUserStatusTable.TABLE_NAME, whereClause, whereArgs);
         return true;
     }
 

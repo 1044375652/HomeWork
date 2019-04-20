@@ -35,10 +35,10 @@
             android:textSize="18sp" />
 
         <TextView
-            android:layout_marginLeft="5sp"
             android:id="@+id/runningActivityPlateNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="5sp"
             android:textSize="18sp" />
 
     </LinearLayout>
@@ -55,11 +55,47 @@
             android:textSize="18sp" />
 
         <TextView
-            android:layout_marginLeft="5sp"
             android:id="@+id/runningActivityStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="5sp"
             android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/runningActivityNotSee"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3sp"
+            android:layout_marginRight="3sp"
+            android:background="@drawable/index_btn"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/runningActivitySee"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3sp"
+            android:layout_marginRight="3sp"
+            android:background="@drawable/index_btn"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/runningActivityToWc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3sp"
+            android:layout_marginRight="3sp"
+            android:background="@drawable/index_btn"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/runningActivityBackFromWc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3sp"
+            android:layout_marginRight="3sp"
+            android:background="@drawable/index_btn"
+            android:textColor="@color/white" />
 
     </LinearLayout>
 
@@ -75,10 +111,10 @@
             android:textSize="18sp" />
 
         <TextView
-            android:layout_marginLeft="5sp"
             android:id="@+id/runningActivityRunningMsg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="5sp"
             android:textSize="18sp" />
 
     </LinearLayout>
