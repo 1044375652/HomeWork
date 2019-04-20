@@ -95,22 +95,8 @@ public class BuyTicketEndActivity extends AppCompatActivity {
         super.onStart();
         fourBuyTicketEndCurrentDirection = findViewById(R.id.fourBuyTicketEndCurrentDirection);
         fourBuyTicketEndCurrentDirection.setText(ChangeType.Change.switchDirectionMsg(directionType));
-        String[] columns = new String[]{"_id", "up_date", "up_point", "direction_type"};
-        busMessageInfoList = dataBaseHelper.selectDataFromBusMessageTable(columns, null, null);
-        Log.i(TAG, busMessageInfoList.size() + "");
-        if (busMessageInfoList.size() == 0) {
-            requestFromGetBusMessageUrl();
-        } else {
-            formatData(busMessageInfoList);
-        }
-
-        String[] columns2 = new String[]{"_id", "point_name", "point_type", "direction_type", "point_status"};
-        pointMessagesInfoList = dataBaseHelper.selectDataFromPointMessageTable(columns2, null, null);
-        if (pointMessagesInfoList.size() == 0) {
-            requestFromGetPointMessagesUrl();
-        } else {
-            formatDataOfDownPoint(pointMessagesInfoList);
-        }
+        requestFromGetBusMessageUrl();
+        requestFromGetPointMessagesUrl();
     }
 
 
@@ -155,11 +141,11 @@ public class BuyTicketEndActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 Res res = gson.fromJson(String.valueOf(response.body().string()), Res.class);
-                PointMessagesInfo[] pointMessagesInfos = gson.fromJson(String.valueOf(res.getData()), PointMessagesInfo[].class);
-                pointMessagesInfoList = Arrays.asList(pointMessagesInfos);
-                dataBaseHelper.deleteDataToPointMessageTable("direction_type=? and point_type=?", new String[]{"" + directionType, "" + 1});
-                dataBaseHelper.addDataToPointMessageTable(pointMessagesInfoList);
-                formatDataOfDownPoint(pointMessagesInfoList);
+                if (res.getCode() == 200) {
+                    PointMessagesInfo[] pointMessagesInfos = gson.fromJson(String.valueOf(res.getData()), PointMessagesInfo[].class);
+                    pointMessagesInfoList = Arrays.asList(pointMessagesInfos);
+                    formatDataOfDownPoint(pointMessagesInfoList);
+                }
             }
         });
     }
@@ -237,20 +223,10 @@ public class BuyTicketEndActivity extends AppCompatActivity {
     }
 
     public void buyTicketEndActivityAdd(View view) {
-
-
         String upPointMsg = String.valueOf(buyTicketEndActivityUpPoint.getText());
-
-
         String downPointMsg = String.valueOf(buyTicketEndActivityDownPoint.getText());
-
-
         String upDateMsg = String.valueOf(buyTicketEndActivityUpDate.getText());
-
-
         String tickerNumberMsg = String.valueOf(buyTicketEndActivityTickerNumber.getText());
-
-
         if (StringUtils.isBlank(upPointMsg)) {
             showErrorDialog(context, "上车点未选择");
         } else if (StringUtils.isBlank(downPointMsg)) {
@@ -284,7 +260,7 @@ public class BuyTicketEndActivity extends AppCompatActivity {
                                     .setUpDate(upDate)
                                     .setTickerNumber(tickerNumber)
                                     .setDirectionType(directionType);
-                            requestDataToPost_Order_Message_Url(orderMessageInfo);
+                            requestDataToPostOrderMessageUrl(orderMessageInfo);
                         }
                     })
                     .create()
@@ -303,7 +279,7 @@ public class BuyTicketEndActivity extends AppCompatActivity {
                 }).create().show();
     }
 
-    private void requestDataToPost_Order_Message_Url(OrderMessageInfo orderMessageInfo) {
+    private void requestDataToPostOrderMessageUrl(OrderMessageInfo orderMessageInfo) {
         String obj = gson.toJson(orderMessageInfo);
         requestBody = RequestBody.create(json, obj);
         request = new Request.Builder()

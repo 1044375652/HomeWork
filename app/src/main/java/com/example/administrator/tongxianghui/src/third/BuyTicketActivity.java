@@ -84,18 +84,7 @@ public class BuyTicketActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        String[] columns = new String[]{"_id", "direction_type", "direction_status"};
-        directionMessageInfoList = dataBaseHelper.selectDataFromDirectionMessagesTable(columns, null, null);
-        Log.i(TAG, directionMessageInfoList.size() + "");
-        if (directionMessageInfoList.size() == 0) {
-            requestDataFromGetDirectionMessagesURL();
-        } else {
-            if (directionMessageInfoList.get(0).getDirectionStatus() == 1) {
-                requestDataFromGetDirectionMessagesURL();
-            } else {
-                handler.post(() -> addDirectionMessageInfo(directionMessageInfoList));
-            }
-        }
+        requestDataFromGetDirectionMessagesURL();
     }
 
     private void requestDataFromGetDirectionMessagesURL() {
@@ -115,11 +104,11 @@ public class BuyTicketActivity extends AppCompatActivity {
                 gson = new Gson();
                 assert response.body() != null;
                 Res res = gson.fromJson(response.body().string(), Res.class);
-                DirectionMessageInfo[] directionMessageInfos = gson.fromJson(String.valueOf(res.getData()), DirectionMessageInfo[].class);
-                directionMessageInfoList = Arrays.asList(directionMessageInfos);
-                dataBaseHelper.deleteDataFromDirectionMessagesTable(null, null);
-                dataBaseHelper.addDataToDirectionMessagesTable(directionMessageInfoList);
-                handler.post(() -> addDirectionMessageInfo(directionMessageInfoList));
+                if (res.getCode() == 200) {
+                    DirectionMessageInfo[] directionMessageInfos = gson.fromJson(String.valueOf(res.getData()), DirectionMessageInfo[].class);
+                    directionMessageInfoList = Arrays.asList(directionMessageInfos);
+                    handler.post(() -> addDirectionMessageInfo(directionMessageInfoList));
+                }
             }
         });
     }
@@ -128,23 +117,19 @@ public class BuyTicketActivity extends AppCompatActivity {
         parentLinearLayout.removeAllViews();
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        for (int i = 0; i < directionMessageInfoList.size(); i++) {
+        for (DirectionMessageInfo directionMessageInfo : directionMessageInfoList) {
             Intent intent = new Intent(context, BuyTicketEndActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putInt("directionType", directionMessageInfoList.get(i).getDirectionType());
+            bundle.putInt("directionType", directionMessageInfo.getDirectionType());
             intent.putExtra("directionType", bundle);
             LinearLayout linearLayout = new LinearLayout(context);
-
             TextView textView = new TextView(context);
-            String directionMsg = ChangeType.DirectionType.CodeToMsg(directionMessageInfoList.get(i).getDirectionType());
-            Log.i(TAG, directionMessageInfoList.get(i).getDirectionType() + "");
+            String directionMsg = ChangeType.DirectionType.CodeToMsg(directionMessageInfo.getDirectionType());
             textView.setText(directionMsg);
             textView.setTextSize(18);
             params2.setMargins(0, 8, 0, 0);
             textView.setLayoutParams(params2);
             textView.setTextColor(Color.BLACK);
-
-
             Button button = new Button(context);
             button.setBackgroundResource(R.drawable.register_cancel_btn);
             params.setMargins(30, 10, 10, 0);

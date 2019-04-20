@@ -23,17 +23,17 @@ public class ChangeType {
 
         public static String CodeToMsg(int code) {
             switch (code) {
-                case 1:
+                case 0:
                     return "惠城、博罗至珠海同乡会包车";
-                case 2:
+                case 1:
                     return "珠海至惠城、博罗同乡会包车";
-                case 3:
+                case 2:
                     return "珠海至惠东、淡水客运站班次";
-                case 4:
+                case 3:
                     return "惠东、淡水至珠海客运站班次";
-                case 5:
+                case 4:
                     return "惠东、淡水至珠海同乡会包车";
-                case 6:
+                case 5:
                     return "珠海至惠东、淡水同乡会包车";
             }
             return "惠城、博罗至珠海同乡会包车";
