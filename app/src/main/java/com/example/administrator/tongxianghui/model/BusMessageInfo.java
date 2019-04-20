@@ -2,7 +2,7 @@ package com.example.administrator.tongxianghui.model;
 
 public class BusMessageInfo {
     private int id;
-    private int upPoint;
+    private int point;
     private long upDate;
     private int directionType;
 
@@ -15,15 +15,14 @@ public class BusMessageInfo {
         return this;
     }
 
-    public int getUpPoint() {
-        return upPoint;
+    public int getPoint() {
+        return point;
     }
 
-    public BusMessageInfo setUpPoint(int upPoint) {
-        this.upPoint = upPoint;
+    public BusMessageInfo setPoint(int point) {
+        this.point = point;
         return this;
     }
-
 
     public long getUpDate() {
         return upDate;

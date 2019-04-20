@@ -70,8 +70,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         private static final String DownPoint = "down_point";
         private static final String DirectionType = "direction_type";
         private static final String TicketNumber = "ticket_number";
+        private static final String Phone = "phone";
         private static final String UpDate = "up_date";
-        private static final String SQL = "create table if not exists " + OrderMessageTable.TABLE_NAME + "(" + OrderMessageTable.ID + " INTEGER PRIMARY KEY," + OrderMessageTable.UpPoint + " tinyint(1)," + OrderMessageTable.DownPoint + " tinyint(1)," + OrderMessageTable.DirectionType + " tinyint(1)," + OrderMessageTable.TicketNumber + " tinyint(1)," + OrderMessageTable.UpDate + " int(13))";
+        private static final String SQL = "create table if not exists " + OrderMessageTable.TABLE_NAME + "(" + OrderMessageTable.ID + " INTEGER PRIMARY KEY," + OrderMessageTable.UpPoint + " tinyint(1)," + OrderMessageTable.DownPoint + " tinyint(1)," + OrderMessageTable.DirectionType + " tinyint(1)," + OrderMessageTable.TicketNumber + " tinyint(1)," + OrderMessageTable.UpDate + " int(13)," + OrderMessageTable.Phone + " varchar(11))";
     }
 
     public static synchronized DataBaseHelper getDataBaseHelper(Context context) {
@@ -159,7 +160,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         ContentValues contentValues = getContentValues();
         for (BusMessageInfo busMessageInfo : busMessageInfos) {
             contentValues.clear();
-            contentValues.put(BusMessageTable.Up_Point, busMessageInfo.getUpPoint());
+            contentValues.put(BusMessageTable.Up_Point, busMessageInfo.getPoint());
             contentValues.put(BusMessageTable.Direction_Type, busMessageInfo.getDirectionType());
             contentValues.put(BusMessageTable.Up_Date, busMessageInfo.getUpDate());
             sqLiteDatabase.beginTransaction();
@@ -177,7 +178,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         Cursor cursor = sqLiteDatabase.query(BusMessageTable.TABLE_NAME, columns, whereClause, whereArgs, null, null, null);
         while (cursor.moveToNext()) {
             busMessageInfos.add(new BusMessageInfo().setId(cursor.getInt(cursor.getColumnIndex(BusMessageTable.ID)))
-                    .setUpPoint(cursor.getInt(cursor.getColumnIndex(BusMessageTable.Up_Point)))
+                    .setPoint(cursor.getInt(cursor.getColumnIndex(BusMessageTable.Up_Point)))
                     .setUpDate(cursor.getLong(cursor.getColumnIndex(BusMessageTable.Up_Date))));
         }
         return busMessageInfos;
@@ -337,6 +338,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             contentValues.put(OrderMessageTable.UpPoint, orderMessageInfo.getUpPoint());
             contentValues.put(OrderMessageTable.UpDate, orderMessageInfo.getUpDate());
             contentValues.put(OrderMessageTable.TicketNumber, orderMessageInfo.getTickerNumber());
+            contentValues.put(OrderMessageTable.TicketNumber, orderMessageInfo.getTickerNumber());
+            contentValues.put(OrderMessageTable.Phone, orderMessageInfo.getPhone());
             sqLiteDatabase.beginTransaction();
             sqLiteDatabase.insert(OrderMessageTable.TABLE_NAME, null, contentValues);
             sqLiteDatabase.setTransactionSuccessful();

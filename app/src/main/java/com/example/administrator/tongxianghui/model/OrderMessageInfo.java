@@ -7,6 +7,7 @@ public class OrderMessageInfo {
     private int directionType;
     private int tickerNumber;
     private long upDate;
+    private String phone;
 
     public int getId() {
         return id;
@@ -59,6 +60,15 @@ public class OrderMessageInfo {
 
     public OrderMessageInfo setUpDate(long upDate) {
         this.upDate = upDate;
+        return this;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public OrderMessageInfo setPhone(String phone) {
+        this.phone = phone;
         return this;
     }
 }

@@ -65,6 +65,7 @@ public class BuyTicketEndActivity extends AppCompatActivity {
     private TextView buyTicketEndActivityDownPoint;
     private TextView buyTicketEndActivityUpDate;
     private EditText buyTicketEndActivityTickerNumber;
+    private EditText buyTicketEndActivityPhone;
     private Random random;
     private static final int SEEDS = 100000;
 
@@ -86,6 +87,7 @@ public class BuyTicketEndActivity extends AppCompatActivity {
         buyTicketEndActivityUpPoint = findViewById(R.id.buyTicketEndActivityUpPoint);
         buyTicketEndActivityDownPoint = findViewById(R.id.buyTicketEndActivityDownPoint);
         buyTicketEndActivityUpDate = findViewById(R.id.buyTicketEndActivityUpDate);
+        buyTicketEndActivityPhone = findViewById(R.id.buyTicketEndActivityPhone);
         buyTicketEndActivityTickerNumber = findViewById(R.id.buyTicketEndActivityTickerNumber);
         random = new Random();
     }
@@ -157,7 +159,7 @@ public class BuyTicketEndActivity extends AppCompatActivity {
 
     private void formatDataOfUpPoint(List<BusMessageInfo> busMessageInfoList) {
         for (BusMessageInfo busMessageInfo : busMessageInfoList) {
-            upPointList.add(ChangeType.PointType.CodeToMsg(busMessageInfo.getUpPoint()));
+            upPointList.add(ChangeType.PointType.CodeToMsg(busMessageInfo.getPoint()));
         }
 
     }
@@ -227,6 +229,7 @@ public class BuyTicketEndActivity extends AppCompatActivity {
         String downPointMsg = String.valueOf(buyTicketEndActivityDownPoint.getText());
         String upDateMsg = String.valueOf(buyTicketEndActivityUpDate.getText());
         String tickerNumberMsg = String.valueOf(buyTicketEndActivityTickerNumber.getText());
+        String phoneMsg = String.valueOf(buyTicketEndActivityPhone.getText());
         if (StringUtils.isBlank(upPointMsg)) {
             showErrorDialog(context, "上车点未选择");
         } else if (StringUtils.isBlank(downPointMsg)) {
@@ -235,10 +238,12 @@ public class BuyTicketEndActivity extends AppCompatActivity {
             showErrorDialog(context, "上车时间未选择");
         } else if (StringUtils.isBlank(tickerNumberMsg)) {
             showErrorDialog(context, "票数未选择");
+        } else if (StringUtils.isBlank(phoneMsg)) {
+            showErrorDialog(context, "电话未填写");
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setTitle("购票信息是否正确？")
-                    .setMessage("上车点：" + upPointMsg + "，下车点：" + downPointMsg + "，上车时间：" + upDateMsg + "，票数：" + tickerNumberMsg)
+                    .setMessage("上车点：" + upPointMsg + "，下车点：" + downPointMsg + "，上车时间：" + upDateMsg + "，票数：" + tickerNumberMsg + "，电话号：" + phoneMsg)
                     .setNegativeButton("返回", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -259,7 +264,8 @@ public class BuyTicketEndActivity extends AppCompatActivity {
                                     .setDownPoint(downPoint)
                                     .setUpDate(upDate)
                                     .setTickerNumber(tickerNumber)
-                                    .setDirectionType(directionType);
+                                    .setDirectionType(directionType)
+                                    .setPhone(phoneMsg);
                             requestDataToPostOrderMessageUrl(orderMessageInfo);
                         }
                     })
@@ -300,7 +306,12 @@ public class BuyTicketEndActivity extends AppCompatActivity {
                     List<OrderMessageInfo> orderMessageInfoList = new ArrayList<>();
                     orderMessageInfoList.add(orderMessageInfo);
                     dataBaseHelper.addDataToOrderMessageTable(orderMessageInfoList);
-                    Log.i(TAG, "success");
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            MyUtils.toast(context, "提交成功");
+                        }
+                    });
                 }
             }
         });

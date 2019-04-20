@@ -36,11 +36,11 @@
                 android:text="@string/up_point" />
 
             <TextView
-                android:layout_marginLeft="5sp"
-                android:layout_marginRight="5sp"
                 android:id="@+id/buyTicketEndActivityUpPoint"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5sp"
+                android:layout_marginRight="5sp" />
 
             <Button
                 android:layout_width="wrap_content"
@@ -65,11 +65,11 @@
                 android:text="@string/down_point" />
 
             <TextView
-                android:layout_marginLeft="5sp"
-                android:layout_marginRight="5sp"
                 android:id="@+id/buyTicketEndActivityDownPoint"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5sp"
+                android:layout_marginRight="5sp" />
 
             <Button
                 android:layout_width="wrap_content"
@@ -94,11 +94,11 @@
                 android:text="@string/up_date" />
 
             <TextView
-                android:layout_marginLeft="5sp"
-                android:layout_marginRight="5sp"
                 android:id="@+id/buyTicketEndActivityUpDate"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5sp"
+                android:layout_marginRight="5sp" />
 
             <Button
                 android:layout_width="wrap_content"
@@ -133,15 +133,36 @@
         </LinearLayout>
 
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10sp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/phone" />
+
+            <EditText
+                android:id="@+id/buyTicketEndActivityPhone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="6"
+                android:inputType="number" />
+
+
+        </LinearLayout>
+
+
     </LinearLayout>
 
 
     <Button
-        android:onClick="buyTicketEndActivityAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
         android:background="@drawable/index_btn"
+        android:onClick="buyTicketEndActivityAdd"
         android:text="@string/submit_bus_message"
         android:textColor="@color/white" />
 

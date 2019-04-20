@@ -242,7 +242,7 @@ public class ChooseBusMessageActivity extends AppCompatActivity {
                                 .setId(random.nextInt(SEEDS))
                                 .setDirectionType(directionType)
                                 .setUpDate(fourUpPointTime)
-                                .setUpPoint(ChangeType.PointType.MsgToCode(upPointMsg))
+                                .setPoint(ChangeType.PointType.MsgToCode(upPointMsg))
                         );
                         LinearLayout fourMsgGroup = findViewById(R.id.fourMsgGroup);
                         TextView fourMsg = new TextView(context);

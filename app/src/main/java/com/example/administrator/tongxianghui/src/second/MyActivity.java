@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.example.administrator.tongxianghui.R;
 import com.example.administrator.tongxianghui.src.third.AdminInterFaceActivity;
 import com.example.administrator.tongxianghui.src.third.BuyTicketActivity;
+import com.example.administrator.tongxianghui.src.third.CheckTicketActivity;
 import com.example.administrator.tongxianghui.src.third.DirectionChooseActivity;
 import com.example.administrator.tongxianghui.src.third.MyTripActivity;
 
@@ -29,6 +30,8 @@ public class MyActivity extends AppCompatActivity {
     }
 
     public void secondCheckTicket(View view) {
+        intent = new Intent(context, CheckTicketActivity.class);
+        startActivity(intent);
     }
 
     public void secondTrip(View view) {
