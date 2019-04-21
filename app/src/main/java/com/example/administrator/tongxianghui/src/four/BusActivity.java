@@ -55,6 +55,8 @@ public class BusActivity extends AppCompatActivity {
 
     private static final String Get_Bus_Url = "http://" + Ip.IP + ":8001/my_bus/messages";
     private static final String Post_Add_Bus_Url = "http://" + Ip.IP + ":8001/my_bus/message";
+    private static final String Post_Delete_Bus_Url = "http://" + Ip.IP + ":8001/my_bus/delete_message";
+    private static final String Post_Modify_Bus_Url = "http://" + Ip.IP + ":8001/my_bus/modify_message";
 
 
     @Override
@@ -70,6 +72,12 @@ public class BusActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         okHttpClient = new OkHttpClient();
         request = new Request.Builder()
                 .url(Get_Bus_Url)
@@ -101,19 +109,37 @@ public class BusActivity extends AppCompatActivity {
     private void showBusView(List<BusInfo> busInfoList) {
         busActivityLinearLayoutGroup.removeAllViews();
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins(20, 0, 0, 0);
+        layoutParams.setMargins(20, 5, 0, 0);
         for (BusInfo busInfo : busInfoList) {
             LinearLayout linearLayout = new LinearLayout(context);
             TextView textView = new TextView(context);
             textView.setTextSize(18);
+
             Button modify = new Button(context);
+            modify.setAllCaps(false);
             modify.setTextColor(Color.WHITE);
             modify.setBackgroundResource(R.drawable.index_btn);
             modify.setLayoutParams(layoutParams);
+            modify.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    modifyBus(busInfo);
+                }
+            });
+
+
             Button delete = new Button(context);
+            delete.setAllCaps(false);
             delete.setTextColor(Color.WHITE);
             delete.setBackgroundResource(R.drawable.index_btn);
             delete.setLayoutParams(layoutParams);
+            delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    deleteBus(busInfo);
+                }
+            });
+
             textView.setText(busInfo.getPlateNumber());
             modify.setText("modify");
             delete.setText("delete");
@@ -183,4 +209,124 @@ public class BusActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void deleteBus(BusInfo busInfo) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("确定删除该车信息？")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        requestDataToPostDeleteBusUrl(busInfo);
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                })
+                .create().show();
+    }
+
+    private void requestDataToPostDeleteBusUrl(BusInfo busInfo) {
+        okHttpClient = new OkHttpClient();
+        String obj = gson.toJson(busInfo);
+        requestBody = RequestBody.create(json, obj);
+        request = new Request.Builder()
+                .url(Post_Delete_Bus_Url)
+                .post(requestBody)
+                .build();
+        call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.i(TAG, "请求服务器失败");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Res res = gson.fromJson(String.valueOf(response.body().string()), Res.class);
+                if (res.getCode() == 200) {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            MyUtils.toast(context, "删除成功");
+                            timerTask = new TimerTask() {
+                                @Override
+                                public void run() {
+                                    intent = new Intent(context, BusActivity.class);
+                                    startActivity(intent);
+                                }
+                            };
+                            timer = new Timer();
+                            timer.schedule(timerTask, 1000);
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    private void modifyBus(BusInfo busInfo) {
+        EditText editText = new EditText(context);
+        editText.setText(busInfo.getPlateNumber());
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("修改车辆信息")
+                .setView(editText)
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        busInfo.setPlateNumber(String.valueOf(editText.getText()));
+                        requestDataToPostModifyBusUrl(busInfo);
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                })
+                .create().show();
+    }
+
+    private void requestDataToPostModifyBusUrl(BusInfo busInfo) {
+        okHttpClient = new OkHttpClient();
+        String obj = gson.toJson(busInfo);
+        requestBody = RequestBody.create(json, obj);
+        request = new Request.Builder()
+                .url(Post_Modify_Bus_Url)
+                .post(requestBody)
+                .build();
+        call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.i(TAG, "请求服务器失败");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Res res = gson.fromJson(String.valueOf(response.body().string()), Res.class);
+                if (res.getCode() == 200) {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            MyUtils.toast(context, "修改成功");
+                            timerTask = new TimerTask() {
+                                @Override
+                                public void run() {
+                                    intent = new Intent(context, BusActivity.class);
+                                    startActivity(intent);
+                                }
+                            };
+                            timer = new Timer();
+                            timer.schedule(timerTask, 1000);
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+
 }
