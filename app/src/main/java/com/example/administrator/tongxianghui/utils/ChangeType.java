@@ -133,7 +133,7 @@ public class ChangeType {
                 case 0:
                     return "没看到车";
                 case 1:
-                    return "看到车";
+                    return "我已上车";
                 case 2:
                     return "服务区上厕所";
                 case 3:
@@ -146,7 +146,7 @@ public class ChangeType {
             switch (msg) {
                 case "没看到车":
                     return 0;
-                case "看到车":
+                case "我已上车":
                     return 1;
                 case "服务区上厕所":
                     return 2;

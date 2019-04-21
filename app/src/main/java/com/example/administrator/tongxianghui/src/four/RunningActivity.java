@@ -24,8 +24,10 @@ import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class RunningActivity extends AppCompatActivity {
@@ -35,11 +37,6 @@ public class RunningActivity extends AppCompatActivity {
     private TextView runningActivityCurrentDirection;
     private TextView runningActivityPlateNumber;
     private TextView runningActivityStatus;
-    private Button runningActivityNotSee;
-    private Button runningActivityInCar;
-    private Button runningActivityToWc;
-    private Button runningActivityBackFromWc;
-    private DataBaseHelper dataBaseHelper;
     private OkHttpClient okHttpClient;
     private Request request;
     private Call call;
@@ -49,6 +46,8 @@ public class RunningActivity extends AppCompatActivity {
     private Gson gson;
     private Handler handler;
     private Context context;
+    private RequestBody requestBody;
+    private MediaType json = MediaType.parse("application/json;charset=utf-8");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,10 +58,6 @@ public class RunningActivity extends AppCompatActivity {
         runningActivityCurrentDirection = findViewById(R.id.runningActivityCurrentDirection);
         runningActivityPlateNumber = findViewById(R.id.runningActivityPlateNumber);
         runningActivityStatus = findViewById(R.id.runningActivityStatus);
-        runningActivityNotSee = findViewById(R.id.runningActivityNotSee);
-        runningActivityInCar = findViewById(R.id.runningActivityInCar);
-        runningActivityToWc = findViewById(R.id.runningActivityToWc);
-        runningActivityBackFromWc = findViewById(R.id.runningActivityBackFromWc);
         runningActivityPlateNumber.setText(myTripSerializable.getPlateNumber());
         runningActivityCurrentDirection.setText("当前乘车方向：" + ChangeType.DirectionType.CodeToMsg(myTripSerializable.getDirectionType()));
         okHttpClient = new OkHttpClient();
@@ -76,7 +71,7 @@ public class RunningActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         request = new Request.Builder()
-                .url(Get_User_Status_Url + "?phone=" + myTripSerializable.getPhone())
+                .url(Get_User_Status_Url + "?phone=" + myTripSerializable.getPhone() + "&direction_type=" + myTripSerializable.getDirectionType())
                 .build();
         call = okHttpClient.newCall(request);
         call.enqueue(new Callback() {
@@ -104,22 +99,56 @@ public class RunningActivity extends AppCompatActivity {
 
 
     public void runningActivityNotSee(View view) {
+        requestPostChangeUserStatusUrl(0);
     }
 
     public void runningActivityInCar(View view) {
+        requestPostChangeUserStatusUrl(1);
     }
 
     public void runningActivityToWc(View view) {
+        requestPostChangeUserStatusUrl(2);
     }
 
     public void runningActivityBackFromWc(View view) {
+        requestPostChangeUserStatusUrl(3);
     }
 
     private void requestPostChangeUserStatusUrl(int thisStatus) {
         if (thisStatus == status) {
             MyUtils.toast(context, "已经是" + ChangeType.UserStatusType.CodeToMsg(thisStatus) + "状态了");
         } else {
+            UserStatusReq userStatusReq = new UserStatusReq();
+            userStatusReq.setUserStatus(thisStatus)
+                    .setPhone(myTripSerializable.getPhone())
+                    .setDirectionType(myTripSerializable.getDirectionType());
+            String obj = gson.toJson(userStatusReq);
+            requestBody = RequestBody.create(json, obj);
+            request = new Request.Builder()
+                    .url(Post_Change_User_Status_Url)
+                    .post(requestBody)
+                    .build();
+            call = okHttpClient.newCall(request);
+            call.enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    Log.i(TAG, "请求服务器失败");
+                }
 
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    Res res = gson.fromJson(String.valueOf(response.body().string()), Res.class);
+                    if (res.getCode() == 200) {
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                MyUtils.toast(context, "修改状态成功");
+                                runningActivityStatus.setText(ChangeType.UserStatusType.CodeToMsg(thisStatus));
+                            }
+                        });
+                    }
+                }
+            });
         }
     }
 
