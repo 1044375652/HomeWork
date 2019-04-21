@@ -13,11 +13,11 @@
         android:theme="@style/AppTheme">
         <activity android:name=".src.four.BusActivity"></activity>
         <activity android:name=".src.four.RunningActivity" />
-        <activity android:name=".src.third.CheckTicketActivity" />
+        <activity android:name=".src.four.CheckTicketActivity" />
         <activity android:name=".src.third.MyTripActivity" />
         <activity android:name=".src.four.BuyTicketEndActivity" />
         <activity
-            android:name=".src.four.ChooseBusMessageActivity"
+            android:name=".src.fifth.ChooseBusMessageActivity"
             android:launchMode="singleTop" />
         <activity android:name=".src.third.DirectionChooseActivity" />
         <activity android:name=".src.third.AdminInterFaceActivity" />
@@ -31,7 +31,9 @@
         <activity android:name=".src.OperaActivity" />
         <activity android:name=".src.index.RegisterActivity" />
         <activity android:name=".src.second.MyActivity" />
-        <activity android:name=".src.third.BuyTicketActivity" />
+        <activity
+            android:name=".src.third.BuyTicketActivity"
+            android:launchMode="singleTop" />
     </application>
 
 </manifest>
