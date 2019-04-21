@@ -98,7 +98,7 @@ public class BuyTicketEndActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         fourBuyTicketEndCurrentDirection = findViewById(R.id.fourBuyTicketEndCurrentDirection);
-        fourBuyTicketEndCurrentDirection.setText(ChangeType.Change.switchDirectionMsg(directionType));
+        fourBuyTicketEndCurrentDirection.setText(ChangeType.Change.codeToMsg(directionType));
         requestFromGetBusMessageUrl();
         requestFromGetPointMessagesUrl();
     }
@@ -311,7 +311,8 @@ public class BuyTicketEndActivity extends AppCompatActivity {
                     RunningUserStatusInfo runningUserStatusInfo = new RunningUserStatusInfo();
                     runningUserStatusInfo.setPhone(orderMessageInfo.getPhone())
                             .setPlateNumber(orderMessageInfo.getPalteNumber())
-                            .setUserStatus(0);
+                            .setUserStatus(0)
+                            .setDirectionType(directionType);
                     String obj = gson.toJson(runningUserStatusInfo);
                     requestBody = RequestBody.create(json, obj);
                     request = new Request.Builder()

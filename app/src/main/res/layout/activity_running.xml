@@ -70,6 +70,7 @@
         android:layout_height="wrap_content">
 
         <Button
+            android:onClick="runningActivityNotSee"
             android:text="@string/not_see"
             android:id="@+id/runningActivityNotSee"
             android:layout_width="wrap_content"
@@ -80,6 +81,7 @@
             android:textColor="@color/white" />
 
         <Button
+            android:onClick="runningActivityInCar"
             android:text="@string/in_car"
             android:id="@+id/runningActivityInCar"
             android:layout_width="wrap_content"
@@ -90,6 +92,7 @@
             android:textColor="@color/white" />
 
         <Button
+            android:onClick="runningActivityToWc"
             android:text="@string/to_wc"
             android:id="@+id/runningActivityToWc"
             android:layout_width="wrap_content"
@@ -100,6 +103,7 @@
             android:textColor="@color/white" />
 
         <Button
+            android:onClick="runningActivityBackFromWc"
             android:text="@string/back_from_wc"
             android:id="@+id/runningActivityBackFromWc"
             android:layout_width="wrap_content"

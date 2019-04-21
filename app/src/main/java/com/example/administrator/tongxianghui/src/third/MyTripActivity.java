@@ -45,7 +45,7 @@ public class MyTripActivity extends AppCompatActivity {
         String[] columns = new String[]{"_id", "up_point", "down_point", "direction_type", "ticket_number", "up_date", "phone", "plate_number"};
         orderMessageInfoList = dataBaseHelper.selectDataFromOrderMessageTable(columns, null, null);
         SimpleAdapter simpleAdapter = new SimpleAdapter(context, getData(orderMessageInfoList), R.layout.activity_my_trip_item,
-                new String[]{"MyTripActivityUpPoint", "MyTripActivityDownPoint", "MyTripActivityUpPointDate", "MyTripActivityPlateNumber"},
+                new String[]{"myTripActivityUpPoint", "myTripActivityDownPoint", "myTripActivityUpPointDate", "myTripActivityPlateNumber"},
                 new int[]{R.id.MyTripActivityUpPoint, R.id.MyTripActivityDownPoint, R.id.MyTripActivityUpPointDate, R.id.MyTripActivityPlateNumber});
         myTripActivityListView = findViewById(R.id.MyTripActivityListView);
         myTripActivityListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -70,10 +70,10 @@ public class MyTripActivity extends AppCompatActivity {
         List<Map<String, Object>> mapList = new ArrayList<>();
         for (OrderMessageInfo orderMessageInfo : orderMessageInfoList) {
             mapList.add(new HashMap<String, Object>() {{
-                put("MyTripActivityUpPoint", ChangeType.PointType.CodeToMsg(orderMessageInfo.getUpPoint()));
-                put("MyTripActivityDownPoint", ChangeType.PointType.CodeToMsg(orderMessageInfo.getDownPoint()));
-                put("MyTripActivityUpPointDate", MyUtils.DateToString(orderMessageInfo.getUpDate()));
-                put("MyTripActivityPlateNumber", orderMessageInfo.getPalteNumber());
+                put("myTripActivityUpPoint", ChangeType.PointType.CodeToMsg(orderMessageInfo.getUpPoint()));
+                put("myTripActivityDownPoint", ChangeType.PointType.CodeToMsg(orderMessageInfo.getDownPoint()));
+                put("myTripActivityUpPointDate", MyUtils.DateToString(orderMessageInfo.getUpDate()));
+                put("myTripActivityPlateNumber", orderMessageInfo.getPalteNumber());
             }});
         }
         return mapList;

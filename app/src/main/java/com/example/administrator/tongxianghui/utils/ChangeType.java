@@ -100,7 +100,7 @@ public class ChangeType {
     }
 
     public static class Change {
-        public static String switchDirectionMsg(int directionType) {
+        public static String codeToMsg(int directionType) {
             String msg = "当前乘车方向：";
             switch (directionType) {
                 case 0:

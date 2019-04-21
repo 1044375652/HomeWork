@@ -1,19 +1,23 @@
 package com.example.administrator.tongxianghui.src.four;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.administrator.tongxianghui.R;
 import com.example.administrator.tongxianghui.dao.DataBaseHelper;
 import com.example.administrator.tongxianghui.model.MyTripSerializable;
+import com.example.administrator.tongxianghui.model.UserStatusReq;
 import com.example.administrator.tongxianghui.model.base.Res;
 import com.example.administrator.tongxianghui.utils.ChangeType;
 import com.example.administrator.tongxianghui.utils.Ip;
+import com.example.administrator.tongxianghui.utils.MyUtils;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -40,9 +44,11 @@ public class RunningActivity extends AppCompatActivity {
     private Request request;
     private Call call;
     private static final String Get_User_Status_Url = "http://" + Ip.IP + ":8001/status/message";
+    private static final String Post_Change_User_Status_Url = "http://" + Ip.IP + ":8001/status/user_status";
     private int status;
     private Gson gson;
     private Handler handler;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +68,8 @@ public class RunningActivity extends AppCompatActivity {
         okHttpClient = new OkHttpClient();
         gson = new Gson();
         handler = new Handler();
+        context = RunningActivity.this;
+
     }
 
     @Override
@@ -91,12 +99,29 @@ public class RunningActivity extends AppCompatActivity {
     }
 
     private void showTextView(int status) {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                runningActivityStatus.setText(ChangeType.UserStatusType.CodeToMsg(status));
-            }
-        });
+        handler.post(() -> runningActivityStatus.setText(ChangeType.UserStatusType.CodeToMsg(status)));
     }
+
+
+    public void runningActivityNotSee(View view) {
+    }
+
+    public void runningActivityInCar(View view) {
+    }
+
+    public void runningActivityToWc(View view) {
+    }
+
+    public void runningActivityBackFromWc(View view) {
+    }
+
+    private void requestPostChangeUserStatusUrl(int thisStatus) {
+        if (thisStatus == status) {
+            MyUtils.toast(context, "已经是" + ChangeType.UserStatusType.CodeToMsg(thisStatus) + "状态了");
+        } else {
+
+        }
+    }
+
 
 }

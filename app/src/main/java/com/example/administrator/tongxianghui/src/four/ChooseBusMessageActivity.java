@@ -97,7 +97,7 @@ public class ChooseBusMessageActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         TextView fourCurrentDirection = findViewById(R.id.fourCurrentDirection);
-        fourCurrentDirection.setText(ChangeType.Change.switchDirectionMsg(directionType));
+        fourCurrentDirection.setText(ChangeType.Change.codeToMsg(directionType));
         requestDataFromPointMessagesUrl();
     }
 

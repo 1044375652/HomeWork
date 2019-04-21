@@ -5,6 +5,7 @@ public class RunningUserStatusInfo {
     private int userStatus;
     private String phone;
     private String plateNumber;
+    private int directionType;
 
     public int getId() {
         return id;
@@ -39,6 +40,15 @@ public class RunningUserStatusInfo {
 
     public RunningUserStatusInfo setPlateNumber(String plateNumber) {
         this.plateNumber = plateNumber;
+        return this;
+    }
+
+    public int getDirectionType() {
+        return directionType;
+    }
+
+    public RunningUserStatusInfo setDirectionType(int directionType) {
+        this.directionType = directionType;
         return this;
     }
 }
