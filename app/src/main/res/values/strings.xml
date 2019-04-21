@@ -32,6 +32,7 @@
     <string name="direction6">珠海至惠东、淡水同乡会包车</string>
     <string name="choose_number_show">请选择票数</string>
     <string name="admin_interface">管理员界面</string>
+    <string name="with_car_people">跟车员</string>
     <string name="select_all_direction">全选</string>
     <string name="invert_select">反选</string>
     <string name="add_up_point">添加上车点</string>
@@ -48,6 +49,10 @@
     <string name="in_car">我已上车</string>
     <string name="to_wc">服务区上厕所</string>
     <string name="back_from_wc">上完厕所回来</string>
+    <string name="set_direction_message">设置乘车信息</string>
+    <string name="add_bus">添加车辆</string>
+    <string name="update_order">完善订单</string>
+    <string name="current_bus">当前车辆</string>
 
     <string-array name="direction1_up">
         <item>

@@ -32,7 +32,7 @@ import com.example.administrator.tongxianghui.model.DirectionMessageInfo;
 import com.example.administrator.tongxianghui.model.ModifyDirectionMessageReq;
 import com.example.administrator.tongxianghui.model.base.Res;
 import com.example.administrator.tongxianghui.src.four.BuyTicketEndActivity;
-import com.example.administrator.tongxianghui.src.four.ChooseBusMessageActivity;
+
 import com.example.administrator.tongxianghui.utils.ChangeType;
 import com.example.administrator.tongxianghui.utils.Ip;
 import com.google.gson.Gson;
