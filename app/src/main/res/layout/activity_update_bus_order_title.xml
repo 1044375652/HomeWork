@@ -1,0 +1,29 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/updateBusOrderActivityUserPhone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/phone" />
+
+    <TextView
+        android:id="@+id/updateBusOrderActivityUpPoint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/up_point" />
+
+    <TextView
+        android:id="@+id/updateBusOrderActivityPlateNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/plate_number" />
+
+    <TextView
+        android:id="@+id/updateBusOrderActivityWithCarPhone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/with_car_people" />
+
+</LinearLayout>

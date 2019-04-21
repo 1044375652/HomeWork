@@ -53,6 +53,7 @@
     <string name="add_bus">添加车辆</string>
     <string name="update_order">完善订单</string>
     <string name="current_bus">当前车辆</string>
+    <string name="editor">编辑</string>
 
     <string-array name="direction1_up">
         <item>

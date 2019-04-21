@@ -23,6 +23,7 @@ import android.widget.TimePicker;
 import com.example.administrator.tongxianghui.R;
 import com.example.administrator.tongxianghui.model.BusMessageInfo;
 import com.example.administrator.tongxianghui.src.four.BusActivity;
+import com.example.administrator.tongxianghui.src.four.UpdateBusOrderActivity;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -58,10 +59,11 @@ public class AdminInterFaceActivity extends AppCompatActivity {
     }
 
     public void adminInterFaceActivityAddBus(View view) {
-        intent = new Intent(context, BusActivity.class);
-        startActivity(intent);
+
     }
 
     public void adminInterFaceActivityUpdateOrder(View view) {
+        intent = new Intent(context, UpdateBusOrderActivity.class);
+        startActivity(intent);
     }
 }
