@@ -333,7 +333,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     .setTickerNumber(cursor.getInt(cursor.getColumnIndex(OrderMessageTable.TicketNumber)))
                     .setUpPoint(cursor.getInt(cursor.getColumnIndex(OrderMessageTable.UpPoint)))
                     .setPhone(cursor.getString(cursor.getColumnIndex(OrderMessageTable.Phone)))
-                    .setPalteNumber(cursor.getString(cursor.getColumnIndex(OrderMessageTable.PlateNumber)))
+                    .setPlateNumber(cursor.getString(cursor.getColumnIndex(OrderMessageTable.PlateNumber)))
             );
         }
         return orderMessageInfoList;
@@ -353,7 +353,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             contentValues.put(OrderMessageTable.TicketNumber, orderMessageInfo.getTickerNumber());
             contentValues.put(OrderMessageTable.TicketNumber, orderMessageInfo.getTickerNumber());
             contentValues.put(OrderMessageTable.Phone, orderMessageInfo.getPhone());
-            contentValues.put(OrderMessageTable.PlateNumber, orderMessageInfo.getPalteNumber());
+            contentValues.put(OrderMessageTable.PlateNumber, orderMessageInfo.getPlateNumber());
             sqLiteDatabase.beginTransaction();
             sqLiteDatabase.insert(OrderMessageTable.TABLE_NAME, null, contentValues);
             sqLiteDatabase.setTransactionSuccessful();

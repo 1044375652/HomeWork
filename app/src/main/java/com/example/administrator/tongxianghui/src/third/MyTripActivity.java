@@ -53,7 +53,7 @@ public class MyTripActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Bundle bundle = new Bundle();
                 MyTripSerializable myTripSerializable = new MyTripSerializable();
-                myTripSerializable.setPlateNumber(orderMessageInfoList.get(i).getPalteNumber());
+                myTripSerializable.setPlateNumber(orderMessageInfoList.get(i).getPlateNumber());
                 myTripSerializable.setDirectionType(orderMessageInfoList.get(i).getDirectionType());
                 myTripSerializable.setPhone(orderMessageInfoList.get(i).getPhone());
                 Log.i(TAG, orderMessageInfoList.get(i).getPhone());
@@ -73,7 +73,7 @@ public class MyTripActivity extends AppCompatActivity {
                 put("myTripActivityUpPoint", ChangeType.PointType.CodeToMsg(orderMessageInfo.getUpPoint()));
                 put("myTripActivityDownPoint", ChangeType.PointType.CodeToMsg(orderMessageInfo.getDownPoint()));
                 put("myTripActivityUpPointDate", MyUtils.DateToString(orderMessageInfo.getUpDate()));
-                put("myTripActivityPlateNumber", orderMessageInfo.getPalteNumber());
+                put("myTripActivityPlateNumber", orderMessageInfo.getPlateNumber());
             }});
         }
         return mapList;

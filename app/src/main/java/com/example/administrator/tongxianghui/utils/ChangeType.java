@@ -16,6 +16,8 @@ public class ChangeType {
                     return 5;
                 case "珠海至惠东、淡水同乡会包车":
                     return 6;
+                case "全部":
+                    return 11;
             }
             return 1;
         }
@@ -35,6 +37,8 @@ public class ChangeType {
                     return "惠东、淡水至珠海同乡会包车";
                 case 5:
                     return "珠海至惠东、淡水同乡会包车";
+                case 11:
+                    return "全部";
             }
             return "惠城、博罗至珠海同乡会包车";
         }

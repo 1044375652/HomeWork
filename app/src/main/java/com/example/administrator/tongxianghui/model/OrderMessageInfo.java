@@ -8,7 +8,7 @@ public class OrderMessageInfo {
     private int tickerNumber;
     private long upDate;
     private String phone;
-    private String palteNumber;
+    private String plateNumber;
 
     public int getId() {
         return id;
@@ -73,12 +73,12 @@ public class OrderMessageInfo {
         return this;
     }
 
-    public String getPalteNumber() {
-        return palteNumber;
+    public String getPlateNumber() {
+        return plateNumber;
     }
 
-    public OrderMessageInfo setPalteNumber(String palteNumber) {
-        this.palteNumber = palteNumber;
+    public OrderMessageInfo setPlateNumber(String plateNumber) {
+        this.plateNumber = plateNumber;
         return this;
     }
 }

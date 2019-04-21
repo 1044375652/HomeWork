@@ -307,10 +307,10 @@ public class BuyTicketEndActivity extends AppCompatActivity {
                 if (res.getCode() == 200) {
                     List<OrderMessageInfo> orderMessageInfoList = new ArrayList<>();
                     orderMessageInfoList.add(orderMessageInfo);
-                    orderMessageInfo.setPalteNumber("123456");
+                    orderMessageInfo.setPlateNumber("123456");
                     RunningUserStatusInfo runningUserStatusInfo = new RunningUserStatusInfo();
                     runningUserStatusInfo.setPhone(orderMessageInfo.getPhone())
-                            .setPlateNumber(orderMessageInfo.getPalteNumber())
+                            .setPlateNumber(orderMessageInfo.getPlateNumber())
                             .setUserStatus(0)
                             .setDirectionType(directionType);
                     String obj = gson.toJson(runningUserStatusInfo);
