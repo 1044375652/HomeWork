@@ -54,8 +54,14 @@ public class MyTripActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_trip);
+        initData();
+    }
+
+    private void initData() {
         context = MyTripActivity.this;
         dataBaseHelper = DataBaseHelper.getDataBaseHelper(context);
+        gson = new Gson();
+        handler = new Handler();
     }
 
     @Override
@@ -69,7 +75,6 @@ public class MyTripActivity extends AppCompatActivity {
         } else {
             showData();
         }
-
     }
 
     private void requestDataFromGetOrderMessagesByPhoneUrl(String phone) {

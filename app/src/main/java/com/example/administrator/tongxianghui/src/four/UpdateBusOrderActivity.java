@@ -138,6 +138,11 @@ public class UpdateBusOrderActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         showTitleData();
         requestDataFromGetDirectionMessagesUrl();
         requestDataFromGetOrderMessagesURL(currentPage, currentDirectionType);
@@ -376,12 +381,6 @@ public class UpdateBusOrderActivity extends AppCompatActivity {
                     .setWithCarPhone(withCarPhone)
                     .setPlateNumber(plateNumber)
             );
-        }
-        for (UpdateOrderMessageReq updateOrderMessageReq : updateOrderMessageReqList) {
-            Log.i(TAG, updateOrderMessageReq.getPhone());
-            Log.i(TAG, updateOrderMessageReq.getPlateNumber());
-            Log.i(TAG, updateOrderMessageReq.getWithCarPhone());
-            Log.i(TAG, updateOrderMessageReq.getDirectionType() + "");
         }
         String obj = gson.toJson(updateOrderMessageReqList);
         requestBody = RequestBody.create(json, obj);
