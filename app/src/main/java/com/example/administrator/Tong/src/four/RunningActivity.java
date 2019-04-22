@@ -1,6 +1,7 @@
 package com.example.administrator.Tong.src.four;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -46,6 +47,7 @@ public class RunningActivity extends AppCompatActivity {
     private Handler handler;
     private Context context;
     private RequestBody requestBody;
+    private Intent intent;
     private MediaType json = MediaType.parse("application/json;charset=utf-8");
 
     @Override
@@ -68,7 +70,13 @@ public class RunningActivity extends AppCompatActivity {
         runningActivityCurrentDirection.setText("当前乘车方向：" + ChangeType.DirectionType.CodeToMsg(myTripSerializable.getDirectionType()));
         runningActivityWithCarPeople.setText(myTripSerializable.getWithCarPhone());
         runningActivityWithCarPeople.setTextColor(Color.rgb(255, 100, 0));
-
+        runningActivityWithCarPeople.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                intent = new Intent(Intent.ACTION_CALL);
+                startActivity(intent);
+            }
+        });
         okHttpClient = new OkHttpClient();
         gson = new Gson();
         handler = new Handler();

@@ -41,4 +41,6 @@
             android:launchMode="singleTop" />
     </application>
 
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+
 </manifest>
