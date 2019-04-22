@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.administrator.tongxianghui">
+    package="com.example.administrator.Tong">
 
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
@@ -12,32 +12,32 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".src.four.UpdateBusOrderActivity"
+            android:name="com.example.administrator.Tong.src.four.UpdateBusOrderActivity"
             android:launchMode="singleTop"></activity>
         <activity
-            android:name=".src.four.BusActivity"
+            android:name="com.example.administrator.Tong.src.four.BusActivity"
             android:launchMode="singleTop" />
-        <activity android:name=".src.four.RunningActivity" />
-        <activity android:name=".src.four.CheckTicketActivity" />
-        <activity android:name=".src.third.MyTripActivity" />
-        <activity android:name=".src.four.BuyTicketEndActivity" />
+        <activity android:name="com.example.administrator.Tong.src.four.RunningActivity" />
+        <activity android:name="com.example.administrator.Tong.src.four.CheckTicketActivity" />
+        <activity android:name="com.example.administrator.Tong.src.third.MyTripActivity" />
+        <activity android:name="com.example.administrator.Tong.src.four.BuyTicketEndActivity" />
         <activity
-            android:name=".src.fifth.ChooseBusMessageActivity"
+            android:name="com.example.administrator.Tong.src.fifth.ChooseBusMessageActivity"
             android:launchMode="singleTop" />
-        <activity android:name=".src.third.DirectionChooseActivity" />
-        <activity android:name=".src.third.AdminInterFaceActivity" />
-        <activity android:name=".src.index.MainActivity">
+        <activity android:name="com.example.administrator.Tong.src.third.DirectionChooseActivity" />
+        <activity android:name="com.example.administrator.Tong.src.third.AdminInterFaceActivity" />
+        <activity android:name="com.example.administrator.Tong.src.index.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".src.OperaActivity" />
-        <activity android:name=".src.index.RegisterActivity" />
-        <activity android:name=".src.second.MyActivity" />
+        <activity android:name="com.example.administrator.Tong.src.OperaActivity" />
+        <activity android:name="com.example.administrator.Tong.src.index.RegisterActivity" />
+        <activity android:name="com.example.administrator.Tong.src.second.MyActivity" />
         <activity
-            android:name=".src.third.BuyTicketActivity"
+            android:name="com.example.administrator.Tong.src.third.BuyTicketActivity"
             android:launchMode="singleTop" />
     </application>
 
