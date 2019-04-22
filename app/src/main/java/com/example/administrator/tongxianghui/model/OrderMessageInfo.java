@@ -9,7 +9,7 @@ public class OrderMessageInfo {
     private long upDate;
     private String phone;
     private String plateNumber;
-    private String withCarNumber;
+    private String withCarPhone;
 
     public int getId() {
         return id;
@@ -83,12 +83,12 @@ public class OrderMessageInfo {
         return this;
     }
 
-    public String getWithCarNumber() {
-        return withCarNumber;
+    public String getWithCarPhone() {
+        return withCarPhone;
     }
 
-    public OrderMessageInfo setWithCarNumber(String withCarNumber) {
-        this.withCarNumber = withCarNumber;
+    public OrderMessageInfo setWithCarPhone(String withCarPhone) {
+        this.withCarPhone = withCarPhone;
         return this;
     }
 }

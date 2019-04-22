@@ -56,6 +56,7 @@ public class RegisterActivity extends AppCompatActivity {
     private Handler handler;
     private Response response;
     private Random random;
+    private Bundle bundle;
 
 
     @Override
@@ -154,6 +155,9 @@ public class RegisterActivity extends AppCompatActivity {
                                         TimerTask timerTask = new TimerTask() {
                                             @Override
                                             public void run() {
+                                                bundle = new Bundle();
+                                                bundle.putString("userPhone", phone);
+                                                intent.putExtra("userPhone", bundle);
                                                 intent = new Intent(context, MyActivity.class);
                                                 startActivity(intent);
                                             }

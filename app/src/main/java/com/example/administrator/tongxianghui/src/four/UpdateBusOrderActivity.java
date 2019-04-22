@@ -203,7 +203,7 @@ public class UpdateBusOrderActivity extends AppCompatActivity {
         for (OrderMessageInfo orderMessageInfo : orderMessageInfoList) {
             mapList.add(new HashMap<String, Object>() {{
                 String plateNumber = orderMessageInfo.getPlateNumber();
-                String withCarPhone = orderMessageInfo.getWithCarNumber();
+                String withCarPhone = orderMessageInfo.getWithCarPhone();
                 put("updateBusOrderActivityUserPhone", orderMessageInfo.getPhone());
                 put("updateBusOrderActivityUpPoint", ChangeType.PointType.CodeToMsg(orderMessageInfo.getUpPoint()));
                 if (StringUtils.isBlank(plateNumber)) {

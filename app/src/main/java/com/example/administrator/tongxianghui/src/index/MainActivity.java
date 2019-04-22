@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private Context context;
     private Intent intent;
     private EditText editText;
+    private Bundle bundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +66,9 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
             intent = new Intent(context, MyActivity.class);
+            bundle = new Bundle();
+            bundle.putString("userPhone", phone);
+            intent.putExtra("userPhone", bundle);
             startActivity(intent);
         } else {
             builder.setTitle("请输入手机号")

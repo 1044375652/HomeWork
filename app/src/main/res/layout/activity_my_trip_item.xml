@@ -37,7 +37,7 @@
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/MyTripActivityUpPoint"
+                android:id="@+id/myTripActivityUpPoint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="14sp" />
@@ -49,7 +49,7 @@
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/MyTripActivityDownPoint"
+                android:id="@+id/myTripActivityDownPoint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="14sp" />
@@ -61,7 +61,7 @@
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/MyTripActivityUpPointDate"
+                android:id="@+id/myTripActivityUpPointDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="14sp" />
@@ -73,7 +73,19 @@
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/MyTripActivityPlateNumber"
+                android:id="@+id/myTripActivityPlateNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/with_car_people"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/myTripActivityWithCarPhone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="14sp" />

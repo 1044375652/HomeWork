@@ -51,7 +51,6 @@ public class BuyTicketEndActivity extends AppCompatActivity {
     private static final String Post_User_Status_Url = "http://" + Ip.IP + ":8001/status/user";
     private OkHttpClient okHttpClient;
     private Request request;
-    private Response response;
     private RequestBody requestBody;
     private MediaType json = MediaType.parse("application/json;charset=utf-8");
     private Call call;
@@ -267,7 +266,9 @@ public class BuyTicketEndActivity extends AppCompatActivity {
                                     .setUpDate(upDate)
                                     .setTickerNumber(tickerNumber)
                                     .setDirectionType(directionType)
-                                    .setPhone(phoneMsg);
+                                    .setPhone(phoneMsg)
+                                    .setPlateNumber("空")
+                                    .setWithCarPhone("空");
                             requestDataToPostOrderMessageUrl(orderMessageInfo);
                         }
                     })
@@ -305,9 +306,6 @@ public class BuyTicketEndActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 Res res = gson.fromJson(String.valueOf(response.body().string()), Res.class);
                 if (res.getCode() == 200) {
-                    List<OrderMessageInfo> orderMessageInfoList = new ArrayList<>();
-                    orderMessageInfoList.add(orderMessageInfo);
-                    orderMessageInfo.setPlateNumber("123456");
                     RunningUserStatusInfo runningUserStatusInfo = new RunningUserStatusInfo();
                     runningUserStatusInfo.setPhone(orderMessageInfo.getPhone())
                             .setPlateNumber(orderMessageInfo.getPlateNumber())
@@ -328,7 +326,6 @@ public class BuyTicketEndActivity extends AppCompatActivity {
 
                         @Override
                         public void onResponse(Call call, Response response) throws IOException {
-                            dataBaseHelper.addDataToOrderMessageTable(orderMessageInfoList);
                             handler.post(() -> MyUtils.toast(context, "提交成功"));
                         }
                     });

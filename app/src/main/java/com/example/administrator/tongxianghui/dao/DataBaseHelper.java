@@ -73,7 +73,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         private static final String Phone = "phone";
         private static final String UpDate = "up_date";
         private static final String PlateNumber = "plate_number";
-        private static final String SQL = "create table if not exists " + OrderMessageTable.TABLE_NAME + "(" + OrderMessageTable.ID + " INTEGER PRIMARY KEY," + OrderMessageTable.UpPoint + " tinyint(1)," + OrderMessageTable.DownPoint + " tinyint(1)," + OrderMessageTable.DirectionType + " tinyint(1)," + OrderMessageTable.TicketNumber + " tinyint(1)," + OrderMessageTable.UpDate + " int(13)," + OrderMessageTable.Phone + " varchar(11)," + OrderMessageTable.PlateNumber + " varchar(5))";
+        private static final String WithCarPhone = "with_car_phone";
+        private static final String SQL = "create table if not exists " + OrderMessageTable.TABLE_NAME + "(" + OrderMessageTable.ID + " INTEGER PRIMARY KEY," + OrderMessageTable.UpPoint + " tinyint(1)," + OrderMessageTable.DownPoint + " tinyint(1)," + OrderMessageTable.DirectionType + " tinyint(1)," + OrderMessageTable.TicketNumber + " tinyint(1)," + OrderMessageTable.UpDate + " int(13)," + OrderMessageTable.Phone + " varchar(11)," + OrderMessageTable.PlateNumber + " varchar(10)," + OrderMessageTable.WithCarPhone + " varchar(10))";
     }
 
     private static class RunningUserStatusTable {
@@ -334,6 +335,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     .setUpPoint(cursor.getInt(cursor.getColumnIndex(OrderMessageTable.UpPoint)))
                     .setPhone(cursor.getString(cursor.getColumnIndex(OrderMessageTable.Phone)))
                     .setPlateNumber(cursor.getString(cursor.getColumnIndex(OrderMessageTable.PlateNumber)))
+                    .setWithCarPhone(cursor.getString(cursor.getColumnIndex(OrderMessageTable.WithCarPhone)))
             );
         }
         return orderMessageInfoList;
@@ -354,6 +356,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             contentValues.put(OrderMessageTable.TicketNumber, orderMessageInfo.getTickerNumber());
             contentValues.put(OrderMessageTable.Phone, orderMessageInfo.getPhone());
             contentValues.put(OrderMessageTable.PlateNumber, orderMessageInfo.getPlateNumber());
+            contentValues.put(OrderMessageTable.WithCarPhone, orderMessageInfo.getWithCarPhone());
             sqLiteDatabase.beginTransaction();
             sqLiteDatabase.insert(OrderMessageTable.TABLE_NAME, null, contentValues);
             sqLiteDatabase.setTransactionSuccessful();

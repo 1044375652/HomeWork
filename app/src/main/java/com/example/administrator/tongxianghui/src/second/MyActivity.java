@@ -16,6 +16,7 @@ import com.example.administrator.tongxianghui.src.third.MyTripActivity;
 public class MyActivity extends AppCompatActivity {
     private Context context = MyActivity.this;
     private Intent intent;
+    private Bundle bundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,12 +30,16 @@ public class MyActivity extends AppCompatActivity {
     }
 
     public void secondCheckTicket(View view) {
+        bundle = getIntent().getBundleExtra("userPhone");
         intent = new Intent(context, CheckTicketActivity.class);
+        intent.putExtra("userPhone", bundle);
         startActivity(intent);
     }
 
     public void secondTrip(View view) {
+        bundle = getIntent().getBundleExtra("userPhone");
         intent = new Intent(context, MyTripActivity.class);
+        intent.putExtra("userPhone", bundle);
         startActivity(intent);
     }
 
