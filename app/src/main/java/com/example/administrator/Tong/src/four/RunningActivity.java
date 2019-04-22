@@ -1,6 +1,7 @@
 package com.example.administrator.Tong.src.four;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -33,6 +34,7 @@ public class RunningActivity extends AppCompatActivity {
     private MyTripSerializable myTripSerializable;
     private TextView runningActivityCurrentDirection;
     private TextView runningActivityPlateNumber;
+    private TextView runningActivityWithCarPeople;
     private TextView runningActivityStatus;
     private OkHttpClient okHttpClient;
     private Request request;
@@ -50,18 +52,27 @@ public class RunningActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_running);
+        initData();
+    }
+
+    private void initData() {
         Bundle bundle = getIntent().getBundleExtra("myTripSerializable");
         myTripSerializable = (MyTripSerializable) bundle.getSerializable("myTripSerializable");
+
         runningActivityCurrentDirection = findViewById(R.id.runningActivityCurrentDirection);
         runningActivityPlateNumber = findViewById(R.id.runningActivityPlateNumber);
         runningActivityStatus = findViewById(R.id.runningActivityStatus);
+        runningActivityWithCarPeople = findViewById(R.id.runningActivityWithCarPeople);
+
         runningActivityPlateNumber.setText(myTripSerializable.getPlateNumber());
         runningActivityCurrentDirection.setText("当前乘车方向：" + ChangeType.DirectionType.CodeToMsg(myTripSerializable.getDirectionType()));
+        runningActivityWithCarPeople.setText(myTripSerializable.getWithCarPhone());
+        runningActivityWithCarPeople.setTextColor(Color.rgb(255, 100, 0));
+
         okHttpClient = new OkHttpClient();
         gson = new Gson();
         handler = new Handler();
         context = RunningActivity.this;
-
     }
 
     @Override
@@ -115,6 +126,7 @@ public class RunningActivity extends AppCompatActivity {
         if (thisStatus == status) {
             MyUtils.toast(context, "已经是" + ChangeType.UserStatusType.CodeToMsg(thisStatus) + "状态了");
         } else {
+            status = thisStatus;
             UserStatusReq userStatusReq = new UserStatusReq();
             userStatusReq.setUserStatus(thisStatus)
                     .setPhone(myTripSerializable.getPhone())

@@ -6,6 +6,7 @@ public class MyTripSerializable implements Serializable {
     private int directionType;
     private String plateNumber;
     private String phone;
+    private String withCarPhone;
 
     public int getDirectionType() {
         return directionType;
@@ -32,5 +33,13 @@ public class MyTripSerializable implements Serializable {
     public MyTripSerializable setPhone(String phone) {
         this.phone = phone;
         return this;
+    }
+
+    public String getWithCarPhone() {
+        return withCarPhone;
+    }
+
+    public void setWithCarPhone(String withCarPhone) {
+        this.withCarPhone = withCarPhone;
     }
 }
