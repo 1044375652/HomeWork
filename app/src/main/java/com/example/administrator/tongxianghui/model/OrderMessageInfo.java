@@ -9,6 +9,7 @@ public class OrderMessageInfo {
     private long upDate;
     private String phone;
     private String plateNumber;
+    private String withCarNumber;
 
     public int getId() {
         return id;
@@ -79,6 +80,15 @@ public class OrderMessageInfo {
 
     public OrderMessageInfo setPlateNumber(String plateNumber) {
         this.plateNumber = plateNumber;
+        return this;
+    }
+
+    public String getWithCarNumber() {
+        return withCarNumber;
+    }
+
+    public OrderMessageInfo setWithCarNumber(String withCarNumber) {
+        this.withCarNumber = withCarNumber;
         return this;
     }
 }

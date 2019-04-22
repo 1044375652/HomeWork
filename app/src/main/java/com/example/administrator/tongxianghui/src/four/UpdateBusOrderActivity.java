@@ -2,6 +2,7 @@ package com.example.administrator.tongxianghui.src.four;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 import com.example.administrator.tongxianghui.R;
 import com.example.administrator.tongxianghui.model.DirectionMessageInfo;
 import com.example.administrator.tongxianghui.model.OrderMessageInfo;
+import com.example.administrator.tongxianghui.model.UpdateOrderMessageReq;
 import com.example.administrator.tongxianghui.model.base.Res;
 import com.example.administrator.tongxianghui.utils.ChangeType;
 import com.example.administrator.tongxianghui.utils.Ip;
@@ -36,11 +38,15 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class UpdateBusOrderActivity extends AppCompatActivity {
@@ -54,6 +60,8 @@ public class UpdateBusOrderActivity extends AppCompatActivity {
     private Request request;
     private Call call;
     private Gson gson;
+    private RequestBody requestBody;
+    private MediaType json = MediaType.parse("application/json;charset=utf-8");
     private List<DirectionMessageInfo> directionMessageInfoList;
     private static final String TAG = UpdateBusOrderActivity.class.getName();
     private int currentPage;
@@ -67,9 +75,13 @@ public class UpdateBusOrderActivity extends AppCompatActivity {
     private Button updateBusOrderActivitySubmit;
     private ListView title;
     private CheckBox titleCheckBox;
+    private TimerTask timerTask;
+    private Timer timer;
+    private Intent intent;
 
     private static String GET_Direction_Messages_URL = "http://" + Ip.IP + ":8001/direction/direction_messages";
     private static String GET_Order_Messages_URL = "http://" + Ip.IP + ":8001/order/messages";
+    private static String Post_Update_Order_Messages_URL = "http://" + Ip.IP + ":8001/order/update_order_message";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,8 +165,8 @@ public class UpdateBusOrderActivity extends AppCompatActivity {
     private void showOrderData(List<OrderMessageInfo> orderMessageInfoList) {
         ListView orderData = new ListView(context);
         SimpleAdapter simpleAdapter = new SimpleAdapter(context, getOrderData(orderMessageInfoList), R.layout.activity_update_bus_order_item
-                , new String[]{"updateBusOrderActivityUserPhone", "updateBusOrderActivityUpPoint", "updateBusOrderActivityPlateNumber", "updateBusOrderActivityWithCarPhone"}
-                , new int[]{R.id.updateBusOrderActivityUserPhone, R.id.updateBusOrderActivityUpPoint, R.id.updateBusOrderActivityPlateNumber, R.id.updateBusOrderActivityWithCarPhone});
+                , new String[]{"updateBusOrderActivityDirection", "updateBusOrderActivityUserPhone", "updateBusOrderActivityUpPoint", "updateBusOrderActivityPlateNumber", "updateBusOrderActivityWithCarPhone"}
+                , new int[]{R.id.updateBusOrderActivityDirection, R.id.updateBusOrderActivityUserPhone, R.id.updateBusOrderActivityUpPoint, R.id.updateBusOrderActivityPlateNumber, R.id.updateBusOrderActivityWithCarPhone});
         orderData.setAdapter(simpleAdapter);
         updateBusOrderActivityOrderDataItem.removeAllViews();
         updateBusOrderActivityOrderDataItem.addView(orderData);
@@ -168,9 +180,11 @@ public class UpdateBusOrderActivity extends AppCompatActivity {
                         ConstraintLayout constraintLayout = (ConstraintLayout) orderData.getChildAt(i);
                         CheckBox checkBox = constraintLayout.findViewById(R.id.updateBusOrderActivityCheckBox);
                         TextView phoneTextView = constraintLayout.findViewById(R.id.updateBusOrderActivityUserPhone);
+                        TextView directionView = constraintLayout.findViewById(R.id.updateBusOrderActivityDirection);
                         listItem.add(new HashMap<String, Object>() {{
                             put("checkBox", checkBox);
                             put("phone", String.valueOf(phoneTextView.getText()));
+                            put("directionType", String.valueOf(directionView.getText()));
                         }});
                     }
                 }
@@ -188,10 +202,18 @@ public class UpdateBusOrderActivity extends AppCompatActivity {
         List<Map<String, Object>> mapList = new ArrayList<>();
         for (OrderMessageInfo orderMessageInfo : orderMessageInfoList) {
             mapList.add(new HashMap<String, Object>() {{
+                String plateNumber = orderMessageInfo.getPlateNumber();
+                String withCarPhone = orderMessageInfo.getWithCarNumber();
                 put("updateBusOrderActivityUserPhone", orderMessageInfo.getPhone());
                 put("updateBusOrderActivityUpPoint", ChangeType.PointType.CodeToMsg(orderMessageInfo.getUpPoint()));
-                put("updateBusOrderActivityPlateNumber", "空");
-                put("updateBusOrderActivityWithCarPhone", "空");
+                if (StringUtils.isBlank(plateNumber)) {
+                    plateNumber = "空";
+                }
+                if (StringUtils.isBlank(withCarPhone)) {
+                    withCarPhone = "空";
+                }
+                put("updateBusOrderActivityPlateNumber", plateNumber);
+                put("updateBusOrderActivityWithCarPhone", withCarPhone);
             }});
         }
         return mapList;
@@ -294,24 +316,32 @@ public class UpdateBusOrderActivity extends AppCompatActivity {
             showErrorDialog(context, "未选择需要设置的用户");
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            LinearLayout linearLayout = new LinearLayout(context);
+            linearLayout.setOrientation(LinearLayout.VERTICAL);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             EditText plateNumber = new EditText(context);
             plateNumber.setHint("车牌号");
             EditText withCarPhone = new EditText(context);
             withCarPhone.setHint("跟车员手机");
+            plateNumber.setLayoutParams(params);
+            withCarPhone.setLayoutParams(params);
+            linearLayout.addView(plateNumber);
+            linearLayout.addView(withCarPhone);
             builder.setTitle("请完善订单信息")
-                    .setView(plateNumber)
-                    .setView(withCarPhone)
+                    .setView(linearLayout)
                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             String plateNumberMsg = String.valueOf(plateNumber.getText());
                             String withCarPhoneMsg = String.valueOf(withCarPhone.getText());
+                            Log.i(TAG, plateNumberMsg);
+                            Log.i(TAG, withCarPhoneMsg);
                             if (StringUtils.isBlank(plateNumberMsg)) {
                                 MyUtils.toast(context, "车牌号未输入");
                             } else if (StringUtils.isBlank(withCarPhoneMsg)) {
                                 MyUtils.toast(context, "跟车员电话未输入");
                             } else {
-
+                                requestDataToPostUpdateOrderMessagesUrl(plateNumberMsg, withCarPhoneMsg, listItemCheesed);
                             }
                         }
                     })
@@ -336,6 +366,58 @@ public class UpdateBusOrderActivity extends AppCompatActivity {
                 }).create().show();
     }
 
-    private void
+    private void requestDataToPostUpdateOrderMessagesUrl(String plateNumber, String withCarPhone, List<Map<String, Object>> mapList) {
+        okHttpClient = new OkHttpClient();
+        List<UpdateOrderMessageReq> updateOrderMessageReqList = new ArrayList<>();
+        for (Map<String, Object> map : mapList) {
+            updateOrderMessageReqList.add(new UpdateOrderMessageReq()
+                    .setPhone(String.valueOf(map.get("phone")))
+                    .setDirectionType(ChangeType.DirectionType.MsgToCode(String.valueOf(map.get("directionType"))))
+                    .setWithCarPhone(withCarPhone)
+                    .setPlateNumber(plateNumber)
+            );
+        }
+        for (UpdateOrderMessageReq updateOrderMessageReq : updateOrderMessageReqList) {
+            Log.i(TAG, updateOrderMessageReq.getPhone());
+            Log.i(TAG, updateOrderMessageReq.getPlateNumber());
+            Log.i(TAG, updateOrderMessageReq.getWithCarPhone());
+            Log.i(TAG, updateOrderMessageReq.getDirectionType() + "");
+        }
+        String obj = gson.toJson(updateOrderMessageReqList);
+        requestBody = RequestBody.create(json, obj);
+        request = new Request.Builder()
+                .url(Post_Update_Order_Messages_URL)
+                .post(requestBody)
+                .build();
+        call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.i(TAG, "请求服务器失败");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Res res = gson.fromJson(String.valueOf(response.body().string()), Res.class);
+                if (res.getCode() == 200) {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            MyUtils.toast(context, "添加成功");
+                            timerTask = new TimerTask() {
+                                @Override
+                                public void run() {
+                                    intent = new Intent(context, UpdateBusOrderActivity.class);
+                                    startActivity(intent);
+                                }
+                            };
+                            timer = new Timer();
+                            timer.schedule(timerTask, 1000);
+                        }
+                    });
+                }
+            }
+        });
+    }
 
 }
