@@ -5,12 +5,12 @@
     android:padding="10sp">
 
     <CheckBox
-        app:layout_constraintHorizontal_chainStyle="spread_inside"
         android:id="@+id/updateBusOrderActivityCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/updateBusOrderActivityUserPhone"
         app:layout_constraintTop_toTopOf="parent" />

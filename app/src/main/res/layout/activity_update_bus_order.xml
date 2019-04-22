@@ -76,6 +76,7 @@
 
 
     <Button
+        android:id="@+id/updateBusOrderActivityPrePage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -85,6 +86,7 @@
         android:textColor="@color/white" />
 
     <Button
+        android:id="@+id/updateBusOrderActivityNextPage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -92,5 +94,29 @@
         android:background="@drawable/index_btn"
         android:text="@string/next_page"
         android:textColor="@color/white" />
+
+    <Button
+        android:id="@+id/updateBusOrderActivityBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/index_btn"
+        android:onClick="updateBusOrderActivityBack"
+        android:text="@string/register_back"
+        android:textColor="@color/white"
+        android:visibility="gone" />
+
+    <Button
+        android:onClick="updateBusOrderActivitySetting"
+        android:id="@+id/updateBusOrderActivitySetting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/index_btn"
+        android:text="@string/setting"
+        android:textColor="@color/white"
+        android:visibility="gone" />
 
 </RelativeLayout>

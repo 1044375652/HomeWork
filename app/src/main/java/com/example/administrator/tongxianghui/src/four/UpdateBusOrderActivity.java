@@ -3,6 +3,7 @@ package com.example.administrator.tongxianghui.src.four;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Handler;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,6 +11,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -23,6 +27,8 @@ import com.example.administrator.tongxianghui.utils.ChangeType;
 import com.example.administrator.tongxianghui.utils.Ip;
 import com.example.administrator.tongxianghui.utils.MyUtils;
 import com.google.gson.Gson;
+
+import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -54,6 +60,14 @@ public class UpdateBusOrderActivity extends AppCompatActivity {
     private int currentDirectionType;
     private List<OrderMessageInfo> orderMessageInfoList;
     private Handler handler;
+    private List<Map<String, Object>> listItem;
+    private Button updateBusOrderActivityPrePage;
+    private Button updateBusOrderActivityNextPage;
+    private Button updateBusOrderActivityBack;
+    private Button updateBusOrderActivitySubmit;
+    private ListView title;
+    private CheckBox titleCheckBox;
+
     private static String GET_Direction_Messages_URL = "http://" + Ip.IP + ":8001/direction/direction_messages";
     private static String GET_Order_Messages_URL = "http://" + Ip.IP + ":8001/order/messages";
 
@@ -79,6 +93,10 @@ public class UpdateBusOrderActivity extends AppCompatActivity {
         updateBusOrderActivityOrderDataItem = findViewById(R.id.updateBusOrderActivityOrderDataItem);
         gson = new Gson();
         handler = new Handler();
+        updateBusOrderActivityPrePage = findViewById(R.id.updateBusOrderActivityPrePage);
+        updateBusOrderActivityNextPage = findViewById(R.id.updateBusOrderActivityNextPage);
+        updateBusOrderActivityBack = findViewById(R.id.updateBusOrderActivityBack);
+        updateBusOrderActivitySubmit = findViewById(R.id.updateBusOrderActivitySetting);
     }
 
     @Override
@@ -90,6 +108,18 @@ public class UpdateBusOrderActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        int paddingLeft = 0;
+        for (Map<String, Object> map : listItem) {
+            CheckBox checkBox = (CheckBox) map.get("checkBox");
+            paddingLeft = checkBox.getWidth();
+            checkBox.setVisibility(View.VISIBLE);
+        }
+        titleCheckBox.setVisibility(View.INVISIBLE);
+        title.setPadding(paddingLeft, 0, 0, 0);
+        updateBusOrderActivityPrePage.setVisibility(View.GONE);
+        updateBusOrderActivityNextPage.setVisibility(View.GONE);
+        updateBusOrderActivityBack.setVisibility(View.VISIBLE);
+        updateBusOrderActivitySubmit.setVisibility(View.VISIBLE);
         return super.onOptionsItemSelected(item);
     }
 
@@ -102,24 +132,50 @@ public class UpdateBusOrderActivity extends AppCompatActivity {
     }
 
     private void showTitleData() {
-        ListView title = new ListView(context);
-        SimpleAdapter simpleAdapter = new SimpleAdapter(context, getTitleData(), R.layout.activity_update_bus_order_title
+        title = new ListView(context);
+        SimpleAdapter simpleAdapter = new SimpleAdapter(context, getTitleData(), R.layout.activity_update_bus_order_item
                 , new String[]{"updateBusOrderActivityUserPhone", "updateBusOrderActivityUpPoint", "updateBusOrderActivityPlateNumber", "updateBusOrderActivityWithCarPhone"}
                 , new int[]{R.id.updateBusOrderActivityUserPhone, R.id.updateBusOrderActivityUpPoint, R.id.updateBusOrderActivityPlateNumber, R.id.updateBusOrderActivityWithCarPhone});
         title.setAdapter(simpleAdapter);
+        title.post(new Runnable() {
+            @Override
+            public void run() {
+                if (title.getCount() == title.getChildCount()) {
+                    titleCheckBox = title.getChildAt(0).findViewById(R.id.updateBusOrderActivityCheckBox);
+                }
+            }
+        });
         updateBusOrderActivityTitle.removeAllViews();
         updateBusOrderActivityTitle.addView(title);
         updateBusOrderActivityCurrentDirection.setText("全部");
     }
 
     private void showOrderData(List<OrderMessageInfo> orderMessageInfoList) {
-        ListView title = new ListView(context);
-        SimpleAdapter simpleAdapter = new SimpleAdapter(context, getOrderData(orderMessageInfoList), R.layout.activity_update_bus_order_title
+        ListView orderData = new ListView(context);
+        SimpleAdapter simpleAdapter = new SimpleAdapter(context, getOrderData(orderMessageInfoList), R.layout.activity_update_bus_order_item
                 , new String[]{"updateBusOrderActivityUserPhone", "updateBusOrderActivityUpPoint", "updateBusOrderActivityPlateNumber", "updateBusOrderActivityWithCarPhone"}
                 , new int[]{R.id.updateBusOrderActivityUserPhone, R.id.updateBusOrderActivityUpPoint, R.id.updateBusOrderActivityPlateNumber, R.id.updateBusOrderActivityWithCarPhone});
-        title.setAdapter(simpleAdapter);
+        orderData.setAdapter(simpleAdapter);
         updateBusOrderActivityOrderDataItem.removeAllViews();
-        updateBusOrderActivityOrderDataItem.addView(title);
+        updateBusOrderActivityOrderDataItem.addView(orderData);
+        orderData.post(new Runnable() {
+            @Override
+            public void run() {
+                listItem = new ArrayList<>();
+                if (orderData.getChildCount() == orderData.getCount()) {
+                    int count = orderData.getChildCount();
+                    for (int i = 0; i < count; i++) {
+                        ConstraintLayout constraintLayout = (ConstraintLayout) orderData.getChildAt(i);
+                        CheckBox checkBox = constraintLayout.findViewById(R.id.updateBusOrderActivityCheckBox);
+                        TextView phoneTextView = constraintLayout.findViewById(R.id.updateBusOrderActivityUserPhone);
+                        listItem.add(new HashMap<String, Object>() {{
+                            put("checkBox", checkBox);
+                            put("phone", String.valueOf(phoneTextView.getText()));
+                        }});
+                    }
+                }
+            }
+        });
     }
 
     List<Map<String, Object>> getTitleData() {
@@ -178,10 +234,6 @@ public class UpdateBusOrderActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialogInterface, int i) {
                 updateBusOrderActivityCurrentDirection.setText(directionList.get(i));
                 currentDirectionType = ChangeType.DirectionType.MsgToCode(directionList.get(i));
-                Log.i(TAG, "--------------------");
-                Log.i(TAG, currentPage + "");
-                Log.i(TAG, currentDirectionType + "");
-                Log.i(TAG, "--------------------");
                 requestDataFromGetOrderMessagesURL(currentPage, currentDirectionType);
             }
         }).create().show();
@@ -205,8 +257,6 @@ public class UpdateBusOrderActivity extends AppCompatActivity {
                 if (res.getCode() == 200) {
                     OrderMessageInfo[] orderMessageInfos = gson.fromJson(String.valueOf(res.getData()), OrderMessageInfo[].class);
                     orderMessageInfoList = Arrays.asList(orderMessageInfos);
-                    Log.i(TAG, (orderMessageInfoList == null) + "");
-                    Log.i(TAG, orderMessageInfoList.size() + "");
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -218,5 +268,74 @@ public class UpdateBusOrderActivity extends AppCompatActivity {
         });
     }
 
+
+    public void updateBusOrderActivityBack(View view) {
+        for (Map<String, Object> map : listItem) {
+            CheckBox checkBox = (CheckBox) map.get("checkBox");
+            checkBox.setVisibility(View.GONE);
+            checkBox.setChecked(false);
+        }
+        titleCheckBox.setVisibility(View.GONE);
+        updateBusOrderActivityPrePage.setVisibility(View.VISIBLE);
+        updateBusOrderActivityNextPage.setVisibility(View.VISIBLE);
+        updateBusOrderActivityBack.setVisibility(View.GONE);
+        updateBusOrderActivitySubmit.setVisibility(View.GONE);
+    }
+
+    public void updateBusOrderActivitySetting(View view) {
+        List<Map<String, Object>> listItemCheesed = new ArrayList<>();
+        for (Map<String, Object> map : listItem) {
+            CheckBox checkBox = (CheckBox) map.get("checkBox");
+            if (checkBox.isChecked()) {
+                listItemCheesed.add(map);
+            }
+        }
+        if (listItemCheesed.size() == 0) {
+            showErrorDialog(context, "未选择需要设置的用户");
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            EditText plateNumber = new EditText(context);
+            plateNumber.setHint("车牌号");
+            EditText withCarPhone = new EditText(context);
+            withCarPhone.setHint("跟车员手机");
+            builder.setTitle("请完善订单信息")
+                    .setView(plateNumber)
+                    .setView(withCarPhone)
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            String plateNumberMsg = String.valueOf(plateNumber.getText());
+                            String withCarPhoneMsg = String.valueOf(withCarPhone.getText());
+                            if (StringUtils.isBlank(plateNumberMsg)) {
+                                MyUtils.toast(context, "车牌号未输入");
+                            } else if (StringUtils.isBlank(withCarPhoneMsg)) {
+                                MyUtils.toast(context, "跟车员电话未输入");
+                            } else {
+
+                            }
+                        }
+                    })
+                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    })
+                    .create().show();
+        }
+    }
+
+    private void showErrorDialog(Context context, String msg) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(msg)
+                .setNegativeButton("返回", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                }).create().show();
+    }
+
+    private void
 
 }
