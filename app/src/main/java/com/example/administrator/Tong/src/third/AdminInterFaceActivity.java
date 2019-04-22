@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.example.administrator.Tong.R;
+import com.example.administrator.Tong.src.four.BusActivity;
 import com.example.administrator.Tong.src.four.UpdateBusOrderActivity;
 
 public class AdminInterFaceActivity extends AppCompatActivity {
@@ -36,7 +37,8 @@ public class AdminInterFaceActivity extends AppCompatActivity {
     }
 
     public void adminInterFaceActivityAddBus(View view) {
-
+        intent = new Intent(context, BusActivity.class);
+        startActivity(intent);
     }
 
     public void adminInterFaceActivityUpdateOrder(View view) {

@@ -157,8 +157,8 @@ public class RegisterActivity extends AppCompatActivity {
                                             public void run() {
                                                 bundle = new Bundle();
                                                 bundle.putString("userPhone", phone);
-                                                intent.putExtra("userPhone", bundle);
                                                 intent = new Intent(context, MyActivity.class);
+                                                intent.putExtra("userPhone", bundle);
                                                 startActivity(intent);
                                             }
                                         };

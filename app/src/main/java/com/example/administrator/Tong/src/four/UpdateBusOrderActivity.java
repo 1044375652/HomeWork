@@ -3,6 +3,9 @@ package com.example.administrator.Tong.src.four;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
@@ -12,15 +15,19 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.example.administrator.Tong.R;
+import com.example.administrator.Tong.model.BusInfo;
 import com.example.administrator.Tong.model.DirectionMessageInfo;
 import com.example.administrator.Tong.model.OrderMessageInfo;
 import com.example.administrator.Tong.model.UpdateOrderMessageReq;
@@ -78,10 +85,12 @@ public class UpdateBusOrderActivity extends AppCompatActivity {
     private TimerTask timerTask;
     private Timer timer;
     private Intent intent;
+    private List<BusInfo> busInfoList;
 
     private static String GET_Direction_Messages_URL = "http://" + Ip.IP + ":8001/direction/direction_messages";
     private static String GET_Order_Messages_URL = "http://" + Ip.IP + ":8001/order/messages";
     private static String Post_Update_Order_Messages_URL = "http://" + Ip.IP + ":8001/order/update_order_message";
+    private static final String Get_Bus_Url = "http://" + Ip.IP + ":8001/my_bus/messages";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,6 +148,35 @@ public class UpdateBusOrderActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         showTitleData();
+        requestDataFromGetBusUrl();
+    }
+
+    private void requestDataFromGetBusUrl() {
+        okHttpClient = new OkHttpClient();
+        request = new Request.Builder()
+                .url(Get_Bus_Url)
+                .build();
+        call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.i(TAG, "请求服务器失败");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Res res = gson.fromJson(response.body().string(), Res.class);
+                if (res.getCode() == 200) {
+                    BusInfo[] busInfos = gson.fromJson(String.valueOf(res.getData()), BusInfo[].class);
+                    busInfoList = Arrays.asList(busInfos);
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         requestDataFromGetDirectionMessagesUrl();
         requestDataFromGetOrderMessagesURL(currentPage, currentDirectionType);
     }
@@ -319,14 +357,21 @@ public class UpdateBusOrderActivity extends AppCompatActivity {
             LinearLayout linearLayout = new LinearLayout(context);
             linearLayout.setOrientation(LinearLayout.VERTICAL);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            EditText plateNumber = new EditText(context);
-            plateNumber.setHint("车牌号");
+
             EditText withCarPhone = new EditText(context);
             withCarPhone.setHint("跟车员手机");
+            EditText plateNumber = new EditText(context);
+            plateNumber.setHint("车牌号");
+            plateNumber.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showPopUpWindow(plateNumber);
+                }
+            });
             plateNumber.setLayoutParams(params);
             withCarPhone.setLayoutParams(params);
-            linearLayout.addView(plateNumber);
             linearLayout.addView(withCarPhone);
+            linearLayout.addView(plateNumber);
             builder.setTitle("请完善订单信息")
                     .setView(linearLayout)
                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
@@ -353,6 +398,29 @@ public class UpdateBusOrderActivity extends AppCompatActivity {
                     })
                     .create().show();
         }
+    }
+
+    private void showPopUpWindow(EditText editText) {
+        ListView listView = new ListView(context);
+
+        List<String> plateNumber = new ArrayList<>();
+        for (BusInfo busInfo : busInfoList) {
+            plateNumber.add(busInfo.getPlateNumber());
+        }
+
+        ArrayAdapter arrayAdapter = new ArrayAdapter(context, R.layout.support_simple_spinner_dropdown_item, plateNumber);
+        listView.setAdapter(arrayAdapter);
+        PopupWindow popupWindow = new PopupWindow(listView, 100, LinearLayout.LayoutParams.WRAP_CONTENT);
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.showAsDropDown(editText, 0, 0);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                editText.setText(plateNumber.get(i));
+                popupWindow.dismiss();
+            }
+        });
     }
 
     private void showErrorDialog(Context context, String msg) {
