@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.administrator.Tong.MyApplication;
 import com.example.administrator.Tong.R;
 import com.example.administrator.Tong.dao.DataBaseHelper;
 import com.example.administrator.Tong.model.User;
@@ -38,7 +39,7 @@ import okhttp3.Response;
 public class RegisterActivity extends AppCompatActivity {
 
     private Intent intent;
-    private Context context = RegisterActivity.this;
+    private Context context;
     private EditText editText;
     private DataBaseHelper dataBaseHelper;
     private MediaType JSON = MediaType.parse("application/json;charset=utf-8");
@@ -57,15 +58,22 @@ public class RegisterActivity extends AppCompatActivity {
     private Response response;
     private Random random;
     private Bundle bundle;
+    private MyApplication myApplication;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        initData();
+    }
+
+    private void initData() {
+        context = this;
         dataBaseHelper = DataBaseHelper.getDataBaseHelper(context);
         gson = new Gson();
         random = new Random();
+        myApplication = (MyApplication) getApplication();
     }
 
     public void registerBack(View view) {
@@ -155,10 +163,8 @@ public class RegisterActivity extends AppCompatActivity {
                                         TimerTask timerTask = new TimerTask() {
                                             @Override
                                             public void run() {
-                                                bundle = new Bundle();
-                                                bundle.putString("userPhone", phone);
+                                                myApplication.setPhone(phone);
                                                 intent = new Intent(context, MyActivity.class);
-                                                intent.putExtra("userPhone", bundle);
                                                 startActivity(intent);
                                             }
                                         };

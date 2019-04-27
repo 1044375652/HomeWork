@@ -4,24 +4,36 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.administrator.Tong.MyApplication;
 import com.example.administrator.Tong.R;
 import com.example.administrator.Tong.src.four.CheckTicketActivity;
 import com.example.administrator.Tong.src.third.AdminInterFaceActivity;
 import com.example.administrator.Tong.src.third.BuyTicketActivity;
 import com.example.administrator.Tong.src.third.MyTripActivity;
+import com.example.administrator.Tong.utils.MyUtils;
 
 public class MyActivity extends AppCompatActivity {
-    private Context context = MyActivity.this;
+    private Context context;
     private Intent intent;
     private Bundle bundle;
+    private static final String TAG = MyActivity.class.getName();
+    private MyApplication myApplication;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
+        initData();
+    }
+
+
+    private void initData() {
+        context = this;
+        myApplication = (MyApplication) getApplication();
     }
 
     public void secondBuyTicket(View view) {
@@ -30,16 +42,12 @@ public class MyActivity extends AppCompatActivity {
     }
 
     public void secondCheckTicket(View view) {
-        bundle = getIntent().getBundleExtra("userPhone");
         intent = new Intent(context, CheckTicketActivity.class);
-        intent.putExtra("userPhone", bundle);
         startActivity(intent);
     }
 
     public void secondTrip(View view) {
-        bundle = getIntent().getBundleExtra("userPhone");
         intent = new Intent(context, MyTripActivity.class);
-        intent.putExtra("userPhone", bundle);
         startActivity(intent);
     }
 

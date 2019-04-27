@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
+import com.example.administrator.Tong.MyApplication;
 import com.example.administrator.Tong.R;
 import com.example.administrator.Tong.dao.DataBaseHelper;
 import com.example.administrator.Tong.model.MyTripSerializable;
@@ -47,6 +48,7 @@ public class MyTripActivity extends AppCompatActivity {
     private Call call;
     private Gson gson;
     private Handler handler;
+    private MyApplication myApplication;
 
     private static String GET_Order_Messages_By_Phone_URL = "http://" + Ip.IP + ":8001/order/messages_phone";
 
@@ -62,6 +64,7 @@ public class MyTripActivity extends AppCompatActivity {
         dataBaseHelper = DataBaseHelper.getDataBaseHelper(context);
         gson = new Gson();
         handler = new Handler();
+        myApplication = (MyApplication) getApplication();
     }
 
     @Override
@@ -70,7 +73,7 @@ public class MyTripActivity extends AppCompatActivity {
         String[] columns = new String[]{"_id", "up_point", "down_point", "direction_type", "ticket_number", "up_date", "phone", "plate_number"};
         orderMessageInfoList = dataBaseHelper.selectDataFromOrderMessageTable(columns, null, null);
         if (orderMessageInfoList.size() == 0) {
-            String phone = getIntent().getBundleExtra("userPhone").getString("userPhone");
+            String phone = myApplication.getPhone();
             requestDataFromGetOrderMessagesByPhoneUrl(phone);
         } else {
             showData();

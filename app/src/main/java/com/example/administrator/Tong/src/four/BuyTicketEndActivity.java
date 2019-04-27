@@ -229,7 +229,7 @@ public class BuyTicketEndActivity extends AppCompatActivity {
         String upPointMsg = String.valueOf(buyTicketEndActivityUpPoint.getText());
         String downPointMsg = String.valueOf(buyTicketEndActivityDownPoint.getText());
         String upDateMsg = String.valueOf(buyTicketEndActivityUpDate.getText());
-        String tickerNumberMsg = String.valueOf(buyTicketEndActivityTickerNumber.getText());
+        String ticketNumberMsg = String.valueOf(buyTicketEndActivityTickerNumber.getText());
         String phoneMsg = String.valueOf(buyTicketEndActivityPhone.getText());
         if (StringUtils.isBlank(upPointMsg)) {
             showErrorDialog(context, "上车点未选择");
@@ -237,14 +237,14 @@ public class BuyTicketEndActivity extends AppCompatActivity {
             showErrorDialog(context, "下车点未选择");
         } else if (StringUtils.isBlank(upDateMsg)) {
             showErrorDialog(context, "上车时间未选择");
-        } else if (StringUtils.isBlank(tickerNumberMsg)) {
+        } else if (StringUtils.isBlank(ticketNumberMsg)) {
             showErrorDialog(context, "票数未选择");
         } else if (StringUtils.isBlank(phoneMsg)) {
             showErrorDialog(context, "电话未填写");
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setTitle("购票信息是否正确？")
-                    .setMessage("上车点：" + upPointMsg + "，下车点：" + downPointMsg + "，上车时间：" + upDateMsg + "，票数：" + tickerNumberMsg + "，电话号：" + phoneMsg)
+                    .setMessage("上车点：" + upPointMsg + "，下车点：" + downPointMsg + "，上车时间：" + upDateMsg + "，票数：" + ticketNumberMsg + "，电话号：" + phoneMsg)
                     .setNegativeButton("返回", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -259,12 +259,13 @@ public class BuyTicketEndActivity extends AppCompatActivity {
                             int upPoint = ChangeType.PointType.MsgToCode(upPointMsg);
                             int downPoint = ChangeType.PointType.MsgToCode(downPointMsg);
                             long upDate = MyUtils.StringToDate(upDateMsg);
-                            int tickerNumber = Integer.parseInt(tickerNumberMsg);
+                            int ticketNumber = Integer.parseInt(ticketNumberMsg);
+                            Log.i(TAG, ticketNumber + "");
                             orderMessageInfo.setUpPoint(upPoint)
                                     .setId(random.nextInt(SEEDS))
                                     .setDownPoint(downPoint)
                                     .setUpDate(upDate)
-                                    .setTickerNumber(tickerNumber)
+                                    .setTicketNumber(ticketNumber)
                                     .setDirectionType(directionType)
                                     .setPhone(phoneMsg)
                                     .setPlateNumber("空")

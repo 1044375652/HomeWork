@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.administrator.Tong.MyApplication;
 import com.example.administrator.Tong.R;
 import com.example.administrator.Tong.dao.DataBaseHelper;
 import com.example.administrator.Tong.model.DirectionMessageInfo;
@@ -52,6 +53,7 @@ public class BuyTicketActivity extends AppCompatActivity {
     private TimerTask timerTask;
     private Timer timer;
     private LinearLayout parentLinearLayout;
+    private MyApplication myApplication;
     private static String GET_Direction_Messages_URL = "http://" + Ip.IP + ":8001/direction/direction_messages";
     private static final String TAG = BuyTicketActivity.class.getName();
 
@@ -59,10 +61,15 @@ public class BuyTicketActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buy_ticket);
-        context = BuyTicketActivity.this;
+        initData();
+    }
+
+    private void initData() {
+        context = this;
         dataBaseHelper = DataBaseHelper.getDataBaseHelper(context);
         parentLinearLayout = findViewById(R.id.thirdBuyTicketGroup);
         handler = new Handler();
+        myApplication = (MyApplication) getApplication();
     }
 
     @Override

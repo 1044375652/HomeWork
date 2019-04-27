@@ -9,6 +9,7 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.example.administrator.Tong.MyApplication;
 import com.example.administrator.Tong.R;
 import com.example.administrator.Tong.dao.DataBaseHelper;
 import com.example.administrator.Tong.model.OrderMessageInfo;
@@ -48,6 +49,7 @@ public class CheckTicketActivity extends AppCompatActivity {
     private Gson gson;
     private static final String TAG = CheckTicketActivity.class.getName();
     private Handler handler;
+    private MyApplication myApplication;
 
     private static String GET_Order_Messages_By_Phone_URL = "http://" + Ip.IP + ":8001/order/messages_phone";
 
@@ -70,6 +72,7 @@ public class CheckTicketActivity extends AppCompatActivity {
         dataBaseHelper = DataBaseHelper.getDataBaseHelper(context);
         gson = new Gson();
         handler = new Handler();
+        myApplication = (MyApplication) getApplication();
     }
 
     @Override
@@ -78,7 +81,7 @@ public class CheckTicketActivity extends AppCompatActivity {
         String[] columns = new String[]{"_id", "up_point", "down_point", "direction_type", "ticket_number", "phone", "up_date", "plate_number", "with_car_phone"};
         orderMessageInfoList = dataBaseHelper.selectDataFromOrderMessageTable(columns, null, null);
         if (orderMessageInfoList.size() == 0) {
-            String phone = getIntent().getBundleExtra("userPhone").getString("userPhone");
+            String phone = myApplication.getPhone();
             requestDataFromGetOrderMessagesByPhoneUrl(phone);
         } else {
             showData();
@@ -127,7 +130,7 @@ public class CheckTicketActivity extends AppCompatActivity {
                 put("checkTicketActivityUpPoint", ChangeType.PointType.CodeToMsg(orderMessageInfo.getUpPoint()));
                 put("checkTicketActivityDownPoint", ChangeType.PointType.CodeToMsg(orderMessageInfo.getDownPoint()));
                 put("checkTicketActivityUpDate", MyUtils.DateToString(orderMessageInfo.getUpDate()));
-                put("checkTicketActivityTicketNumber", orderMessageInfo.getTickerNumber());
+                put("checkTicketActivityTicketNumber", orderMessageInfo.getTicketNumber());
                 put("checkTicketActivityPhone", orderMessageInfo.getPhone());
             }});
         }

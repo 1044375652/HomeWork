@@ -331,7 +331,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     .setDirectionType(cursor.getInt(cursor.getColumnIndex(OrderMessageTable.DirectionType)))
                     .setUpDate(cursor.getLong(cursor.getColumnIndex(OrderMessageTable.UpDate)))
                     .setDownPoint(cursor.getInt(cursor.getColumnIndex(OrderMessageTable.DownPoint)))
-                    .setTickerNumber(cursor.getInt(cursor.getColumnIndex(OrderMessageTable.TicketNumber)))
+                    .setTicketNumber(cursor.getInt(cursor.getColumnIndex(OrderMessageTable.TicketNumber)))
                     .setUpPoint(cursor.getInt(cursor.getColumnIndex(OrderMessageTable.UpPoint)))
                     .setPhone(cursor.getString(cursor.getColumnIndex(OrderMessageTable.Phone)))
                     .setPlateNumber(cursor.getString(cursor.getColumnIndex(OrderMessageTable.PlateNumber)))
@@ -352,8 +352,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             contentValues.put(OrderMessageTable.DownPoint, orderMessageInfo.getDownPoint());
             contentValues.put(OrderMessageTable.UpPoint, orderMessageInfo.getUpPoint());
             contentValues.put(OrderMessageTable.UpDate, orderMessageInfo.getUpDate());
-            contentValues.put(OrderMessageTable.TicketNumber, orderMessageInfo.getTickerNumber());
-            contentValues.put(OrderMessageTable.TicketNumber, orderMessageInfo.getTickerNumber());
+            contentValues.put(OrderMessageTable.TicketNumber, orderMessageInfo.getTicketNumber());
             contentValues.put(OrderMessageTable.Phone, orderMessageInfo.getPhone());
             contentValues.put(OrderMessageTable.PlateNumber, orderMessageInfo.getPlateNumber());
             contentValues.put(OrderMessageTable.WithCarPhone, orderMessageInfo.getWithCarPhone());

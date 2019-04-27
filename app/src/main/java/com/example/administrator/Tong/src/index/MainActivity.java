@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.administrator.Tong.MyApplication;
 import com.example.administrator.Tong.R;
 import com.example.administrator.Tong.dao.DataBaseHelper;
 import com.example.administrator.Tong.model.User;
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private Intent intent;
     private EditText editText;
     private Bundle bundle;
+    private MyApplication myApplication;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,10 +67,9 @@ public class MainActivity extends AppCompatActivity {
                         }).create().show();
                 return;
             }
+            myApplication = (MyApplication) getApplication();
             intent = new Intent(context, MyActivity.class);
-            bundle = new Bundle();
-            bundle.putString("userPhone", phone);
-            intent.putExtra("userPhone", bundle);
+            myApplication.setPhone(phone);
             startActivity(intent);
         } else {
             builder.setTitle("请输入手机号")

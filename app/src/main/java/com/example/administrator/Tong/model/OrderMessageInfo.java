@@ -5,7 +5,7 @@ public class OrderMessageInfo {
     private int upPoint;
     private int downPoint;
     private int directionType;
-    private int tickerNumber;
+    private int ticketNumber;
     private long upDate;
     private String phone;
     private String plateNumber;
@@ -47,12 +47,12 @@ public class OrderMessageInfo {
         return this;
     }
 
-    public int getTickerNumber() {
-        return tickerNumber;
+    public int getTicketNumber() {
+        return ticketNumber;
     }
 
-    public OrderMessageInfo setTickerNumber(int tickerNumber) {
-        this.tickerNumber = tickerNumber;
+    public OrderMessageInfo setTicketNumber(int ticketNumber) {
+        this.ticketNumber = ticketNumber;
         return this;
     }
 
