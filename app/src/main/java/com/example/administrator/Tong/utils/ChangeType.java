@@ -5,21 +5,21 @@ public class ChangeType {
         public static int MsgToCode(String msg) {
             switch (msg) {
                 case "惠城、博罗至珠海同乡会包车":
-                    return 1;
+                    return 0;
                 case "珠海至惠城、博罗同乡会包车":
-                    return 2;
+                    return 1;
                 case "珠海至惠东、淡水客运站班次":
-                    return 3;
+                    return 2;
                 case "惠东、淡水至珠海客运站班次":
-                    return 4;
+                    return 3;
                 case "惠东、淡水至珠海同乡会包车":
-                    return 5;
+                    return 4;
                 case "珠海至惠东、淡水同乡会包车":
-                    return 6;
+                    return 5;
                 case "全部":
                     return 11;
             }
-            return 1;
+            return 0;
         }
 
 

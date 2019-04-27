@@ -129,18 +129,7 @@ public class UpdateBusOrderActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int paddingLeft = 0;
-        for (Map<String, Object> map : listItem) {
-            CheckBox checkBox = (CheckBox) map.get("checkBox");
-            paddingLeft = checkBox.getWidth();
-            checkBox.setVisibility(View.VISIBLE);
-        }
-        titleCheckBox.setVisibility(View.INVISIBLE);
-        title.setPadding(paddingLeft, 0, 0, 0);
-        updateBusOrderActivityPrePage.setVisibility(View.GONE);
-        updateBusOrderActivityNextPage.setVisibility(View.GONE);
-        updateBusOrderActivityBack.setVisibility(View.VISIBLE);
-        updateBusOrderActivitySubmit.setVisibility(View.VISIBLE);
+        showBackBtn();
         return super.onOptionsItemSelected(item);
     }
 
@@ -252,6 +241,7 @@ public class UpdateBusOrderActivity extends AppCompatActivity {
                 }
                 put("updateBusOrderActivityPlateNumber", plateNumber);
                 put("updateBusOrderActivityWithCarPhone", withCarPhone);
+                put("updateBusOrderActivityDirection", orderMessageInfo.getDirectionType());
             }});
         }
         return mapList;
@@ -330,16 +320,41 @@ public class UpdateBusOrderActivity extends AppCompatActivity {
 
 
     public void updateBusOrderActivityBack(View view) {
+        showPageBtn();
+    }
+
+    private void showBackBtn() {
+        int paddingLeft = 0;
         for (Map<String, Object> map : listItem) {
             CheckBox checkBox = (CheckBox) map.get("checkBox");
-            checkBox.setVisibility(View.GONE);
-            checkBox.setChecked(false);
+            paddingLeft = checkBox.getWidth();
+            checkBox.setVisibility(View.VISIBLE);
         }
-        titleCheckBox.setVisibility(View.GONE);
-        updateBusOrderActivityPrePage.setVisibility(View.VISIBLE);
-        updateBusOrderActivityNextPage.setVisibility(View.VISIBLE);
-        updateBusOrderActivityBack.setVisibility(View.GONE);
-        updateBusOrderActivitySubmit.setVisibility(View.GONE);
+        titleCheckBox.setVisibility(View.INVISIBLE);
+        title.setPadding(paddingLeft, 0, 0, 0);
+        updateBusOrderActivityPrePage.setVisibility(View.GONE);
+        updateBusOrderActivityNextPage.setVisibility(View.GONE);
+        updateBusOrderActivityBack.setVisibility(View.VISIBLE);
+        updateBusOrderActivitySubmit.setVisibility(View.VISIBLE);
+    }
+
+    private void showPageBtn() {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                for (Map<String, Object> map : listItem) {
+                    CheckBox checkBox = (CheckBox) map.get("checkBox");
+                    checkBox.setVisibility(View.GONE);
+                    checkBox.setChecked(false);
+                }
+                titleCheckBox.setVisibility(View.GONE);
+                updateBusOrderActivityPrePage.setVisibility(View.VISIBLE);
+                updateBusOrderActivityNextPage.setVisibility(View.VISIBLE);
+                updateBusOrderActivityBack.setVisibility(View.GONE);
+                updateBusOrderActivitySubmit.setVisibility(View.GONE);
+            }
+        });
+
     }
 
     public void updateBusOrderActivitySetting(View view) {
@@ -350,9 +365,11 @@ public class UpdateBusOrderActivity extends AppCompatActivity {
                 listItemCheesed.add(map);
             }
         }
+
         if (listItemCheesed.size() == 0) {
             showErrorDialog(context, "未选择需要设置的用户");
         } else {
+
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             LinearLayout linearLayout = new LinearLayout(context);
             linearLayout.setOrientation(LinearLayout.VERTICAL);
@@ -365,22 +382,20 @@ public class UpdateBusOrderActivity extends AppCompatActivity {
             plateNumber.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showPopUpWindow(plateNumber);
+                    showPopUpWindow(plateNumber, withCarPhone);
                 }
             });
             plateNumber.setLayoutParams(params);
             withCarPhone.setLayoutParams(params);
             linearLayout.addView(withCarPhone);
             linearLayout.addView(plateNumber);
-            builder.setTitle("请完善订单信息")
+            builder.setTitle("完善订单信息")
                     .setView(linearLayout)
                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             String plateNumberMsg = String.valueOf(plateNumber.getText());
                             String withCarPhoneMsg = String.valueOf(withCarPhone.getText());
-                            Log.i(TAG, plateNumberMsg);
-                            Log.i(TAG, withCarPhoneMsg);
                             if (StringUtils.isBlank(plateNumberMsg)) {
                                 MyUtils.toast(context, "车牌号未输入");
                             } else if (StringUtils.isBlank(withCarPhoneMsg)) {
@@ -400,24 +415,25 @@ public class UpdateBusOrderActivity extends AppCompatActivity {
         }
     }
 
-    private void showPopUpWindow(EditText editText) {
+    private void showPopUpWindow(EditText plateNumber, EditText withCarPhone) {
         ListView listView = new ListView(context);
 
-        List<String> plateNumber = new ArrayList<>();
+        List<String> plateNumberList = new ArrayList<>();
         for (BusInfo busInfo : busInfoList) {
-            plateNumber.add(busInfo.getPlateNumber());
+            plateNumberList.add(busInfo.getPlateNumber());
         }
 
-        ArrayAdapter arrayAdapter = new ArrayAdapter(context, R.layout.support_simple_spinner_dropdown_item, plateNumber);
+        ArrayAdapter arrayAdapter = new ArrayAdapter(context, R.layout.support_simple_spinner_dropdown_item, plateNumberList);
         listView.setAdapter(arrayAdapter);
         PopupWindow popupWindow = new PopupWindow(listView, 100, LinearLayout.LayoutParams.WRAP_CONTENT);
         popupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
         popupWindow.setOutsideTouchable(true);
-        popupWindow.showAsDropDown(editText, 0, 0);
+        popupWindow.showAsDropDown(plateNumber, 0, 0);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                editText.setText(plateNumber.get(i));
+                plateNumber.setText(plateNumberList.get(i));
+                withCarPhone.setText(busInfoList.get(i).getWithCarPhone());
                 popupWindow.dismiss();
             }
         });
@@ -436,11 +452,12 @@ public class UpdateBusOrderActivity extends AppCompatActivity {
 
     private void requestDataToPostUpdateOrderMessagesUrl(String plateNumber, String withCarPhone, List<Map<String, Object>> mapList) {
         okHttpClient = new OkHttpClient();
+
         List<UpdateOrderMessageReq> updateOrderMessageReqList = new ArrayList<>();
         for (Map<String, Object> map : mapList) {
             updateOrderMessageReqList.add(new UpdateOrderMessageReq()
                     .setPhone(String.valueOf(map.get("phone")))
-                    .setDirectionType(ChangeType.DirectionType.MsgToCode(String.valueOf(map.get("directionType"))))
+                    .setDirectionType(Integer.parseInt(String.valueOf(map.get("directionType"))))
                     .setWithCarPhone(withCarPhone)
                     .setPlateNumber(plateNumber)
             );
@@ -471,6 +488,7 @@ public class UpdateBusOrderActivity extends AppCompatActivity {
                                 public void run() {
                                     intent = new Intent(context, UpdateBusOrderActivity.class);
                                     startActivity(intent);
+                                    showPageBtn();
                                 }
                             };
                             timer = new Timer();
