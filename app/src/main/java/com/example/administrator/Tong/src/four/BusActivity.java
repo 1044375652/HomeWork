@@ -22,6 +22,8 @@ import com.example.administrator.Tong.utils.Ip;
 import com.example.administrator.Tong.utils.MyUtils;
 import com.google.gson.Gson;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -110,10 +112,16 @@ public class BusActivity extends AppCompatActivity {
         busActivityLinearLayoutGroup.removeAllViews();
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         layoutParams.setMargins(20, 5, 0, 0);
+        LinearLayout.LayoutParams layoutParams2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams2.setMargins(5, 0, 5, 0);
         for (BusInfo busInfo : busInfoList) {
             LinearLayout linearLayout = new LinearLayout(context);
-            TextView textView = new TextView(context);
-            textView.setTextSize(18);
+            TextView withCarPhone = new TextView(context);
+            TextView plateNumber = new TextView(context);
+            withCarPhone.setLayoutParams(layoutParams2);
+            plateNumber.setLayoutParams(layoutParams2);
+            withCarPhone.setTextSize(18);
+            plateNumber.setTextSize(18);
 
             Button modify = new Button(context);
             modify.setAllCaps(false);
@@ -140,10 +148,12 @@ public class BusActivity extends AppCompatActivity {
                 }
             });
 
-            textView.setText(busInfo.getPlateNumber());
+            withCarPhone.setText(busInfo.getWithCarPhone());
+            plateNumber.setText(busInfo.getPlateNumber());
             modify.setText("modify");
             delete.setText("delete");
-            linearLayout.addView(textView);
+            linearLayout.addView(plateNumber);
+            linearLayout.addView(withCarPhone);
             linearLayout.addView(modify);
             linearLayout.addView(delete);
             linearLayout.setLayoutParams(layoutParams);
@@ -152,14 +162,25 @@ public class BusActivity extends AppCompatActivity {
     }
 
     public void busActivityBusBtn(View view) {
-        EditText editText = new EditText(context);
+        LinearLayout linearLayout = new LinearLayout(context);
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+
+        EditText withCarPhone = new EditText(context);
+        withCarPhone.setHint("请输入跟车员电话");
+        EditText plateNumber = new EditText(context);
+        plateNumber.setHint("请输入车牌号");
+        linearLayout.addView(withCarPhone);
+        linearLayout.addView(plateNumber);
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("添加车辆信息")
-                .setView(editText)
+                .setView(linearLayout)
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        requestDataToPostAddBusUrl(new BusInfo().setPlateNumber(String.valueOf(editText.getText())));
+                        requestDataToPostAddBusUrl(new BusInfo()
+                                .setPlateNumber(String.valueOf(plateNumber.getText()))
+                                .setWithCarPhone(String.valueOf(withCarPhone.getText()))
+                        );
                     }
                 })
                 .setNegativeButton("返回", new DialogInterface.OnClickListener() {
@@ -326,6 +347,17 @@ public class BusActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void showErrorDialog(Context context, String errMsg) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(errMsg)
+                .setNegativeButton("返回", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                }).create().show();
     }
 
 

@@ -17,17 +17,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/current_bus"
+            android:textColor="#000"
+            android:textSize="22sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@id/busActivityBusBtn"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:onClick="busActivityBusBtn"
             android:id="@+id/busActivityBusBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/index_btn"
+            android:onClick="busActivityBusBtn"
             android:text="@string/add"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -37,6 +39,30 @@
 
 
     </android.support.constraint.ConstraintLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5sp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15sp"
+            android:text="@string/plate_number"
+            android:textColor="#000"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_marginLeft="10sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/with_car_people"
+            android:textColor="#000"
+            android:textSize="20sp" />
+
+
+    </LinearLayout>
 
 
     <LinearLayout
