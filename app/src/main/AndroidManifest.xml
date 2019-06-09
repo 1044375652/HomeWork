@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".src.third.WithCarPeopleActivity"></activity>
+        <activity android:name=".src.four.WithCarPeopleRunningActivity"></activity>
+        <activity android:name=".src.third.WithCarPeopleActivity" />
         <activity
             android:name=".src.four.UpdateBusOrderActivity"
             android:launchMode="singleTop" />

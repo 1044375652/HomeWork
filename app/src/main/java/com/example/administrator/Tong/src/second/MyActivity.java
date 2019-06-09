@@ -15,6 +15,7 @@ import com.example.administrator.Tong.src.four.CheckTicketActivity;
 import com.example.administrator.Tong.src.third.AdminInterFaceActivity;
 import com.example.administrator.Tong.src.third.BuyTicketActivity;
 import com.example.administrator.Tong.src.third.MyTripActivity;
+import com.example.administrator.Tong.src.third.WithCarPeopleActivity;
 import com.example.administrator.Tong.utils.MyUtils;
 
 public class MyActivity extends AppCompatActivity {
@@ -79,5 +80,7 @@ public class MyActivity extends AppCompatActivity {
     }
 
     public void secondWithCarPeople(View view) {
+        intent = new Intent(context, WithCarPeopleActivity.class);
+        startActivity(intent);
     }
 }

@@ -310,6 +310,7 @@ public class BuyTicketEndActivity extends AppCompatActivity {
                     runningUserStatusInfo.setPhone(orderMessageInfo.getPhone())
                             .setBusId(0)
                             .setUserStatus(0)
+                            .setPointName(orderMessageInfo.getUpPoint())
                             .setDirectionType(directionType);
                     String obj = gson.toJson(runningUserStatusInfo);
                     requestBody = RequestBody.create(json, obj);

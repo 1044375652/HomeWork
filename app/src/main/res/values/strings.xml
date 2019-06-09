@@ -57,6 +57,8 @@
     <string name="pre_page">上一页</string>
     <string name="next_page">下一页</string>
     <string name="setting">设置</string>
+    <string name="modify">修改</string>
+    <string name="bus_status">乘车状态</string>
 
     <string-array name="direction1_up">
         <item>

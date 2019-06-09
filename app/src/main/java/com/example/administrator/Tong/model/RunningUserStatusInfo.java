@@ -6,6 +6,16 @@ public class RunningUserStatusInfo {
     private String phone;
     private int busId;
     private int directionType;
+    private int pointName;
+
+    public int getPointName() {
+        return pointName;
+    }
+
+    public RunningUserStatusInfo setPointName(int pointName) {
+        this.pointName = pointName;
+        return this;
+    }
 
     public int getId() {
         return id;

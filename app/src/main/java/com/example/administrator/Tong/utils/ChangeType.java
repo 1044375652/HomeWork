@@ -161,4 +161,122 @@ public class ChangeType {
         }
     }
 
+    public static class BusStatusType {
+        public static String CodeToMsg(int code) {
+            String msg = "";
+            switch (code) {
+                case 0:
+                    msg = "未发车";
+                    break;
+                case 1:
+                    msg = "正在前往花边岭广场";
+                    break;
+                case 2:
+                    msg = "已到花边岭广场";
+                    break;
+                case 3:
+                    msg = "正在前往惠大";
+                    break;
+                case 4:
+                    msg = "已到惠大";
+                    break;
+                case 5:
+                    msg = "正在前往江北华贸";
+                    break;
+                case 6:
+                    msg = "已到江北华贸";
+                    break;
+                case 7:
+                    msg = "正在前往博罗华侨中学";
+                    break;
+                case 8:
+                    msg = "已到博罗华侨中学";
+                    break;
+                case 9:
+                    msg = "正在前往香洲梅华中";
+                    break;
+                case 10:
+                    msg = "已到香洲梅华中";
+                    break;
+                case 11:
+                    msg = "正在前往北理工";
+                    break;
+                case 12:
+                    msg = "已到北理工";
+                    break;
+                case 13:
+                    msg = "正在前往北师";
+                    break;
+                case 14:
+                    msg = "已到北师";
+                    break;
+                case 15:
+                    msg = "正在前往UIC";
+                    break;
+                case 16:
+                    msg = "已到UIC";
+                    break;
+            }
+            return msg;
+        }
+
+        public static int MsgToCode(String msg) {
+            int code = 0;
+            switch (msg) {
+                case "未发车":
+                    code = 0;
+                    break;
+                case "正在前往花边岭广场":
+                    code = 1;
+                    break;
+                case "已到花边岭广场":
+                    code = 2;
+                    break;
+                case "正在前往惠大":
+                    code = 3;
+                    break;
+                case "已到惠大":
+                    code = 4;
+                    break;
+                case "正在前往江北华贸":
+                    code = 5;
+                    break;
+                case "已到江北华贸":
+                    code = 6;
+                    break;
+                case "正在前往博罗华侨中学":
+                    code = 7;
+                    break;
+                case "已到博罗华侨中学":
+                    code = 8;
+                    break;
+                case "正在前往香洲梅华中":
+                    code = 9;
+                    break;
+                case "已到香洲梅华中":
+                    code = 10;
+                    break;
+                case "正在前往北理工":
+                    code = 11;
+                    break;
+                case "已到北理工":
+                    code = 12;
+                    break;
+                case "正在前往北师":
+                    code = 13;
+                    break;
+                case "已到北师":
+                    code = 14;
+                    break;
+                case "正在前往UIC":
+                    code = 15;
+                    break;
+                case "已到UIC":
+                    code = 16;
+                    break;
+            }
+            return code;
+        }
+    }
+
 }

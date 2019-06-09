@@ -11,7 +11,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.administrator.Tong.R;
+import com.example.administrator.Tong.model.BusInfo;
 import com.example.administrator.Tong.model.MyTripSerializable;
+import com.example.administrator.Tong.model.RunningUserStatusInfo;
 import com.example.administrator.Tong.model.UserStatusReq;
 import com.example.administrator.Tong.model.base.Res;
 import com.example.administrator.Tong.utils.ChangeType;
@@ -20,6 +22,8 @@ import com.example.administrator.Tong.utils.MyUtils;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -42,6 +46,7 @@ public class RunningActivity extends AppCompatActivity {
     private Call call;
     private static final String Get_User_Status_Url = "http://" + Ip.IP + ":8001/status/message";
     private static final String Post_Change_User_Status_Url = "http://" + Ip.IP + ":8001/status/user_status";
+    private static final String GET_BUS_STATUS_URL = "http://" + Ip.IP + ":8001/my_bus/bus_status_by_bus_id?bus_id=";
     private int status;
     private Gson gson;
     private Handler handler;
@@ -49,6 +54,7 @@ public class RunningActivity extends AppCompatActivity {
     private RequestBody requestBody;
     private Intent intent;
     private MediaType json = MediaType.parse("application/json;charset=utf-8");
+    private TextView runningActivityRunningMsg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +87,7 @@ public class RunningActivity extends AppCompatActivity {
         gson = new Gson();
         handler = new Handler();
         context = RunningActivity.this;
+        runningActivityRunningMsg = findViewById(R.id.runningActivityRunningMsg);
     }
 
     @Override
@@ -100,12 +107,46 @@ public class RunningActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 Res res = gson.fromJson(String.valueOf(response.body().string()), Res.class);
                 if (res.getCode() == 200) {
-                    status = new Double((Double) res.getData()).intValue();
+                    RunningUserStatusInfo[] runningUserStatusInfos = gson.fromJson(String.valueOf(res.getData()), RunningUserStatusInfo[].class);
+                    List<RunningUserStatusInfo> runningUserStatusInfoList = Arrays.asList(runningUserStatusInfos);
+                    RunningUserStatusInfo runningUserStatusInfo = runningUserStatusInfoList.get(0);
+                    status = runningUserStatusInfo.getUserStatus();
                     showTextView(status);
+                    requestFromGetBubStatusUrl(runningUserStatusInfo.getBusId());
                 }
             }
         });
     }
+
+    private void requestFromGetBubStatusUrl(int busId) {
+        request = new Request.Builder()
+                .url(GET_BUS_STATUS_URL + busId)
+                .build();
+        call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.i(TAG, "请求服务器失败");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Res res = gson.fromJson(response.body().string(), Res.class);
+                if (res.getCode() == 200) {
+                    BusInfo[] busInfos = gson.fromJson(String.valueOf(res.getData()), BusInfo[].class);
+                    List<BusInfo> busInfoList = Arrays.asList(busInfos);
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            runningActivityRunningMsg.setText(ChangeType.BusStatusType.CodeToMsg(busInfoList.get(0).getBusStatus()));
+                            runningActivityRunningMsg.setTextColor(Color.RED);
+                        }
+                    });
+                }
+            }
+        });
+    }
+
 
     private void showTextView(int status) {
         handler.post(() -> runningActivityStatus.setText(ChangeType.UserStatusType.CodeToMsg(status)));
