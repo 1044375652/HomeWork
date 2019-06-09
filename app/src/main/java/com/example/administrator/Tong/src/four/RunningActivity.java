@@ -100,8 +100,6 @@ public class RunningActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 Res res = gson.fromJson(String.valueOf(response.body().string()), Res.class);
                 if (res.getCode() == 200) {
-                    Log.i(TAG, res.getData().getClass() + "");
-                    Log.i(TAG, res.getData() + "");
                     status = new Double((Double) res.getData()).intValue();
                     showTextView(status);
                 }

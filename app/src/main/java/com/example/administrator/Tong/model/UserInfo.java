@@ -1,6 +1,6 @@
 package com.example.administrator.Tong.model;
 
-public class User {
+public class UserInfo {
     private int id;
     private String phone;
     private int role;
@@ -9,7 +9,7 @@ public class User {
         return id;
     }
 
-    public User setId(int id) {
+    public UserInfo setId(int id) {
         this.id = id;
         return this;
     }
@@ -18,7 +18,7 @@ public class User {
         return phone;
     }
 
-    public User setPhone(String phone) {
+    public UserInfo setPhone(String phone) {
         this.phone = phone;
         return this;
     }
@@ -27,7 +27,7 @@ public class User {
         return role;
     }
 
-    public User setRole(int role) {
+    public UserInfo setRole(int role) {
         this.role = role;
         return this;
     }

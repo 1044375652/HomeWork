@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.administrator.Tong.MyApplication;
@@ -22,6 +23,8 @@ public class MyActivity extends AppCompatActivity {
     private Bundle bundle;
     private static final String TAG = MyActivity.class.getName();
     private MyApplication myApplication;
+    private Button secondAdminInterFace;
+    private Button secondWithCarPeople;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +37,20 @@ public class MyActivity extends AppCompatActivity {
     private void initData() {
         context = this;
         myApplication = (MyApplication) getApplication();
+        secondAdminInterFace = findViewById(R.id.secondAdminInterFace);
+        secondWithCarPeople = findViewById(R.id.secondWithCarPeople);
+        toggleBtn();
+    }
+
+    private void toggleBtn() {
+        if (myApplication.getRole() == 0) {
+            secondAdminInterFace.setVisibility(View.GONE);
+            secondWithCarPeople.setVisibility(View.GONE);
+        } else if (myApplication.getRole() == 1) {
+            secondAdminInterFace.setVisibility(View.GONE);
+        } else if (myApplication.getRole() == 2) {
+            secondWithCarPeople.setVisibility(View.GONE);
+        }
     }
 
     public void secondBuyTicket(View view) {

@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
@@ -27,6 +26,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.example.administrator.Tong.R;
+import com.example.administrator.Tong.model.BusIdReq;
 import com.example.administrator.Tong.model.BusInfo;
 import com.example.administrator.Tong.model.DirectionMessageInfo;
 import com.example.administrator.Tong.model.OrderMessageInfo;
@@ -90,6 +90,7 @@ public class UpdateBusOrderActivity extends AppCompatActivity {
     private static String GET_Direction_Messages_URL = "http://" + Ip.IP + ":8001/direction/direction_messages";
     private static String GET_Order_Messages_URL = "http://" + Ip.IP + ":8001/order/messages";
     private static String Post_Update_Order_Messages_URL = "http://" + Ip.IP + ":8001/order/update_order_message";
+    private static String Post_Update_BUS_ID_Messages_URL = "http://" + Ip.IP + ":8001/status/update_bus_id";
     private static final String Get_Bus_Url = "http://" + Ip.IP + ":8001/my_bus/messages";
 
     @Override
@@ -375,6 +376,7 @@ public class UpdateBusOrderActivity extends AppCompatActivity {
             linearLayout.setOrientation(LinearLayout.VERTICAL);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
+            EditText busId = new EditText(context);
             EditText withCarPhone = new EditText(context);
             withCarPhone.setHint("跟车员手机");
             EditText plateNumber = new EditText(context);
@@ -382,7 +384,7 @@ public class UpdateBusOrderActivity extends AppCompatActivity {
             plateNumber.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showPopUpWindow(plateNumber, withCarPhone);
+                    showPopUpWindow(plateNumber, withCarPhone, busId);
                 }
             });
             plateNumber.setLayoutParams(params);
@@ -396,12 +398,13 @@ public class UpdateBusOrderActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialogInterface, int i) {
                             String plateNumberMsg = String.valueOf(plateNumber.getText());
                             String withCarPhoneMsg = String.valueOf(withCarPhone.getText());
+                            String busIdMsg = String.valueOf(busId.getText());
                             if (StringUtils.isBlank(plateNumberMsg)) {
                                 MyUtils.toast(context, "车牌号未输入");
                             } else if (StringUtils.isBlank(withCarPhoneMsg)) {
                                 MyUtils.toast(context, "跟车员电话未输入");
                             } else {
-                                requestDataToPostUpdateOrderMessagesUrl(plateNumberMsg, withCarPhoneMsg, listItemCheesed);
+                                requestDataToPostUpdateOrderMessagesUrl(plateNumberMsg, withCarPhoneMsg, busIdMsg, listItemCheesed);
                             }
                         }
                     })
@@ -415,7 +418,7 @@ public class UpdateBusOrderActivity extends AppCompatActivity {
         }
     }
 
-    private void showPopUpWindow(EditText plateNumber, EditText withCarPhone) {
+    private void showPopUpWindow(EditText plateNumber, EditText withCarPhone, EditText busId) {
         ListView listView = new ListView(context);
 
         List<String> plateNumberList = new ArrayList<>();
@@ -434,6 +437,7 @@ public class UpdateBusOrderActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 plateNumber.setText(plateNumberList.get(i));
                 withCarPhone.setText(busInfoList.get(i).getWithCarPhone());
+                busId.setText(String.valueOf(busInfoList.get(i).getId()));
                 popupWindow.dismiss();
             }
         });
@@ -450,16 +454,21 @@ public class UpdateBusOrderActivity extends AppCompatActivity {
                 }).create().show();
     }
 
-    private void requestDataToPostUpdateOrderMessagesUrl(String plateNumber, String withCarPhone, List<Map<String, Object>> mapList) {
+    private void requestDataToPostUpdateOrderMessagesUrl(String plateNumber, String withCarPhone, String busId, List<Map<String, Object>> mapList) {
         okHttpClient = new OkHttpClient();
-
         List<UpdateOrderMessageReq> updateOrderMessageReqList = new ArrayList<>();
+        List<BusIdReq> busIdReqList = new ArrayList<>();
         for (Map<String, Object> map : mapList) {
             updateOrderMessageReqList.add(new UpdateOrderMessageReq()
                     .setPhone(String.valueOf(map.get("phone")))
                     .setDirectionType(Integer.parseInt(String.valueOf(map.get("directionType"))))
                     .setWithCarPhone(withCarPhone)
                     .setPlateNumber(plateNumber)
+            );
+            busIdReqList.add(new BusIdReq()
+                    .setPhone(String.valueOf(map.get("phone")))
+                    .setDirectionType(Integer.parseInt(String.valueOf(map.get("directionType"))))
+                    .setBusId(busId)
             );
         }
         String obj = gson.toJson(updateOrderMessageReqList);
@@ -479,22 +488,40 @@ public class UpdateBusOrderActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 Res res = gson.fromJson(String.valueOf(response.body().string()), Res.class);
                 if (res.getCode() == 200) {
-                    handler.post(new Runnable() {
+                    String busIdReq = gson.toJson(busIdReqList);
+                    requestBody = RequestBody.create(json, busIdReq);
+                    request = new Request.Builder()
+                            .url(Post_Update_BUS_ID_Messages_URL)
+                            .post(requestBody)
+                            .build();
+                    call = okHttpClient.newCall(request);
+                    call.enqueue(new Callback() {
                         @Override
-                        public void run() {
-                            MyUtils.toast(context, "添加成功");
-                            timerTask = new TimerTask() {
+                        public void onFailure(Call call, IOException e) {
+                            Log.i(TAG, "请求服务器失败");
+                        }
+
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+                            handler.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    intent = new Intent(context, UpdateBusOrderActivity.class);
-                                    startActivity(intent);
-                                    showPageBtn();
+                                    MyUtils.toast(context, "添加成功");
+                                    timerTask = new TimerTask() {
+                                        @Override
+                                        public void run() {
+                                            intent = new Intent(context, UpdateBusOrderActivity.class);
+                                            startActivity(intent);
+                                            showPageBtn();
+                                        }
+                                    };
+                                    timer = new Timer();
+                                    timer.schedule(timerTask, 1000);
                                 }
-                            };
-                            timer = new Timer();
-                            timer.schedule(timerTask, 1000);
+                            });
                         }
                     });
+
                 }
             }
         });

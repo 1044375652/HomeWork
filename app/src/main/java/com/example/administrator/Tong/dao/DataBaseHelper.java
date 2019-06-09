@@ -12,7 +12,7 @@ import com.example.administrator.Tong.model.DirectionMessageInfo;
 import com.example.administrator.Tong.model.OrderMessageInfo;
 import com.example.administrator.Tong.model.PointMessagesInfo;
 import com.example.administrator.Tong.model.RunningUserStatusInfo;
-import com.example.administrator.Tong.model.User;
+import com.example.administrator.Tong.model.UserInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -131,13 +131,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     //增加数据User
-    public boolean addDataToUserTable(List<User> users) {
+    public boolean addDataToUserTable(List<UserInfo> userInfos) {
         SQLiteDatabase sqLiteDatabase = getMyWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        for (User user : users) {
-            contentValues.put(UserTable.ID, user.getId());
-            contentValues.put(UserTable.ROLE, user.getRole());
-            contentValues.put(UserTable.PHONE, user.getPhone());
+        for (UserInfo userInfo : userInfos) {
+            contentValues.put(UserTable.ID, userInfo.getId());
+            contentValues.put(UserTable.ROLE, userInfo.getRole());
+            contentValues.put(UserTable.PHONE, userInfo.getPhone());
             sqLiteDatabase.beginTransaction();
             sqLiteDatabase.insert(UserTable.TABLE_NAME, null, contentValues);
             sqLiteDatabase.setTransactionSuccessful();
@@ -150,17 +150,17 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     //删除数据
 
     //查询数据User
-    public List<User> selectDataFromUserTable(String[] columns, String whereClause, String[] whereArgs) {
+    public List<UserInfo> selectDataFromUserTable(String[] columns, String whereClause, String[] whereArgs) {
         SQLiteDatabase sqLiteDatabase = getMyReadableDatabase();
         Cursor cursor = sqLiteDatabase.query(UserTable.TABLE_NAME, columns, whereClause, whereArgs, null, null, null);
-        List<User> users = new ArrayList<>();
+        List<UserInfo> userInfos = new ArrayList<>();
         while (cursor.moveToNext()) {
-            users.add(new User()
+            userInfos.add(new UserInfo()
                     .setPhone(cursor.getString(cursor.getColumnIndex(UserTable.PHONE)))
                     .setId(cursor.getInt(cursor.getColumnIndex(UserTable.ID)))
                     .setRole(cursor.getInt(cursor.getColumnIndex(UserTable.ROLE))));
         }
-        return users;
+        return userInfos;
     }
 
     //修改数据
@@ -382,7 +382,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             runningUserStatusInfoList.add(new RunningUserStatusInfo()
                     .setId(cursor.getInt(cursor.getColumnIndex(RunningUserStatusTable.ID)))
                     .setPhone(cursor.getString(cursor.getColumnIndex(RunningUserStatusTable.Phone)))
-                    .setPlateNumber(cursor.getString(cursor.getColumnIndex(RunningUserStatusTable.PlateNumber)))
                     .setUserStatus(cursor.getInt(cursor.getColumnIndex(RunningUserStatusTable.PlateNumber)))
             );
         }

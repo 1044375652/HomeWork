@@ -260,7 +260,6 @@ public class BuyTicketEndActivity extends AppCompatActivity {
                             int downPoint = ChangeType.PointType.MsgToCode(downPointMsg);
                             long upDate = MyUtils.StringToDate(upDateMsg);
                             int ticketNumber = Integer.parseInt(ticketNumberMsg);
-                            Log.i(TAG, ticketNumber + "");
                             orderMessageInfo.setUpPoint(upPoint)
                                     .setId(random.nextInt(SEEDS))
                                     .setDownPoint(downPoint)
@@ -309,7 +308,7 @@ public class BuyTicketEndActivity extends AppCompatActivity {
                 if (res.getCode() == 200) {
                     RunningUserStatusInfo runningUserStatusInfo = new RunningUserStatusInfo();
                     runningUserStatusInfo.setPhone(orderMessageInfo.getPhone())
-                            .setPlateNumber(orderMessageInfo.getPlateNumber())
+                            .setBusId(0)
                             .setUserStatus(0)
                             .setDirectionType(directionType);
                     String obj = gson.toJson(runningUserStatusInfo);

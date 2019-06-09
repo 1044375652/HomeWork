@@ -4,7 +4,7 @@ public class RunningUserStatusInfo {
     private int id;
     private int userStatus;
     private String phone;
-    private String plateNumber;
+    private int busId;
     private int directionType;
 
     public int getId() {
@@ -29,19 +29,20 @@ public class RunningUserStatusInfo {
         return phone;
     }
 
+    public int getBusId() {
+        return busId;
+    }
+
+    public RunningUserStatusInfo setBusId(int busId) {
+        this.busId = busId;
+        return this;
+    }
+
     public RunningUserStatusInfo setPhone(String phone) {
         this.phone = phone;
         return this;
     }
 
-    public String getPlateNumber() {
-        return plateNumber;
-    }
-
-    public RunningUserStatusInfo setPlateNumber(String plateNumber) {
-        this.plateNumber = plateNumber;
-        return this;
-    }
 
     public int getDirectionType() {
         return directionType;

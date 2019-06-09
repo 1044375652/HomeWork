@@ -123,7 +123,6 @@ public class MyTripActivity extends AppCompatActivity {
                 myTripSerializable.setDirectionType(orderMessageInfoList.get(i).getDirectionType());
                 myTripSerializable.setPhone(orderMessageInfoList.get(i).getPhone());
                 myTripSerializable.setWithCarPhone(orderMessageInfoList.get(i).getWithCarPhone());
-                Log.i(TAG, orderMessageInfoList.get(i).getPhone());
                 bundle.putSerializable("myTripSerializable", myTripSerializable);
                 Intent intent = new Intent(context, RunningActivity.class);
                 intent.putExtra("myTripSerializable", bundle);

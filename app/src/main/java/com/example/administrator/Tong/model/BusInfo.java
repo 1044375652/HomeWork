@@ -4,6 +4,17 @@ public class BusInfo {
     private int id;
     private String plateNumber;
     private String withCarPhone;
+    private int busStatus;
+
+
+    public int getBusStatus() {
+        return busStatus;
+    }
+
+    public BusInfo setBusStatus(int busStatus) {
+        this.busStatus = busStatus;
+        return this;
+    }
 
     public int getId() {
         return id;

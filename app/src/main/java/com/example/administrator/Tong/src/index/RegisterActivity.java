@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.example.administrator.Tong.MyApplication;
 import com.example.administrator.Tong.R;
 import com.example.administrator.Tong.dao.DataBaseHelper;
-import com.example.administrator.Tong.model.User;
+import com.example.administrator.Tong.model.UserInfo;
 import com.example.administrator.Tong.model.base.Res;
 import com.example.administrator.Tong.src.second.MyActivity;
 import com.example.administrator.Tong.utils.Ip;
@@ -85,9 +85,9 @@ public class RegisterActivity extends AppCompatActivity {
         editText = findViewById(R.id.registerInputPhone);
         final String phone = String.valueOf(editText.getText());
         okHttpClient = new OkHttpClient();
-        User user = new User();
-        user.setPhone(phone).setRole(0).setId(random.nextInt(SEEDS));
-        String userObj = gson.toJson(user);
+        UserInfo userInfo = new UserInfo();
+        userInfo.setPhone(phone).setRole(0).setId(random.nextInt(SEEDS));
+        String userObj = gson.toJson(userInfo);
         requestBody = RequestBody.create(JSON, userObj);
         request = new Request.Builder()
                 .url(IS_REGISTER_URL)
@@ -103,7 +103,7 @@ public class RegisterActivity extends AppCompatActivity {
                     response = call.execute();
                     res = gson.fromJson(response.body().string(), Res.class);
                     if (res.getCode() == 200) {
-                        registerUser(phone, user);
+                        registerUser(phone, userInfo);
                     } else {
                         handler.post(new Runnable() {
                             @Override
@@ -119,7 +119,7 @@ public class RegisterActivity extends AppCompatActivity {
         }).start();
     }
 
-    private void registerUser(String phone, User user) {
+    private void registerUser(String phone, UserInfo userInfo) {
         alert = new AlertDialog.Builder(context);
         if (!StringUtils.isBlank(phone)) {
             handler.post(new Runnable() {
@@ -129,9 +129,9 @@ public class RegisterActivity extends AppCompatActivity {
                             .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    List<User> userList = new ArrayList<>();
-                                    userList.add(user);
-                                    requestBody = RequestBody.create(JSON, gson.toJson(user));
+                                    List<UserInfo> userInfoList = new ArrayList<>();
+                                    userInfoList.add(userInfo);
+                                    requestBody = RequestBody.create(JSON, gson.toJson(userInfo));
                                     request = new Request.Builder()
                                             .url(REGISTER_URL)
                                             .post(requestBody)
@@ -157,7 +157,7 @@ public class RegisterActivity extends AppCompatActivity {
                                             }
                                         }
                                     }).start();
-                                    if (dataBaseHelper.addDataToUserTable(userList) && res.getCode() == 200) {
+                                    if (dataBaseHelper.addDataToUserTable(userInfoList) && res.getCode() == 200) {
                                         toast("注册成功，正在帮您自动登录");
                                         Timer timer = new Timer();
                                         TimerTask timerTask = new TimerTask() {

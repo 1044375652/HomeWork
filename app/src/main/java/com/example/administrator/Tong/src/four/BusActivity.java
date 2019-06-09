@@ -180,6 +180,7 @@ public class BusActivity extends AppCompatActivity {
                         requestDataToPostAddBusUrl(new BusInfo()
                                 .setPlateNumber(String.valueOf(plateNumber.getText()))
                                 .setWithCarPhone(String.valueOf(withCarPhone.getText()))
+                                .setBusStatus(0)
                         );
                     }
                 })

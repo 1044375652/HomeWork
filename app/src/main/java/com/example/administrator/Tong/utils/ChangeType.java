@@ -97,7 +97,7 @@ public class ChangeType {
                 case 9:
                     return "惠东客运站";
                 case 10:
-                    return "淡水客运站l";
+                    return "淡水客运站";
             }
             return "花边岭广场";
         }
