@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.Tong.R;
+import com.example.administrator.Tong.model.BusInfo;
 import com.example.administrator.Tong.model.BusStatusReq;
 import com.example.administrator.Tong.model.RunningUserStatusInfo;
 import com.example.administrator.Tong.model.base.Res;
@@ -55,6 +56,7 @@ public class WithCarPeopleRunningActivity extends AppCompatActivity {
 
     private static String GET_RUNNING_USER_MESSAGES_URL = "http://" + Ip.IP + ":8001/status/by_bus_id?bus_id=";
     private static String UPDATE_BUS_STATUS_BY_ID_URL = "http://" + Ip.IP + ":8001/my_bus/bus_status_by_bus_id";
+    private static final String GET_BUS_STATUS_URL = "http://" + Ip.IP + ":8001/my_bus/bus_status_by_bus_id?bus_id=";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +105,7 @@ public class WithCarPeopleRunningActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         requestDataFromRunningUserMessagesUrl();
+        requestFromGetBubStatusUrl(busId);
     }
 
     private void requestDataFromRunningUserMessagesUrl() {
@@ -198,6 +201,37 @@ public class WithCarPeopleRunningActivity extends AppCompatActivity {
         }
     }
 
+    private void requestFromGetBubStatusUrl(int busId) {
+        request = new Request.Builder()
+                .url(GET_BUS_STATUS_URL + busId)
+                .build();
+        call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.i(TAG, "请求服务器失败");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Res res = gson.fromJson(response.body().string(), Res.class);
+                if (res.getCode() == 200) {
+                    BusInfo[] busInfos = gson.fromJson(String.valueOf(res.getData()), BusInfo[].class);
+                    List<BusInfo> busInfoList = Arrays.asList(busInfos);
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            withCarPeopleRunningActivityBusStatus.setText(ChangeType.BusStatusType.CodeToMsg(busInfoList.get(0).getBusStatus()));
+                            withCarPeopleRunningActivityBusStatus.setTextColor(Color.RED);
+                            withCarPeopleRunningActivityBusStatus.setPadding(10, 0, 0, 0);
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+
     private void toast(String msg) {
         Toast.makeText(context, msg, Toast.LENGTH_LONG);
     }
@@ -240,5 +274,9 @@ public class WithCarPeopleRunningActivity extends AppCompatActivity {
 
                     }
                 }).create().show();
+    }
+
+    public void withCarPeopleRunningActivityFlush(View view) {
+        requestDataFromRunningUserMessagesUrl();
     }
 }

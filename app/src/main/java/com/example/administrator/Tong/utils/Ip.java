@@ -1,5 +1,5 @@
 package com.example.administrator.Tong.utils;
 
 public class Ip {
-    public static final String IP = "172.20.10.3";
+    public static final String IP = "192.168.103.223";
 }

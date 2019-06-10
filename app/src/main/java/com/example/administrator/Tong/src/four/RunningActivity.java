@@ -55,6 +55,7 @@ public class RunningActivity extends AppCompatActivity {
     private Intent intent;
     private MediaType json = MediaType.parse("application/json;charset=utf-8");
     private TextView runningActivityRunningMsg;
+    private int busId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +113,7 @@ public class RunningActivity extends AppCompatActivity {
                     RunningUserStatusInfo runningUserStatusInfo = runningUserStatusInfoList.get(0);
                     status = runningUserStatusInfo.getUserStatus();
                     showTextView(status);
+                    busId = runningUserStatusInfo.getBusId();
                     requestFromGetBubStatusUrl(runningUserStatusInfo.getBusId());
                 }
             }
@@ -209,4 +211,7 @@ public class RunningActivity extends AppCompatActivity {
     }
 
 
+    public void runningActivityflush(View view) {
+        requestFromGetBubStatusUrl(busId);
+    }
 }

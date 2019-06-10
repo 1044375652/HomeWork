@@ -59,6 +59,7 @@
     <string name="setting">设置</string>
     <string name="modify">修改</string>
     <string name="bus_status">乘车状态</string>
+    <string name="flush">刷新</string>
 
     <string-array name="direction1_up">
         <item>

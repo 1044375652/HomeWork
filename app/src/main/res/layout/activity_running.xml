@@ -151,6 +151,12 @@
             android:layout_marginLeft="5sp"
             android:textSize="18sp" />
 
+        <Button
+            android:onClick="runningActivityflush"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/flush"/>
+
     </LinearLayout>
 
 

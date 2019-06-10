@@ -17,6 +17,8 @@ import com.example.administrator.Tong.src.third.BuyTicketActivity;
 import com.example.administrator.Tong.src.third.MyTripActivity;
 import com.example.administrator.Tong.src.third.WithCarPeopleActivity;
 import com.example.administrator.Tong.utils.MyUtils;
+import com.tencent.android.tpush.XGIOperateCallback;
+import com.tencent.android.tpush.XGPushManager;
 
 public class MyActivity extends AppCompatActivity {
     private Context context;
@@ -34,6 +36,10 @@ public class MyActivity extends AppCompatActivity {
         initData();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
 
     private void initData() {
         context = this;
